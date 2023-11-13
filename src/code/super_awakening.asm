@@ -215,44 +215,80 @@ SuperAwakening::
 ;
 ; Change Weapon Hotkeys
 ;
-
-.change_weapon_3
+.change_weapon3
+.inc_weapon3
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_A
     cp J_A
-    jp nz, .change_weapon_3_end
+    jp nz, .inc_weapon3_end ; Check decrement next
 
     ; Increment weapon
     ld  a, [wInventoryItems_override.Weapon3]
     inc a
     ; Check for overflow
     and $0F ; If this is initialize to $E, it will be F here for 1 frame :/
-    cp $0E
+    cp (INVENTORY_BOOMERANG+1)
     jp nz, .set_weapon_3
     ld a, $00
+    jp .set_weapon_3
+.inc_weapon3_end
+.dec_weapon3
+    ; Check for button press
+    ldh a, [hJoypadState2]
+    and J_START
+    cp J_START
+    jp nz, .change_weapon3_end ; Done with weapon3 check
+
+    ; Decrement weapon
+    ld  a, [wInventoryItems_override.Weapon3]
+    dec a
+    ; Check for overflow
+    cp $FF
+    jp nz, .set_weapon_3
+    ld a, INVENTORY_BOOMERANG
+.dec_weapon_3_end
 .set_weapon_3
     ld [wInventoryItems_override.Weapon3], a
-.change_weapon_3_end
+.set_weapon_3_end
+.change_weapon3_end
 
-.change_weapon_4
+.change_weapon4
+.inc_weapon4
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_B
     cp J_B
-    jp nz, .change_weapon_4_end
+    jp nz, .inc_weapon4_end ; Check decrement next
 
     ; Increment weapon
     ld  a, [wInventoryItems_override.Weapon4]
     inc a
     ; Check for overflow
     and $0F ; If this is initialize to $E, it will be F here for 1 frame :/
-    cp $0E
+    cp (INVENTORY_BOOMERANG+1)
     jp nz, .set_weapon_4
     ld a, $00
+    jp .set_weapon_4
+.inc_weapon4_end
+.dec_weapon4
+    ; Check for button press
+    ldh a, [hJoypadState2]
+    and J_SELECT
+    cp J_SELECT
+    jp nz, .change_weapon4_end ; Done with weapon3 check
+
+    ; Decrement weapon
+    ld  a, [wInventoryItems_override.Weapon4]
+    dec a
+    ; Check for overflow
+    cp $FF
+    jp nz, .set_weapon_4
+    ld a, INVENTORY_BOOMERANG
+.dec_weapon_4_end
 .set_weapon_4
     ld [wInventoryItems_override.Weapon4], a
-.change_weapon_4_end
-
+.set_weapon_4_end
+.change_weapon4_end
 
     ret
