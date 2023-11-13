@@ -17,8 +17,6 @@
 
 The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. Custom functionality is implemented for each of the additional inputs.
 
-`Link's Awakening DX` was `Super Game Boy` enhanced to show a custom border.  However the game will not appear in the `Game Boy Color` pallets, but instead the game is limited to a 4 color `Game Boy` pallet.  There is no other native `Super Game Boy` functionality in the original game.
-
 ## Setup
 
 * This romhack must be played using a `Super Game Boy`
@@ -45,4 +43,4 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 
 ![IRL Controller with SGB Controller Buttons](input-mapping-diagram.png)
 
-*IRL Controller, with SGB Controller Button Mapping*
+*IRL Controller, with SGB Controller button mapping*
