@@ -3850,6 +3850,13 @@ wDE0A:
 wDE0B:
   ds 1 ; DE0B
 
+wInventoryItems_override::
+.Weapon4::
+  ds 1
+
+.Weapon3::
+  ds 1
+
 ; top of WRAM is used as Stack
 wStack::
   ds $DFFF - @ + 1 ; DE04 - DFFF
