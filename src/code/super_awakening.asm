@@ -164,7 +164,7 @@ SuperAwakening::
 
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
-    ld [hl], INVENTORY_SWORD
+    ld [hl], INVENTORY_SHIELD
 
 .use_weapon_1_end
 
@@ -178,7 +178,7 @@ SuperAwakening::
 
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
-    ld [hl], INVENTORY_SHIELD
+    ld [hl], INVENTORY_SWORD
 
 .use_weapon_2_end
 
