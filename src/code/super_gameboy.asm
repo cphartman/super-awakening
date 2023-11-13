@@ -57,9 +57,9 @@ SuperGameBoyInit::
 
 .superGameBoyDetected
     ; Now that the detection is over, return to single-player mode.
-    ld   hl, SGBRequestOnePlayerCmd               ; $6A76: $21 $02 $6A
-    call SendUploadCommand                        ; $6A79: $CD $51 $6B
-    call WaitFor3Frames                           ; $6A7C: $CD $86 $6B
+    ;ld   hl, SGBRequestOnePlayerCmd               ; $6A76: $21 $02 $6A
+    ;call SendUploadCommand                        ; $6A79: $CD $51 $6B
+    ;call WaitFor3Frames                           ; $6A7C: $CD $86 $6B
 
     ; Make the displayed screen black,
     ; while we are messing with VRAM for data transfers.

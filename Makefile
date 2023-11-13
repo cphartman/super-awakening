@@ -26,7 +26,7 @@ ifneq ($(MAKECMDGOALS), "clean")
   endif
 endif
 
-ASFLAGS := --export-all
+ASFLAGS := --export-all -w
 
 # If we're using RGBDS >= 0.6.0, add flags to force behavior that used to be default
 ifeq ($(shell expr \

@@ -8286,3 +8286,4 @@ jr_002_78CF:
     ret                                           ; $78D7: $C9
 
 include "code/room_transition.asm"
+include "code/super_awakening.asm"
