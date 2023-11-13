@@ -2,7 +2,7 @@
 
 `Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  
 
-![Super Links Awakening](super-azle.gif)
+![Super Links Awakening](super-lzdx.gif)
 
 ## New Gameplay Features
 * 🗡 Sword always equipped to `A` button
