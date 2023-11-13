@@ -1,6 +1,6 @@
 # Super Link's Awakening
 
-`Super Link's Awakening` is a `Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  
+`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  
 
 ![Super Links Awakening](super-azle.gif)
 
@@ -44,4 +44,5 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 | `L` | Controller 2 |  `Select`  |
 
 ![IRL Controller with SGB Controller Buttons](input-mapping-diagram.png)
-*IRL Controller with SGB Controller Buttons*
+
+*IRL Controller, with SGB Controller Button Mapping*
