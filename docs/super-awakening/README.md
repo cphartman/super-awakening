@@ -1,6 +1,6 @@
 # Super Link's Awakening
 
-`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  
+`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  This romhack enables new gameplay features that are designed to be played with an SNES controller.
 
 ![Super Links Awakening](super-lzdx.gif)
 
