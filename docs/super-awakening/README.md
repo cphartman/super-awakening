@@ -5,8 +5,8 @@
 ![Super Links Awakening](super-lzdx.gif)
 
 ## New Gameplay Features
-* 🗡 Sword always equipped to `A` button
-* ⛨ Shield always equipped to `B` button
+* 🗡 Sword always equipped to `B` button
+* ⛨ Shield always equipped to `A` button
 * 💣 Weapon inventory equipped to `X` and `Y` buttons 
 * 🏹 Switch weapon inventory with `R` and `L` buttons
 
