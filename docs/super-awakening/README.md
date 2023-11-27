@@ -4,6 +4,10 @@
 
 ![Super Links Awakening](super-lzdx.gif)
 
+## Play Online
+Load the rom into the online emulator:
+https://cphartman.github.io/projects/super-links-awakening/
+
 ## New Gameplay Features
 * 🗡 Sword always equipped to `B` button
 * ⛨ Shield always equipped to `A` button
@@ -11,6 +15,10 @@
 * 🏹 Switch weapon inventory with `R` and `L` buttons
 
 ![Super Controller Diagram](super-controller-diagram.png)
+
+## Play Online
+Load the rom into the online emulator:
+https://cphartman.github.io/projects/super-links-awakening/
 
 ## How?
 `Super Game Boy` exposes up to 4 controller inputs to `Game Boy` games.  This feature enabled local multiplayer via `Super Game Boy` for games like `Street Fighter 2` or `Bomberman`.
