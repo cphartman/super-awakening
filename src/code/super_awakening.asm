@@ -217,6 +217,7 @@ SuperAwakening::
 ;
 .change_weapon3
 .inc_weapon3
+
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_A
@@ -226,11 +227,19 @@ SuperAwakening::
     ; Increment weapon
     ld  a, [wInventoryItems_override.Weapon3]
     inc a
-    ; Check for overflow
-    and $0F ; If this is initialize to $E, it will be F here for 1 frame :/
-    cp (INVENTORY_BOOMERANG+1)
+.inc_weapn_check_shield
+    cp INVENTORY_SHIELD 
+    jp nz, .inc_weapon_check_Weapon4 ; Jump if not a shield
+    inc a ; Keep incrementing if this was a shield
+.inc_weapon_check_Weapon4
+    ld hl, wInventoryItems_override.Weapon4
+    cp [hl] ; Check if this is weapon4
+    jp nz, .inc_weapon_check_overflow
+    inc a
+.inc_weapon_check_overflow
+    cp (INVENTORY_MAX+1) ; check if we're beyond the inventory max
     jp nz, .set_weapon_3
-    ld a, $00
+    ld a, INVENTORY_BOMBS
     jp .set_weapon_3
 .inc_weapon3_end
 .dec_weapon3

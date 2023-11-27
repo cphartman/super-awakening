@@ -17,6 +17,7 @@ INVENTORY_ROCS_FEATHER     equ $0A
 INVENTORY_SHOVEL           equ $0B
 INVENTORY_MAGIC_POWDER     equ $0C
 INVENTORY_BOOMERANG        equ $0D
+INVENTORY_MAX               equ INVENTORY_BOOMERANG
 
 ; Minimaps layout
 ; Only $0, $11 and $30 are used in the final game
