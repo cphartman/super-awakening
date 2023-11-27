@@ -123,29 +123,85 @@ SuperAwakening::
     ld [hl], a
 .update_p1_b_mask_end
 
-.update_p1_a_state
+.update_p1_a_state_from_up
+    ; Check left press
     ldh  a, [hJoypadState2]
-    and  J_LEFT | J_UP
+    and  J_UP
     cp 0
-    jp z, .update_p1_a_state_end
+    jp z, .update_p1_a_state_from_up_end ; Not pressing
+
+    ; Ignore if holding start
+    ldh  a, [hPressedButtonsMask2]
+    and  J_START
+    cp 0
+    jp nz, .update_p1_a_state_from_up_end ; Not pressing
+
+    ; Simulate A press
     ld a, [hJoypadState]
     or J_A
     ld hl, hJoypadState
     ld [hl], a
-.update_p1_a_state_end
+.update_p1_a_state_from_up_end
 
-.update_p1_a_mask
+.update_p1_a_mask_from_up
+    ; Check left press
     ldh  a, [hPressedButtonsMask2]
-    and  J_LEFT | J_UP
+    and  J_UP
     cp 0
-    jp z, .update_p1_a_mask_end
+    jp z, .update_p1_a_mask_from_up_end ; Not pressing
+
+    ; Ignore if holding start
+    ldh  a, [hPressedButtonsMask2]
+    and  J_START
+    cp 0
+    jp nz, .update_p1_a_mask_from_up_end ; Not pressing
+
+    ; Simulate A press
     ld a, [hPressedButtonsMask]
     or J_A
     ld hl, hPressedButtonsMask
     ld [hl], a
-.update_p1_a_mask_end
+.update_p1_a_mask_from_up_end
 
+.update_p1_a_state_from_left
+    ; Check left press
+    ldh  a, [hJoypadState2]
+    and  J_LEFT
+    cp 0
+    jp z, .update_p1_a_state_from_left_end ; Not pressing
 
+    ; Ignore if holding select, used for inventory decrement
+    ldh  a, [hPressedButtonsMask2]
+    and  J_SELECT
+    cp 0
+    jp nz, .update_p1_a_state_from_left_end ; Not pressing
+
+    ; Simulate A press
+    ld a, [hJoypadState]
+    or J_A
+    ld hl, hJoypadState
+    ld [hl], a
+.update_p1_a_state_from_left_end
+
+.update_p1_a_mask_from_left
+    ; Check left press
+    ldh  a, [hPressedButtonsMask2]
+    and  J_LEFT
+    cp 0
+    jp z, .update_p1_a_mask_from_left_end ; Not pressing
+
+    ; Ignore if holding select, used for inventory decrement
+    ldh  a, [hPressedButtonsMask2]
+    and  J_SELECT
+    cp 0
+    jp nz, .update_p1_a_mask_from_left_end ; Not pressing
+
+    ; Simulate A press
+    ld a, [hPressedButtonsMask]
+    or J_A
+    ld hl, hPressedButtonsMask
+    ld [hl], a
+.update_p1_a_mask_from_left_end
 ;
 ; Weapon Hotkeys
 ; P2_Right => Weapon 1 => B Slot
@@ -216,88 +272,174 @@ SuperAwakening::
 ; Change Weapon Hotkeys
 ;
 .change_weapon3
-.inc_weapon3
-
-    ; Check for button press
-    ldh a, [hJoypadState2]
-    and J_A
-    cp J_A
-    jp nz, .inc_weapon3_end ; Check decrement next
-
-    ; Increment weapon
-    ld  a, [wInventoryItems_override.Weapon3]
-    inc a
-.inc_weapn_check_shield
-    cp INVENTORY_SHIELD 
-    jp nz, .inc_weapon_check_Weapon4 ; Jump if not a shield
-    inc a ; Keep incrementing if this was a shield
-.inc_weapon_check_Weapon4
-    ld hl, wInventoryItems_override.Weapon4
-    cp [hl] ; Check if this is weapon4
-    jp nz, .inc_weapon_check_overflow
-    inc a
-.inc_weapon_check_overflow
-    cp (INVENTORY_MAX+1) ; check if we're beyond the inventory max
-    jp nz, .set_weapon_3
-    ld a, INVENTORY_BOMBS
-    jp .set_weapon_3
-.inc_weapon3_end
 .dec_weapon3
+    ; Check for both buttons button down
+    ldh a, [hPressedButtonsMask2]
+    and (J_START | J_UP)
+    cp  (J_START | J_UP)
+    jp nz, .dec_weapon3_end
+
+    ; check if up toggled this frame
+    ldh a, [hJoypadState2]
+    and J_UP
+    cp  J_UP
+    jp z, .dec_weapon3_loop
+    
+    jp .dec_weapon3_end ; This is a double-hold frame, not a toggle frame, do nothing
+
+.dec_weapon3_loop
+; next weaponVal
+    ld  a, [wInventoryItems_override.Weapon3]
+    dec a
+    cp $FF ; check we've wrapped around 0
+    jp nz, .dec_weapon3_loop_store
+    ld a, INVENTORY_MAX ; Last inventory weapon
+; store weaponVal
+.dec_weapon3_loop_store
+    ld  [wInventoryItems_override.Weapon3], a
+; test weaponVal
+    call .test_weapon_3_valid
+    jp z, .dec_weapon3_loop
+.weapon_dec_loop_end
+    jp .change_weapon3_end ; Skip the increment check
+.dec_weapon3_end
+
+.inc_weapon3
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_START
     cp J_START
-    jp nz, .change_weapon3_end ; Done with weapon3 check
+    jp nz, .inc_weapon3_end ; Check decrement next
 
-    ; Decrement weapon
+.inc_weapon3_loop
+; next weaponVal
     ld  a, [wInventoryItems_override.Weapon3]
-    dec a
-    ; Check for overflow
-    cp $FF
-    jp nz, .set_weapon_3
-    ld a, INVENTORY_BOOMERANG
-.dec_weapon_3_end
-.set_weapon_3
-    ld [wInventoryItems_override.Weapon3], a
-.set_weapon_3_end
+    inc a
+    cp (INVENTORY_MAX+1) ; check if we're beyond the inventory max
+    jp nz, .inc_weapon3_loop_store
+    ld a, INVENTORY_BOMBS ; Bombs are first weapon, since we skip INVENTORY_EMPTY and INVENTORY_SWORD
+; store weaponVal
+.inc_weapon3_loop_store
+    ld  [wInventoryItems_override.Weapon3], a
+; test weaponVal
+    call .test_weapon_3_valid
+    jp z, .inc_weapon3_loop
+.inc_weapon3_loop_end
+.inc_weapon3_end
 .change_weapon3_end
 
 .change_weapon4
-.inc_weapon4
-    ; Check for button press
-    ldh a, [hJoypadState2]
-    and J_B
-    cp J_B
-    jp nz, .inc_weapon4_end ; Check decrement next
-
-    ; Increment weapon
-    ld  a, [wInventoryItems_override.Weapon4]
-    inc a
-    ; Check for overflow
-    and $0F ; If this is initialize to $E, it will be F here for 1 frame :/
-    cp (INVENTORY_BOOMERANG+1)
-    jp nz, .set_weapon_4
-    ld a, $00
-    jp .set_weapon_4
-.inc_weapon4_end
 .dec_weapon4
+    ; Check for both buttons button down
+    ldh a, [hPressedButtonsMask2]
+    and (J_SELECT | J_LEFT)
+    cp  (J_SELECT | J_LEFT)
+    jp nz, .dec_weapon4_end
+
+    ; check if left toggled this frame
+    ldh a, [hJoypadState2]
+    and J_LEFT
+    cp  J_LEFT
+    jp z, .dec_weapon4_loop
+    
+    jp .dec_weapon4_end ; This is a double-hold frame, not a toggle frame, do nothing
+
+.dec_weapon4_loop
+; next weaponVal
+    ld  a, [wInventoryItems_override.Weapon4]
+    dec a
+    cp $FF ; check we've wrapped around 0
+    jp nz, .dec_weapon4_loop_store
+    ld a, INVENTORY_MAX ; Last inventory weapon
+; store weaponVal
+.dec_weapon4_loop_store
+    ld  [wInventoryItems_override.Weapon4], a
+; test weaponVal
+    call .test_weapon_4_valid
+    jp z, .dec_weapon4_loop
+.dec_weapon4_loop_end
+    jp .change_weapon4_end ; Skip the increment check
+.dec_weapon4_end
+
+.inc_weapon4
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_SELECT
     cp J_SELECT
-    jp nz, .change_weapon4_end ; Done with weapon3 check
+    jp nz, .inc_weapon4_end ; Check decrement next
 
-    ; Decrement weapon
+.inc_weapon4_loop
+; next weaponVal
     ld  a, [wInventoryItems_override.Weapon4]
-    dec a
-    ; Check for overflow
-    cp $FF
-    jp nz, .set_weapon_4
-    ld a, INVENTORY_BOOMERANG
-.dec_weapon_4_end
-.set_weapon_4
-    ld [wInventoryItems_override.Weapon4], a
-.set_weapon_4_end
+    inc a
+    cp (INVENTORY_MAX+1) ; check if we're beyond the inventory max
+    jp nz, .inc_weapon4_loop_store
+    ld a, INVENTORY_BOMBS ; Bombs are first weapon, since we skip INVENTORY_EMPTY and INVENTORY_SWORD
+; store weaponVal
+.inc_weapon4_loop_store
+    ld  [wInventoryItems_override.Weapon4], a
+; test weaponVal
+    call .test_weapon_4_valid
+    jp z, .inc_weapon4_loop
+.weapon_inc_loop_end
+.inc_weapon4_end
+
 .change_weapon4_end
 
+ret
+
+.test_weapon_3_valid
+    ; Bounds check the weapon to 15
+    and $0F
+
+    ; Check weapon 4
+    ld hl, wInventoryItems_override.Weapon4
+    cp [hl] ; Check if this is weapon4
+    jp z, .test_weapon_3_toggle_end
+    
+    cp INVENTORY_SHIELD
+    jp z, .test_weapon_3_toggle_end
+
+    cp INVENTORY_EMPTY
+    jp z, .test_weapon_3_toggle_end
+
+    cp INVENTORY_SWORD
+    jp z, .test_weapon_3_toggle_end
+
+    ; Check check for unused item values
+    cp $0E
+    jp z, .test_weapon_3_toggle_end
+
+    cp $0F
+    jp z, .test_weapon_3_toggle_end
+
+.test_weapon_3_toggle_end
+    ret
+
+.test_weapon_4_valid
+    ; Bounds check the weapon to 15
+    and $0F
+
+    ; Check weapon 3
+    ld hl, wInventoryItems_override.Weapon3
+    cp [hl] ; Check if this is weapon4
+    jp z, .test_weapon_4_toggle_end
+    
+    cp INVENTORY_SHIELD
+    jp z, .test_weapon_4_toggle_end
+
+    cp INVENTORY_EMPTY
+    jp z, .test_weapon_4_toggle_end
+
+    cp INVENTORY_SWORD
+    jp z, .test_weapon_4_toggle_end
+
+    ; Check check for unused item values
+    cp $0E
+    jp z, .test_weapon_4_toggle_end
+
+    cp $0F
+    jp z, .test_weapon_4_toggle_end
+
+.test_weapon_4_toggle_end
     ret
