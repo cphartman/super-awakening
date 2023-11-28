@@ -3008,7 +3008,7 @@ InventoryTileMapPositions::
 DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
-    ld   hl, wInventoryItems_override             ; Show weapon slots 3 and 4
+    ld   hl, wSuperAwakening.Weapon4_Value       ; Show weapon slots 3 and 4
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
     ldh  [hMultiPurpose1], a                      ; $5CA3: $E0 $D8
@@ -3132,11 +3132,51 @@ DrawInventorySlots::
     ret                                           ; $5D24: $C9
 
 ; Draws the inventory slots
+; Draw entire inventory for the pause screen
 InventoryLoad3Handler::
+    ;call SuperAwakening.SetupPauseInventory
     ld   a, [wC154]                               ; $5D25: $FA $54 $C1
     ld   c, a                                     ; $5D28: $4F
     ld   b, $00                                   ; $5D29: $06 $00
     ld   e, $FF                                   ; $5D2B: $1E $FF
+
+.awakening_populate_inventory
+    ; Reset the inventory slots
+    ld hl, wSuperAwakening.Weapon4_Value
+    ld a, INVENTORY_SHIELD
+    ldi [hl], a
+    ld a, INVENTORY_SWORD
+    ldi [hl], a
+    
+    ; test first inventory slot
+    ld a, [hl]
+    and $0F
+    cp 0
+    jp nz, .awakening_populate_inventory_end
+
+.awakening_populate_inventory_initialize
+    ld a, INVENTORY_BOW
+    ldi [hl], a
+    ld a, INVENTORY_BOOMERANG
+    ldi [hl], a
+    ld a, INVENTORY_ROCS_FEATHER
+    ldi [hl], a
+    ld a, INVENTORY_PEGASUS_BOOTS
+    ldi [hl], a
+    ld a, INVENTORY_HOOKSHOT
+    ldi [hl], a
+    ld a, INVENTORY_POWER_BRACELET
+    ldi [hl], a
+    ld a, $00
+    ldi [hl], a
+    ld a, $00
+    ldi [hl], a
+    ld a, $00
+    ldi [hl], a
+    ld a, $00
+    ldi [hl], a
+.awakening_populate_inventory_end
+
     call DrawInventorySlots                       ; $5D2D: $CD $9C $5C
     xor  a                                        ; $5D30: $AF
     ld   [wC154], a                               ; $5D31: $EA $54 $C1
@@ -3371,6 +3411,48 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
     db   $00, $FE, $02
 
 moveInventoryCursor::
+
+;The pause sceen inventory selector is broken below
+;Most imputs are disable except Weapon4
+;Toggling through inventory with select works but is simple
+
+    ; Handle inventory select code
+.awakening_inventory_select
+    
+    ; Check for next pressed
+    ldh  a, [hJoypadState2]
+    and  J_SELECT
+    cp J_SELECT
+    jp nz, .awakening_inventory_select_end
+
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld c, a
+    ld b, $00
+    add  hl, bc
+
+.awakening_inventory_select_loop
+    ld a, [hl]
+    inc a
+
+    cp (INVENTORY_MAX+1); Check for overflow
+    jp nz, .awakening_inventory_select_store
+    ld a, INVENTORY_EMPTY
+; store weaponVal
+.awakening_inventory_select_store
+    ld  [hl], a
+; test weaponVal
+    ;call .test_weapon_3_valid
+    ;jp z, .awakening_inventory_select_loop
+.awakening_inventory_select_loop_end
+    ld b, $00
+    ld c, $0B
+    ld e, $01
+    call DrawInventorySlots
+.awakening_inventory_select_end
+
+
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
     ld   [wC1B6], a                               ; $5F09: $EA $B6 $C1
     ld   a, [wOcarinaMenuOpening]                 ; $5F0C: $FA $B8 $C1
@@ -3522,21 +3604,25 @@ label_020_5FDB:
     ld   e, $00                                   ; $5FE9: $1E $00
     jr   jr_020_600D                              ; $5FEB: $18 $20
 
+; Swap B inventory slot on button press
 jr_020_5FED:
     ldh  a, [hJoypadState]                        ; $5FED: $F0 $CC
     and  J_B                                      ; $5FEF: $E6 $20
     jr   z, ret_020_604A                          ; $5FF1: $28 $57
-
+    ; Push the curent B button onto stack
     ld   a, [wInventoryItems.BButtonSlot]         ; $5FF3: $FA $00 $DB
     push af                                       ; $5FF6: $F5
+    ; Get the current item number from the subscreen item list into a
     ld   hl, wInventoryItems.subscreen            ; $5FF7: $21 $02 $DB
     ld   a, [wInventorySelection]                 ; $5FFA: $FA $A3 $DB
     ld   c, a                                     ; $5FFD: $4F
     ld   b, $00                                   ; $5FFE: $06 $00
     add  hl, bc                                   ; $6000: $09
     ld   a, [hl]                                  ; $6001: $7E
+    ; Load the current item into button B
     ld   [wInventoryItems.BButtonSlot], a         ; $6002: $EA $00 $DB
     pop  af                                       ; $6005: $F1
+    ; Load the old item into the subscreen item list
     ld   [hl], a                                  ; $6006: $77
     ld   c, $00                                   ; $6007: $0E $00
     ld   b, $00                                   ; $6009: $06 $00

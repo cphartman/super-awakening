@@ -3003,16 +3003,15 @@ wIndoorARoomStatus::
 wIndoorBRoomStatus::
   ds $100 ; DA00
 
-; TODO comment
+; Current Equiped items
 wInventoryItems::
 .BButtonSlot::
   ds 1 ; DB00
 
-; TODO comment
 .AButtonSlot::
   ds 1 ; DB01
 
-; TODO comment
+; Inventory items
 .subscreen
   ds INVENTORY_SLOT_COUNT - 2 ; DB02-DB0B
 
@@ -3850,11 +3849,22 @@ wDE0A:
 wDE0B:
   ds 1 ; DE0B
 
-wInventoryItems_override::
-.Weapon4::
+wSuperAwakening::
+; This matches the wInventoryItems object, replaces it in DrawInventorySlots
+.Weapon4_Value:: ; Sync'd to Weapon_Inventory[Weapon4_Inventory_Index]
   ds 1
 
-.Weapon3::
+.Weapon3_Value:: ; Sync'd to Weapon_Inventory[Weapon3_Inventory_Index]
+  ds 1
+
+; Values that the inventory will cycle through, also used to display on the pause screen
+.Weapon_Inventory
+  ds INVENTORY_SLOT_COUNT - 2
+
+.Weapon4_Inventory_Index:
+  ds 1
+
+.Weapon3_Inventory_Index:
   ds 1
 
 ; top of WRAM is used as Stack

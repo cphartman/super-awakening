@@ -1562,6 +1562,9 @@ WorldInteractiveHandler::
     dec  e                                        ; $1009: $1D
 
 .label_100A
+    ; Draw A/B from overworld?
+    ; This draws a/b every other frame?
+    ; We could override the slot values here to just A/B maybe
     callsb DrawInventorySlots                     ; $100A: $3E $20 $EA $00 $21 $CD $9C $5C
 
 label_1012::
