@@ -3412,18 +3412,16 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
 
 moveInventoryCursor::
 
-;The pause sceen inventory selector is broken below
-;Most imputs are disable except Weapon4
-;Toggling through inventory with select works but is simple
 
     ; Handle inventory select code
 .awakening_inventory_select
     
+.awakening_inventory_select_next
     ; Check for next pressed
     ldh  a, [hJoypadState2]
-    and  J_SELECT
-    cp J_SELECT
-    jp nz, .awakening_inventory_select_end
+    and  J_START
+    cp J_START
+    jp nz, .awakening_inventory_select_next_end
 
     ; Load inventory address into HL
     ld   a, [wInventorySelection]
@@ -3432,26 +3430,61 @@ moveInventoryCursor::
     ld b, $00
     add  hl, bc
 
-.awakening_inventory_select_loop
+.awakening_inventory_select_next_loop
     ld a, [hl]
     inc a
 
     cp (INVENTORY_MAX+1); Check for overflow
-    jp nz, .awakening_inventory_select_store
+    jp nz, .awakening_inventory_select_next_store
     ld a, INVENTORY_EMPTY
 ; store weaponVal
-.awakening_inventory_select_store
+.awakening_inventory_select_next_store
     ld  [hl], a
 ; test weaponVal
     ;call .test_weapon_3_valid
-    ;jp z, .awakening_inventory_select_loop
-.awakening_inventory_select_loop_end
+    ;jp z, ..awakening_inventory_select_next_loop
+.awakening_inventory_select_next_loop_end
     ld b, $00
     ld c, $0B
     ld e, $01
     call DrawInventorySlots
-.awakening_inventory_select_end
+.awakening_inventory_select_next_end
 
+.awakening_inventory_select_prev
+    ; Check for next pressed
+    ldh  a, [hJoypadState2]
+    and  J_SELECT
+    cp J_SELECT
+    jp nz, .awakening_inventory_select_prev_end
+
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld c, a
+    ld b, $00
+    add  hl, bc
+
+.awakening_inventory_select_prev_loop
+    ld a, [hl]
+    dec a
+
+    cp $FF; Check for overflow
+    jp nz, .awakening_inventory_select_prev_store
+    ld a, INVENTORY_MAX
+; store weaponVal
+.awakening_inventory_select_prev_store
+    ld  [hl], a
+; test weaponVal
+    ;call .test_weapon_3_valid
+    ;jp z, ..awakening_inventory_select_prev_loop
+.awakening_inventory_select_prev_loop_end
+    ld b, $00
+    ld c, $0B
+    ld e, $01
+    call DrawInventorySlots
+.awakening_inventory_select_prev_end
+
+.awakening_inventory_select_end
 
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
     ld   [wC1B6], a                               ; $5F09: $EA $B6 $C1

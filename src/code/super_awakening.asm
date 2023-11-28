@@ -237,7 +237,7 @@ SuperAwakening::
     ld [hl], INVENTORY_SWORD
 
 .use_weapon_2_end
-/*
+
 .use_weapon_3
     
     ; Check for button input on weapon3
@@ -247,12 +247,12 @@ SuperAwakening::
     jp nz, .use_weapon_3_end
 
     ; Set weapon Slot A
-    ld a, [wInventoryItems_override.Weapon3]
+    ld a, [wSuperAwakening.Weapon3_Value]
     ld hl, wInventoryItems.AButtonSlot
     ld [hl], a
 
 .use_weapon_3_end
-*/
+
 .use_weapon_4
     
     ; Check for button input on weapon4
@@ -271,7 +271,7 @@ SuperAwakening::
 ;
 ; Change Weapon Hotkeys
 ;
-/*
+
 .change_weapon3
 .dec_weapon3
     ; Check for both buttons button down
@@ -280,7 +280,7 @@ SuperAwakening::
     cp  (J_START | J_UP)
     jp nz, .dec_weapon3_end
 
-    ; check if up toggled this frame
+    ; check if left toggled this frame
     ldh a, [hJoypadState2]
     and J_UP
     cp  J_UP
@@ -289,48 +289,85 @@ SuperAwakening::
     jp .dec_weapon3_end ; This is a double-hold frame, not a toggle frame, do nothing
 
 .dec_weapon3_loop
-; next weaponVal
-    ld  a, [wInventoryItems_override.Weapon3]
+; next weapon index
+    ld  a, [wSuperAwakening.Weapon3_Inventory_Index]
     dec a
-    cp $FF ; check we've wrapped around 0
+    cp $FF ; check if we're wraped below 0
     jp nz, .dec_weapon3_loop_store
-    ld a, INVENTORY_MAX ; Last inventory weapon
+    ld a, OVERRIDE_INVENTORY_MAX
 ; store weaponVal
 .dec_weapon3_loop_store
-    ld  [wInventoryItems_override.Weapon3], a
+    ld  [wSuperAwakening.Weapon3_Inventory_Index], a
+; get weapon val
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl]
 ; test weaponVal
-    call .test_weapon_3_valid
+    ; test weapon 4
+    ld hl, wSuperAwakening.Weapon4_Value
+    cp [hl] ; Check if this is weapon3
     jp z, .dec_weapon3_loop
-.weapon_dec_loop_end
+
+    ; Check if this inventory slot is empty
+    cp INVENTORY_EMPTY
+    jp z, .dec_weapon3_loop
+
+.dec_weapon3_loop_end
+    ; a is the new value, b is the new inventory index value
+    ; write weapon3 value to display
+    ld hl, wSuperAwakening.Weapon3_Value
+    ld [hl], a
+
     jp .change_weapon3_end ; Skip the increment check
 .dec_weapon3_end
+
 
 .inc_weapon3
     ; Check for button press
     ldh a, [hJoypadState2]
     and J_START
     cp J_START
-    jp nz, .inc_weapon3_end ; Check decrement next
+    jp nz, .inc_weapon3_end
 
 .inc_weapon3_loop
-; next weaponVal
-    ld  a, [wInventoryItems_override.Weapon3]
+; next weapon index
+    ld  a, [wSuperAwakening.Weapon3_Inventory_Index]
     inc a
-    cp (INVENTORY_MAX+1) ; check if we're beyond the inventory max
+    cp (OVERRIDE_INVENTORY_MAX+1) ; check if we're beyond the inventory max
     jp nz, .inc_weapon3_loop_store
-    ld a, INVENTORY_BOMBS ; Bombs are first weapon, since we skip INVENTORY_EMPTY and INVENTORY_SWORD
-; store weaponVal
+    ld a, 0
+; store weapon index
 .inc_weapon3_loop_store
-    ld  [wInventoryItems_override.Weapon3], a
-; test weaponVal
-    call .test_weapon_3_valid
+    ld  [wSuperAwakening.Weapon3_Inventory_Index], a
+; get weapon val
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl]
+; test weapon Val is valid
+    ; test weapon 4
+    ld hl, wSuperAwakening.Weapon4_Value
+    cp [hl] ; Check if this is weapon3
     jp z, .inc_weapon3_loop
+
+    ; Check if this inventory slot is empty
+    cp INVENTORY_EMPTY
+    jp z, .inc_weapon3_loop
+    
 .inc_weapon3_loop_end
+    ; a is the new value, b is the new inventory index value
+    ; write weapon3 value to display
+    ld hl, wSuperAwakening.Weapon3_Value
+    ld [hl], a
+
 .inc_weapon3_end
 .change_weapon3_end
-*/
-.change_weapon4
 
+
+.change_weapon4
 .dec_weapon4
     ; Check for both buttons button down
     ldh a, [hPressedButtonsMask2]
