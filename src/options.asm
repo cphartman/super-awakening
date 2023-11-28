@@ -17,7 +17,7 @@
 ; - Dialogue debugger  (Marin will become a text-debugging object if your name begins with one space)
 ; - Jump to credits    (Marin will trigger the ending if your name begins with two spaces)
 
-ENABLE_DEBUG_1 equ 1
+;ENABLE_DEBUG_1 equ 1
 
 
 ;

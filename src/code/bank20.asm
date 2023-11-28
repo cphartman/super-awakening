@@ -2814,6 +2814,7 @@ jr_020_5B76:
     ld   [hl+], a                                 ; $5B7B: $22
     ld   a, c                                     ; $5B7C: $79
     inc  de                                       ; $5B7D: $13
+.awakening_load_bracer_number_into_draw_command
     ld   [hl+], a                                 ; $5B7E: $22
     ret                                           ; $5B7F: $C9
 
@@ -3134,49 +3135,20 @@ DrawInventorySlots::
 ; Draws the inventory slots
 ; Draw entire inventory for the pause screen
 InventoryLoad3Handler::
-    ;call SuperAwakening.SetupPauseInventory
-    ld   a, [wC154]                               ; $5D25: $FA $54 $C1
-    ld   c, a                                     ; $5D28: $4F
-    ld   b, $00                                   ; $5D29: $06 $00
-    ld   e, $FF                                   ; $5D2B: $1E $FF
+
 
 .awakening_populate_inventory
-    ; Reset the inventory slots
+    ; Reset the inventory slots for display
     ld hl, wSuperAwakening.Weapon4_Value
     ld a, INVENTORY_SHIELD
     ldi [hl], a
     ld a, INVENTORY_SWORD
     ldi [hl], a
-    
-    ; test first inventory slot
-    ld a, [hl]
-    and $0F
-    cp 0
-    jp nz, .awakening_populate_inventory_end
 
-.awakening_populate_inventory_initialize
-    ld a, INVENTORY_BOW
-    ldi [hl], a
-    ld a, INVENTORY_BOOMERANG
-    ldi [hl], a
-    ld a, INVENTORY_ROCS_FEATHER
-    ldi [hl], a
-    ld a, INVENTORY_PEGASUS_BOOTS
-    ldi [hl], a
-    ld a, INVENTORY_HOOKSHOT
-    ldi [hl], a
-    ld a, INVENTORY_POWER_BRACELET
-    ldi [hl], a
-    ld a, $00
-    ldi [hl], a
-    ld a, $00
-    ldi [hl], a
-    ld a, $00
-    ldi [hl], a
-    ld a, $00
-    ldi [hl], a
-.awakening_populate_inventory_end
-
+    ld   a, [wC154]                               ; $5D25: $FA $54 $C1
+    ld   c, a                                     ; $5D28: $4F
+    ld   b, $00                                   ; $5D29: $06 $00
+    ld   e, $FF                                   ; $5D2B: $1E $FF
     call DrawInventorySlots                       ; $5D2D: $CD $9C $5C
     xor  a                                        ; $5D30: $AF
     ld   [wC154], a                               ; $5D31: $EA $54 $C1
@@ -3412,79 +3384,7 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
 
 moveInventoryCursor::
 
-
-    ; Handle inventory select code
-.awakening_inventory_select
-    
-.awakening_inventory_select_next
-    ; Check for next pressed
-    ldh  a, [hJoypadState2]
-    and  J_START
-    cp J_START
-    jp nz, .awakening_inventory_select_next_end
-
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld c, a
-    ld b, $00
-    add  hl, bc
-
-.awakening_inventory_select_next_loop
-    ld a, [hl]
-    inc a
-
-    cp (INVENTORY_MAX+1); Check for overflow
-    jp nz, .awakening_inventory_select_next_store
-    ld a, INVENTORY_EMPTY
-; store weaponVal
-.awakening_inventory_select_next_store
-    ld  [hl], a
-; test weaponVal
-    ;call .test_weapon_3_valid
-    ;jp z, ..awakening_inventory_select_next_loop
-.awakening_inventory_select_next_loop_end
-    ld b, $00
-    ld c, $0B
-    ld e, $01
-    call DrawInventorySlots
-.awakening_inventory_select_next_end
-
-.awakening_inventory_select_prev
-    ; Check for next pressed
-    ldh  a, [hJoypadState2]
-    and  J_SELECT
-    cp J_SELECT
-    jp nz, .awakening_inventory_select_prev_end
-
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld c, a
-    ld b, $00
-    add  hl, bc
-
-.awakening_inventory_select_prev_loop
-    ld a, [hl]
-    dec a
-
-    cp $FF; Check for overflow
-    jp nz, .awakening_inventory_select_prev_store
-    ld a, INVENTORY_MAX
-; store weaponVal
-.awakening_inventory_select_prev_store
-    ld  [hl], a
-; test weaponVal
-    ;call .test_weapon_3_valid
-    ;jp z, ..awakening_inventory_select_prev_loop
-.awakening_inventory_select_prev_loop_end
-    ld b, $00
-    ld c, $0B
-    ld e, $01
-    call DrawInventorySlots
-.awakening_inventory_select_prev_end
-
-.awakening_inventory_select_end
+    call SuperAwakening_Inventory.awakening_inventory_select
 
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
     ld   [wC1B6], a                               ; $5F09: $EA $B6 $C1
@@ -3580,7 +3480,7 @@ jr_020_5F59:
     ld   [hl], JINGLE_MOVE_SELECTION              ; $5F91: $36 $0A
     ld   e, a                                     ; $5F93: $5F
     ld   d, $00                                   ; $5F94: $16 $00
-    ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    ld   hl, wSuperAwakening.Weapon_Inventory            ; $5F96: $21 $02 $DB
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
@@ -6787,3 +6687,197 @@ jr_020_7ec8:
 
     ret                                           ; $7F19: $C9
 ENDC
+
+
+SuperAwakening_Inventory::
+    ; Handle inventory select code
+.awakening_inventory_select
+    
+.awakening_inventory_select_next
+    ; Check for next pressed
+    ldh  a, [hJoypadState2]
+    and  J_START
+    cp J_START
+    jp nz, .awakening_inventory_select_next_end
+
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld c, a
+    ld b, $00
+    add  hl, bc
+    
+; in: reg_a = initial inventory.  
+; out: reg_b = final inventory value
+; increments until it doesnt match any .Weapon_Inventory values or 0
+    ld a, [hl]
+    ld [hl], $00 ; clear the inventory value
+.awakening_inventory_select_next_loop
+    inc a
+
+    cp (INVENTORY_MAX+1); Check for overflow
+    jp nz, .awakening_inventory_select_next_loop_test
+    ; empty inventory is always valid
+    ld b, 0
+    jp .awakening_inventory_select_next_loop_end
+
+; test weaponVal
+.awakening_inventory_select_next_loop_test
+    cp INVENTORY_SWORD
+    jp z, .awakening_inventory_select_next_loop
+
+    cp INVENTORY_SHIELD
+    jp z, .awakening_inventory_select_next_loop
+
+    ld b, a ; reg_b holds desired inventory value (not empty)
+    ld hl, wSuperAwakening.Weapon_Inventory
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 1
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 2
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 3
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 4
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 5
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 6
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 7
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 8
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 9
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_next_loop ; inventory 10
+
+; store weaponVal
+.awakening_inventory_select_next_loop_end
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld e, a
+    ld d, $00
+    add  hl, de
+
+    ld  [hl], b ; store incremented weapon value into inventory
+
+.awakening_inventory_select_next_refresh
+
+    ; Redraw this inventory tile
+    ld   a, [wInventorySelection]
+    inc a
+    ld e, a
+    inc a
+    ld c, a
+    ld b, $00
+    call DrawInventorySlots
+
+.awakening_inventory_select_next_end
+
+.awakening_inventory_select_prev
+    ; Check for prev pressed
+    ldh  a, [hJoypadState2]
+    and  J_SELECT
+    cp J_SELECT
+    jp nz, .awakening_inventory_select_prev_end
+
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld c, a
+    ld b, $00
+    add  hl, bc
+    
+; in: reg_a = initial inventory.  
+; out: reg_b = final inventory value
+; increments until it doesnt match any .Weapon_Inventory values or 0
+    ld a, [hl]
+    ld [hl], $00 ; clear the inventory value
+.awakening_inventory_select_prev_loop
+    dec a
+    ld b, a
+    cp $00
+    jp z, .awakening_inventory_select_prev_loop_end  ; empty inventory is always valid
+
+    ; Check for out of bounds
+    cp $FF
+    jp nz, .awakening_inventory_select_prev_loop_test  ; loop
+    ld a, INVENTORY_MAX
+
+; test weaponVal
+.awakening_inventory_select_prev_loop_test
+    cp INVENTORY_SWORD
+    jp z, .awakening_inventory_select_prev_loop
+
+    cp INVENTORY_SHIELD
+    jp z, .awakening_inventory_select_prev_loop
+
+    ld b, a ; reg_b holds desired inventory value (not empty)
+    ld hl, wSuperAwakening.Weapon_Inventory
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 1
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 2
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 3
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 4
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 5
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 6
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 7
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 8
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 9
+    ldi a, [hl]
+    cp b
+    jp z, .awakening_inventory_select_prev_loop ; inventory 10
+
+; store weaponVal
+.awakening_inventory_select_prev_loop_end
+    ; Load inventory address into HL
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld e, a
+    ld d, $00
+    add  hl, de
+
+    ld  [hl], b ; store incremented weapon value into inventory
+
+.awakening_inventory_select_prev_refresh
+    ; Redraw this inventory tile
+    ld   a, [wInventorySelection]
+    inc a
+    ld e, a
+    inc a
+    ld c, a
+    ld b, $00
+    call DrawInventorySlots
+
+.awakening_inventory_select_prev_end
+.awakening_inventory_select_end
+    ret

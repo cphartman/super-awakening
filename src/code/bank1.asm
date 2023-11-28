@@ -4,18 +4,18 @@
 ;
 
 DebugSaveFileData::
-    db INVENTORY_SHIELD          ; B button       ; $4667
-    db INVENTORY_SWORD           ; A button       ; $4668
-    db INVENTORY_BOMBS           ; Inventory slots ; $4669
-    db INVENTORY_POWER_BRACELET  ; .              ; $466A
-    db INVENTORY_BOW             ; .              ; $466B
+    db 0          ; B button       ; $4667
+    db 0           ; A button       ; $4668
+    db INVENTORY_BOW           ; Inventory slots ; $4669
+    db INVENTORY_BOMBS      ; .              ; $466A
+    db INVENTORY_BOOMERANG             ; .              ; $466B
     db INVENTORY_HOOKSHOT        ; .              ; $466C
-    db INVENTORY_MAGIC_ROD       ; .              ; $466D
-    db INVENTORY_PEGASUS_BOOTS   ; .              ; $466E
-    db INVENTORY_OCARINA         ; .              ; $466F
-    db INVENTORY_ROCS_FEATHER    ; .              ; $4670
-    db INVENTORY_SHOVEL          ; .              ; $4671
-    db INVENTORY_MAGIC_POWDER    ; .              ; $4672
+    db INVENTORY_PEGASUS_BOOTS       ; .              ; $466D
+    db INVENTORY_ROCS_FEATHER   ; .              ; $466E
+    db 0         ; .              ; $466F
+    db 0    ; .              ; $4670
+    db 0          ; .              ; $4671
+    db 0    ; .              ; $4672
 
     db 1  ; Have Flippers                         ; $4673
     db 1  ; Have Medicine                         ; $4674
@@ -62,7 +62,9 @@ InitSaveFiles::
     ; write a default save file with everything unlocked
     ld   a, [ROM_DebugTool1]                      ; $46BC: $FA $03 $00
     and  a                                        ; $46BF: $A7
-    jp   z, .return                               ; $46C0: $CA $93 $47
+    
+    ; Always write debug save file
+    nop ; jp   z, .return                               ; $46C0: $CA $93 $47
 
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00
@@ -255,6 +257,9 @@ MaxHeartsToStartingHealthTable::
     db 10 FULL_HEARTS  ; 14 heart containers      ; $52A3
 
 ; Main entry point for loading a saved game
+
+; 4A02
+
 LoadSavedFile::
     xor  a                                      ; Can never save in a side-scrolling area ; $52A4: $AF
     ldh  [hIsSideScrolling], a                  ; so make sure that flag is not set ; $52A5: $E0 $F9
@@ -424,6 +429,9 @@ jr_001_531D::
     ldh  [hLinkDirection], a                      ; $538C: $E0 $9E
 
 .finish
+
+    call SuperAwakening_Setup
+
     ld   a, TILEMAP_INVENTORY                     ; $538E: $3E $02
     ld   [wBGMapToLoad], a                        ; $5390: $EA $FF $D6
     ret                                           ; $5393: $C9
@@ -3234,3 +3242,34 @@ UpdateMinimapEntranceArrowAndReturn::
     ret                                           ; $6E18: $C9
 
 include "code/intro.asm"
+
+SuperAwakening_Setup::
+    ;ld  a, 0
+    ;Copy inventory from the save file
+    ld hl, wInventoryItems.subscreen
+    
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon_Inventory
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon_Inventory + 1
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon_Inventory + 2
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon_Inventory + 3
+    ld [hl], a
+    pop hl
+
+    ret

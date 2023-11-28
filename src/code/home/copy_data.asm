@@ -111,7 +111,8 @@ DrawCommandToVRAM::
     jr   .fillColumn                              ; $2953: $18 $2F
 
 .copyRow
-    ; Copy one byte from [de] to [hl]
+    ; Copy one byte from [de] to [hl], sets the tile map index
+.awakening_set_the_tilemap_index
     ld   a, [de]                                  ; $2955: $1A
     ldi  [hl], a                                  ; $2956: $22
     ; If 'dest mod 32' is 0…
