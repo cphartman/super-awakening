@@ -5,7 +5,7 @@
 ![Super Links Awakening](super-lzdx.gif)
 
 ## Play now
-Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
+Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/).
 
 ## New Gameplay Features
 * 🗡 Sword always equipped to `B` button
@@ -34,7 +34,11 @@ The inventory menu allows you to configure up to 10 inventory slots.  Each inven
 ## How?
 `Super Game Boy` exposes up to 4 controller inputs to `Game Boy` games.  This feature enabled local multiplayer via `Super Game Boy` for games like `Street Fighter 2` or `Bomberman`.
 
-The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. Custom functionality is implemented for each of the additional inputs.
+| Street Fighter 2 | Bomberman |
+| ---- | ---- |
+| ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
+
+The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implementes custom functionality  the additional player2 inputs.
 
 ## Setup
 
@@ -43,35 +47,37 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 
 ### Controller Mapping
 
-**IRL Controller** is the the real life controller used to play the game.  **SGB Controller** is the input in to the `Super Game Boy`.
+**IRL Controller** is the the real life controller used to play the game.  **SGB Controller** is the input in to the `Super Game Boy`.  Note that the `A` and `B` buttons on the GB Controller not mapped.
 
 | IRL Controller  | SGB Controller | SGB Button |
 | ------------- | ------------- | ------------- |
-| `Up` | Controller 1 |  `Up`  |
-| `Down` | Controller 1 |  `Down`  |
-| `Left` | Controller 1 |  `Left`  |
-| `Right` | Controller 1 |  `Right`  |
-| `Start` | Controller 1 |  `Start`  |
-| `Select` | Controller 1 |  `Select`  |
-| `A` | Controller 2 |  `Right`  |
-| `B` | Controller 2 |  `Down`  |
-| `X` | Controller 2 |  `Up`  |
-| `Y` | Controller 2 |  `Left`  |
-| `R` | Controller 2 |  `Start`  |
-| `L` | Controller 2 |  `Select`  |
+| `Up` | Player 1 |  `Up`  |
+| `Down` | Player 1 |  `Down`  |
+| `Left` | Player 1 |  `Left`  |
+| `Right` | Player 1 |  `Right`  |
+| `Start` | Player 1 |  `Start`  |
+| `Select` | Player 1 |  `Select`  |
+| `A` | Player 2 |  `Right`  |
+| `B` | Player 2 |  `Down`  |
+| `X` | Player 2 |  `Up`  |
+| `Y` | Player 2 |  `Left`  |
+| `R` | Player 2 |  `Start`  |
+| `L` | Player 2 |  `Select`  |
 
-![IRL Controller with SGB Controller Buttons](input-mapping-diagram.png)
+![IRL Controller with SGB Controller Buttons](controller-mapping.svg)
 
-*IRL Controller, with SGB Controller button mapping*
+*Diagram showing the IRL Controller, with SGB Controller 2 button mapping*
+
 
 ## Compatibility
 | System | Compatibility | Notes |
 | ---- | ---- | ---- |
-| SNES | ✔️ | Confirmed |
-| Mesen | ✔️ | Confirmed |
-| BGB | ✔️ | Confirmed |
+| SNES | ✔️ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
+| Mesen | ✔️ | Set `Gameboy` model to  `Super Game Boy`.  Map the IRL controller/keyboard input to `SNES Port 2 Controller`. |
+| BGB | ✔️ | Set `Emulated System` to  `Super Gameboy`.  Map the IRL controller/keyboard input to `joypad1`. |
 | EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
-| Retroarch | ❌ | `mgba` core does not support Player 2 |
+| mGBA | ❌ | Does not support Player 2 |
+| Retroarch | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
 | Analogue Pocket | ❌ | `Spiritualized.SuperGB` core does not support controller remapping |
 
 ## Limitations
