@@ -40,7 +40,7 @@ The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandoc
 | ---- | ---- |
 | ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
 
-The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional player2 inputs.
+The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional controller 2 inputs.
 
 ## Setup
 
@@ -49,7 +49,7 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 
 ### Controller Mapping
 
-`IRL Controller` is the physical controller used to play the romhack.  `SGB Controller` is the virtual controller input for the `Super Game Boy` system.
+`IRL Controller` is the physical controller used to play the romhack.  `SGB Controller` is the controller input for the `Super Game Boy` system.
 
 | IRL Controller  | SGB Controller | SGB Button |
 | ------------- | ------------- | ------------- |
@@ -73,12 +73,12 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 ### Unused `Super Game Boy` controller buttons
 The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are not used in the romhack.  Pressing `A` or `B` on `SBG Controller 1` will have unexpected results in the games.
 
-## Compatibility
+## System Compatibility
 | System | Compatibility | Notes |
 | ---- | ---- | ---- |
 | SNES | ✔️ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
-| Mesen | ✔️ | Set `Gameboy` model to  `Super Game Boy`.  Map the IRL controller/keyboard input to `SNES Port 2 Controller`. |
-| BGB | ✔️ | Set `Emulated System` to  `Super Gameboy`.  Map the IRL controller/keyboard input to `joypad1`. |
+| Mesen | ✔️ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
+| BGB | ✔️ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. |
 | EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
 | mGBA | ❌ | Does not support Player 2 |
 | Retroarch | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
