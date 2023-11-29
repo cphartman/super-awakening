@@ -12,7 +12,7 @@ Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.g
 * ⛨ Shield always equipped to `A` button
 * 💣 Weapon inventory equipped to `X` and `Y` buttons 
 * 🏹 Switch weapon inventory with `R` and `L` buttons
-* 🎮 Customizable inventory system
+* 💼 Customizable inventory system
 
 ![Super Controller Diagram](super-controller-diagram.png)
 
