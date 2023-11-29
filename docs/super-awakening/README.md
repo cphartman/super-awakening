@@ -76,10 +76,10 @@ The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are no
 ## System Compatibility
 | System | Compatibility | Notes |
 | ---- | ---- | ---- |
-| SNES | ✔️ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
-| Mesen | ✔️ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
-| BGB | ✔️ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. |
-| EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
+| SNES | ✅ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
+| Mesen | ✅ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
+| BGB | ✅ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. |
+| EmulatorJS | ⚠️ | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
 | mGBA | ❌ | Does not support controller 2 remapping |
 | Retroarch | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
 | Analogue Pocket | ❌ | `Spiritualized.SuperGB` does not support controller 2 remapping |
