@@ -292,7 +292,13 @@ SuperAwakening::
     
     jp .dec_weapon3_end ; This is a double-hold frame, not a toggle frame, do nothing
 
+    ld d, $00 ; reg_d is a loop counter
 .dec_weapon3_loop
+    inc d
+    ld a, d
+    cp $0A
+    jp z, .dec_weapon3_end
+
 ; next weapon index
     ld  a, [wSuperAwakening.Weapon3_Inventory_Index]
     dec a
@@ -335,7 +341,12 @@ SuperAwakening::
     cp J_START
     jp nz, .inc_weapon3_end
 
+    ld d, 0 ; reg_d will be a counter to prevent infinite looping
 .inc_weapon3_loop
+    inc d
+    ld a, d
+    cp $0A
+    jp z, .inc_weapon3_end
 ; next weapon index
     ld  a, [wSuperAwakening.Weapon3_Inventory_Index]
     inc a
@@ -387,7 +398,13 @@ SuperAwakening::
     
     jp .dec_weapon4_end ; This is a double-hold frame, not a toggle frame, do nothing
 
+    ld d, $00 ; d is a loop counter
 .dec_weapon4_loop
+    inc d
+    ld a, d
+    cp $0A
+    jp z, .dec_weapon4_end
+
 ; next weapon index
     ld  a, [wSuperAwakening.Weapon4_Inventory_Index]
     dec a
@@ -430,7 +447,13 @@ SuperAwakening::
     cp J_SELECT
     jp nz, .inc_weapon4_end
 
+    ld d, $00 ; reg_d is a loop counter
 .inc_weapon4_loop
+    inc d
+    ld a, d
+    cp $0A
+    jp z, .inc_weapon4_end
+
 ; next weapon index
     ld  a, [wSuperAwakening.Weapon4_Inventory_Index]
     inc a
