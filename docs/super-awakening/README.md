@@ -4,21 +4,32 @@
 
 ![Super Links Awakening](super-lzdx.gif)
 
-## Play Online
-Load the rom into the online emulator:
-https://cphartman.github.io/projects/super-links-awakening/
+## Play now
+Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
 
 ## New Gameplay Features
 * 🗡 Sword always equipped to `B` button
 * ⛨ Shield always equipped to `A` button
 * 💣 Weapon inventory equipped to `X` and `Y` buttons 
 * 🏹 Switch weapon inventory with `R` and `L` buttons
+* 🎮 Customizable inventory system
 
 ![Super Controller Diagram](super-controller-diagram.png)
 
-## Play Online
-Load the rom into the online emulator:
-https://cphartman.github.io/projects/super-links-awakening/
+### Customizable Inventory System
+Use the pause menu to build a custom inventory.  The inventory is used when toggling hotkey weapons.
+
+### Gameplay Controls
+The sword and shield are automatically equiped to the A and B buttons.  There are 2 hotkey items available with the X and Y buttons.  The items currently equiped to the hotkeys are displayed on screen in place of the original A/B items.  
+* Press R to toggle hotkey X to the next inventory slot item.
+* Press L to toggle hotkey Y to the next inventory slot item.
+* Use R+X or R+Y to the previous inventory slot item.
+
+### Pause / Inventory Menu Controls
+The inventory menu allows you to configure up to 10 inventory slots.  Each inventory slot can have a different weapon or no weapon.  The inventory slots set which weapons are available when R or L is pressed during gameplay.
+* Use arrow keys to select an inventory slot.
+* Press R to change selected inventory slot to next item.
+* Press L to change selected inventory slot to the previous item.
 
 ## How?
 `Super Game Boy` exposes up to 4 controller inputs to `Game Boy` games.  This feature enabled local multiplayer via `Super Game Boy` for games like `Street Fighter 2` or `Bomberman`.
@@ -52,3 +63,17 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 ![IRL Controller with SGB Controller Buttons](input-mapping-diagram.png)
 
 *IRL Controller, with SGB Controller button mapping*
+
+## Compatibility
+| System | Compatibility | Notes |
+| ---- | ---- | ---- |
+| SNES | ✔️ | Confirmed |
+| Mesen | ✔️ | Confirmed |
+| BGB | ✔️ | Confirmed |
+| EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
+| Retroarch | ❌ | `mgba` core does not support Player 2 |
+| Analogue Pocket | ❌ | `Spiritualized,SuperGB` core does not support controller remapping |
+
+## Limitations
+* All items always available.  Item Progression is not tracked for new games.
+* Inventory does not save
