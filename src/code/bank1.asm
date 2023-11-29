@@ -4,8 +4,8 @@
 ;
 
 DebugSaveFileData::
-    db 0          ; B button       ; $4667
-    db 0           ; A button       ; $4668
+    db INVENTORY_BOW          ; B button       ; $4667
+    db INVENTORY_BOMBS           ; A button       ; $4668
     db INVENTORY_BOW           ; Inventory slots ; $4669
     db INVENTORY_BOMBS      ; .              ; $466A
     db INVENTORY_BOOMERANG             ; .              ; $466B
@@ -3244,31 +3244,92 @@ UpdateMinimapEntranceArrowAndReturn::
 include "code/intro.asm"
 
 SuperAwakening_Setup::
-    ;ld  a, 0
-    ;Copy inventory from the save file
-    ld hl, wInventoryItems.subscreen
-    
+
+    ; Set Weapon3/Weapon4 Inventory index default
+    ld hl, wSuperAwakening.Weapon4_Inventory_Index
+    ld a, 0
+    ldi [hl], a
+    inc a
+    ldi [hl], a
+
+; This isn't loading the A/B weapons, maybe getting overwritten?? At least it loads the rest of the inventory
+
+    ld hl, wInventoryItems
     ldi a, [hl]
     push hl
-    ld hl, wSuperAwakening.Weapon_Inventory
+    ld hl, wSuperAwakening.Weapon4_Value
     ld [hl], a
     pop hl
 
     ldi a, [hl]
     push hl
-    ld hl, wSuperAwakening.Weapon_Inventory + 1
+    ld hl, wSuperAwakening.Weapon4_Value + 1
     ld [hl], a
     pop hl
 
     ldi a, [hl]
     push hl
-    ld hl, wSuperAwakening.Weapon_Inventory + 2
+    ld hl, wSuperAwakening.Weapon4_Value + 2
     ld [hl], a
     pop hl
 
     ldi a, [hl]
     push hl
-    ld hl, wSuperAwakening.Weapon_Inventory + 3
+    ld hl, wSuperAwakening.Weapon4_Value + 3
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 4
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 5
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 6
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 7
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 8
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 9
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 10
+    ld [hl], a
+    pop hl
+
+    ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 11
+    ld [hl], a
+    pop hl
+
+        ldi a, [hl]
+    push hl
+    ld hl, wSuperAwakening.Weapon4_Value + 12
     ld [hl], a
     pop hl
 
