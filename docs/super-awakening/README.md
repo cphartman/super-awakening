@@ -5,7 +5,7 @@
 ![Super Links Awakening](super-lzdx.gif)
 
 ## Play now
-Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/).
+Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
 
 ## New Gameplay Features
 * 🗡 Sword always equipped to `B` button
