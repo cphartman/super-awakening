@@ -3136,14 +3136,7 @@ DrawInventorySlots::
 ; Draw entire inventory for the pause screen
 InventoryLoad3Handler::
 
-
-.awakening_populate_inventory
-    ; Reset the inventory slots for display
-    ld hl, wSuperAwakening.Weapon4_Value
-    ld a, INVENTORY_SHIELD
-    ldi [hl], a
-    ld a, INVENTORY_SWORD
-    ldi [hl], a
+    call SuperAwakening_Inventory.awakening_inventory_open
 
     ld   a, [wC154]                               ; $5D25: $FA $54 $C1
     ld   c, a                                     ; $5D28: $4F
@@ -4195,6 +4188,7 @@ CloseInventory:
     ld   [wPaletteUnknownE], a                    ; $643E: $EA $D5 $DD
     ld   a, JINGLE_CLOSE_INVENTORY                ; $6441: $3E $12
     ldh  [hJingle], a                             ; $6443: $E0 $F2
+    call SuperAwakening_Inventory.awakening_inventory_close
 .return:
     ret                                           ; $6445: $C9
 
@@ -6774,7 +6768,6 @@ SuperAwakening_Inventory::
     ld  [hl], b ; store incremented weapon value into inventory
 
 .awakening_inventory_select_next_refresh
-
     ; Redraw this inventory tile
     ld   a, [wInventorySelection]
     inc a
@@ -6783,6 +6776,33 @@ SuperAwakening_Inventory::
     ld c, a
     ld b, $00
     call DrawInventorySlots
+
+    ; Inventory item may have change, so refresh their values and re-draw
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon3 index
+    ld hl, wSuperAwakening.Weapon3_Value
+    ld [hl], a ; Set item at weapon 3 value
+
+    ; Inventory item may have change, so refresh their values and re-draw
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon4 index
+    ld hl, wSuperAwakening.Weapon4_Value
+    ld [hl], a ; Set item at weapon4 value
+ 
+    ; Refresh A/B inventory tiles
+    ld b, $00
+    ld c, $01
+    ld e, $FF
+    call DrawInventorySlots
+.awakening_inventory_select_next_refresh_end
 
 .awakening_inventory_select_next_end
 
@@ -6878,6 +6898,41 @@ SuperAwakening_Inventory::
     ld b, $00
     call DrawInventorySlots
 
+    ; Inventory item may have change, so refresh their values and re-draw
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon3 index
+    ld hl, wSuperAwakening.Weapon3_Value
+    ld [hl], a ; Set item at weapon 3 value
+
+    ; Inventory item may have change, so refresh their values and re-draw
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon4 index
+    ld hl, wSuperAwakening.Weapon4_Value
+    ld [hl], a ; Set item at weapon4 value
+ 
+    ; Refresh A/B inventory tiles
+    ld b, $00
+    ld c, $01
+    ld e, $FF
+    call DrawInventorySlots
+.awakening_inventory_select_prev_refresh_end
+
 .awakening_inventory_select_prev_end
 .awakening_inventory_select_end
+    ret
+
+.awakening_inventory_close
+
+    ret
+
+.awakening_inventory_open
+
     ret

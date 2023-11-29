@@ -3245,15 +3245,7 @@ include "code/intro.asm"
 
 SuperAwakening_Setup::
 
-    ; Set Weapon3/Weapon4 Inventory index default
-    ld hl, wSuperAwakening.Weapon4_Inventory_Index
-    ld a, 0
-    ldi [hl], a
-    inc a
-    ldi [hl], a
-
-; This isn't loading the A/B weapons, maybe getting overwritten?? At least it loads the rest of the inventory
-
+    ; Copy saved inventory into override inventory
     ld hl, wInventoryItems
     ldi a, [hl]
     push hl
@@ -3332,5 +3324,33 @@ SuperAwakening_Setup::
     ld hl, wSuperAwakening.Weapon4_Value + 12
     ld [hl], a
     pop hl
+
+    ; Set Weapon3/Weapon4 Inventory index default
+    ld hl, wSuperAwakening.Weapon4_Inventory_Index
+    ld a, 0
+    ldi [hl], a
+    inc a
+    ldi [hl], a
+
+    ; Refresh inventory 3 value
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon3 index
+    ld hl, wSuperAwakening.Weapon3_Value
+    ld [hl], a ; Set item at weapon 3 value
+
+    ; Refresh inventory 4 value
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
+    ld a, [hl] ; Load inventory item at weapon4 index
+    ld hl, wSuperAwakening.Weapon4_Value
+    ld [hl], a ; Set item at weapon4 value
+    
 
     ret

@@ -271,6 +271,10 @@ SuperAwakening::
 ;
 ; Change Weapon Hotkeys
 ;
+    ; Skip all of this if we're not in the overworld
+    ld a, [wGameplayType]
+    cp GAMEPLAY_WORLD
+    jp nz, .change_weapon4_end
 
 .change_weapon3
 .dec_weapon3
