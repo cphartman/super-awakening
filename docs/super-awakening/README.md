@@ -1,6 +1,6 @@
 # Super Link's Awakening
 
-`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional functionality using `Super Game Boy` features.  This romhack enables new gameplay features that are designed to be played with an SNES controller.
+`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional gameplay functionality by using `Super Game Boy` functions.  The new gameplay features are designed to be played with an SNES controller.
 
 ![Super Links Awakening](super-lzdx.gif)
 
@@ -8,46 +8,48 @@
 Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
 
 ## New Gameplay Features
-* 🗡 Sword always equipped to `B` button
-* ⛨ Shield always equipped to `A` button
-* 💣 Weapon inventory equipped to `X` and `Y` buttons 
-* 🏹 Switch weapon inventory with `R` and `L` buttons
-* 💼 Customizable inventory system
+* 🗡 Sword equipped to `B` button
+* ⛨ Shield equipped to `A` button
+* 💣 Items equipped to `X` and `Y` buttons 
+* 🏹 Switch items with `R` and `L` buttons
+* 💼 Custom item inventory system
 
 ![Super Controller Diagram](controller-gameplay.svg)
 
-### Customizable Inventory System
-Use the pause menu to build a custom inventory.  The inventory is used when toggling hotkey weapons.
+### Custom Item Inventory System
+Use the shoulder buttons to quickly change though the items in your inventory.  Create a custom inventory of items to use in gameplay.
 
 ### Gameplay Controls
-The sword and shield are automatically equiped to the A and B buttons.  There are 2 hotkey items available with the X and Y buttons.  The items currently equiped to the hotkeys are displayed on screen in place of the original A/B items.  
-* Press R to toggle hotkey X to the next inventory slot item.
-* Press L to toggle hotkey Y to the next inventory slot item.
-* Use R+X or R+Y to the previous inventory slot item.
+The sword and shield are automatically equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped are displayed on screen during gameplay.  Use the shoulder buttons to change either equipped item.
+* Press `L` to change the item in `Y`
+* Press `R` to change the item in `X`
+* Use `L+Y` or `R+X` change to previous item
 
 ### Pause / Inventory Menu Controls
-The inventory menu allows you to configure up to 10 inventory slots.  Each inventory slot can have a different weapon or no weapon.  The inventory slots set which weapons are available when R or L is pressed during gameplay.
-* Use arrow keys to select an inventory slot.
-* Press R to change selected inventory slot to next item.
-* Press L to change selected inventory slot to the previous item.
+The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
+
+Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
+* Use `arrow keys` to select a slot.
+* Press `R` to change selected slot to the next item.
+* Press `L` to change selected slot to the previous item.
 
 ## How?
-`Super Game Boy` exposes up to 4 controller inputs to `Game Boy` games.  This feature enabled local multiplayer via `Super Game Boy` for games like `Street Fighter 2` or `Bomberman`.
+The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enabled local multiplayer with the `Super Game Boy` for some games.
 
 | Street Fighter 2 | Bomberman |
 | ---- | ---- |
 | ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
 
-The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implementes custom functionality  the additional player2 inputs.
+The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional player2 inputs.
 
 ## Setup
 
 * This romhack must be played using a `Super Game Boy`
-* Controller 1 and Controller 2 inputs for the `Super Game Boy` should both map to a single IRL controller
+* `Super Game Boy` Controller 1 and Controller 2 should both map to a single `IRL controller`.
 
 ### Controller Mapping
 
-**IRL Controller** is the the real life controller used to play the game.  **SGB Controller** is the input in to the `Super Game Boy`.  Note that the `A` and `B` buttons on the GB Controller not mapped.
+`IRL Controller` is the physical controller used to play the romhack.  `SGB Controller` is the virtual controller input for the `Super Game Boy` system.
 
 | IRL Controller  | SGB Controller | SGB Button |
 | ------------- | ------------- | ------------- |
@@ -66,8 +68,10 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 
 ![IRL Controller with SGB Controller Buttons](controller-mapping.svg)
 
-*Diagram showing the IRL Controller, with SGB Controller 2 button mapping*
+*Diagram showing the `IRL Controller` with `SGB Controller` button mapping*
 
+### Unused `Super Game Boy` controller buttons
+The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are not used in the romhack.  Pressing `A` or `B` on `SBG Controller 1` will have unexpected results in the games.
 
 ## Compatibility
 | System | Compatibility | Notes |

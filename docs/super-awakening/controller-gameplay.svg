@@ -354,21 +354,21 @@
      id="layer1"
      transform="scale(2,2) translate(20,1)">>
 <rect style="fill:#1599ff" x="325" y="60" width="73" height="20" rx="5" class="label-bg" />
-<text x="330" y="75" class="labels">Weapon 2</text>
+<text x="360" y="75" class="labels" text-anchor="middle">Item X</text>
 
 <rect style="fill:#39b54a"  x="281" y="95" width="73" height="20" rx="5" class="label-bg" />
-<text x="286" y="110" class="labels">Weapon 1</text>
+<text x="316" y="110" class="labels" text-anchor="middle">Item Y</text>
 
-<rect style="fill:#fe2e2e" x="382" y="95" width="51" height="20" rx="5" class="label-bg" />
-<text x="387" y="110" class="labels">Shield</text>
+<rect style="fill:#fe2e2e" x="377" y="95" width="63" height="20" rx="5" class="label-bg" />
+<text x="408" y="110" class="labels" text-anchor="middle">Shield</text>
 
-<rect style="fill:#ffc431" x="332" y="130" width="53" height="20" rx="5" class="label-bg" />
-<text x="337" y="145" class="labels">Sword</text>
+<rect style="fill:#ffc431" x="325" y="130" width="73" height="20" rx="5" class="label-bg" />
+<text x="360" y="145" class="labels" text-anchor="middle">Sword</text>
 
-<rect style="fill:#8a72e7" x="30" y="1" width="123" height="20" rx="5" class="label-bg" />
-<text x="35" y="15" class="labels">Change Weapon 1</text>
+<rect style="fill:#8a72e7" x="40" y="1" width="110" height="20" rx="5" class="label-bg" />
+<text x="95" y="15" class="labels" text-anchor="middle">Change Item Y</text>
 
-<rect style="fill:#b8b6db" x="295" y="1" width="123" height="20" rx="5" class="label-bg" />
-<text x="300" y="15" class="labels">Change Weapon 2</text>
+<rect style="fill:#b8b6db" x="305" y="1" width="110" height="20" rx="5" class="label-bg" />
+<text x="360" y="15" class="labels" text-anchor="middle">Change Item X</text>
 </g>
 </svg>
