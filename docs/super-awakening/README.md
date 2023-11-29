@@ -34,7 +34,7 @@ Your inventory has 10 different slots.  Each slot can have a different item.  A 
 * Press `L` to change selected slot to the previous item.
 
 ## How?
-The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enabled local multiplayer with the `Super Game Boy` for some games.
+The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer with the `Super Game Boy` for some games.
 
 | Street Fighter 2 | Bomberman |
 | ---- | ---- |
@@ -80,9 +80,9 @@ The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are no
 | Mesen | ✔️ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
 | BGB | ✔️ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. |
 | EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
-| mGBA | ❌ | Does not support Player 2 |
+| mGBA | ❌ | Does not support controller 2 remapping |
 | Retroarch | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
-| Analogue Pocket | ❌ | `Spiritualized.SuperGB` core does not support controller remapping |
+| Analogue Pocket | ❌ | `Spiritualized.SuperGB` does not support controller 2 remapping |
 
 ## Limitations
 * All items always available.  Item Progression is not tracked for new games.
