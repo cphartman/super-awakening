@@ -14,7 +14,7 @@ Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.g
 * 🏹 Switch weapon inventory with `R` and `L` buttons
 * 💼 Customizable inventory system
 
-![Super Controller Diagram](super-controller-diagram.png)
+![Super Controller Diagram](controller-gameplay.svg)
 
 ### Customizable Inventory System
 Use the pause menu to build a custom inventory.  The inventory is used when toggling hotkey weapons.
@@ -72,7 +72,7 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 | BGB | ✔️ | Confirmed |
 | EmulatorJS | ✔️* | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
 | Retroarch | ❌ | `mgba` core does not support Player 2 |
-| Analogue Pocket | ❌ | `Spiritualized,SuperGB` core does not support controller remapping |
+| Analogue Pocket | ❌ | `Spiritualized.SuperGB` core does not support controller remapping |
 
 ## Limitations
 * All items always available.  Item Progression is not tracked for new games.
