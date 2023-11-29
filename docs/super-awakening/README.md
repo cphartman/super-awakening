@@ -2,7 +2,7 @@
 
 `Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional gameplay functionality by using `Super Game Boy` functions.  The new gameplay features are designed to be played with an SNES controller.
 
-![Super Links Awakening](super-lzdx.gif)
+![Super Links Awakening Gameplay Demo](demo-gameplay.gif)
 
 ## Play now
 Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
@@ -25,6 +25,8 @@ The sword and shield are automatically equipped to `A` and `B`.  There are 2 dif
 * Press `R` to change the item in `X`
 * Use `L+Y` or `R+X` change to previous item
 
+![Super Links Awakening Items Demo](demo-items.gif)
+
 ### Pause / Inventory Menu Controls
 The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
 
@@ -32,6 +34,8 @@ Your inventory has 10 different slots.  Each slot can have a different item.  A 
 * Use `arrow keys` to select a slot.
 * Press `R` to change selected slot to the next item.
 * Press `L` to change selected slot to the previous item.
+
+![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
 ## How?
 The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer with the `Super Game Boy` for some games.
