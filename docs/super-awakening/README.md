@@ -5,7 +5,8 @@
 ![Super Links Awakening Gameplay Demo](demo-gameplay.gif)
 
 ## Play now
-Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
+* Download the IPS patch from the latest [Release](https://github.com/cphartman/super-awakening/releases)
+* Load the patched rom into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
 
 ## New Gameplay Features
 * 🗡 Sword equipped to `B` button
