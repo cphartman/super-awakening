@@ -20,14 +20,18 @@ Load the rom file into the [Super Links Awakening Emulator.](https://cphartman.g
 Use the shoulder buttons to quickly change though the items in your inventory.  Create a custom inventory of items to use in gameplay.
 
 ### Gameplay Controls
-The sword and shield are automatically equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped are displayed on screen during gameplay.  Use the shoulder buttons to change either equipped item.
+The sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
+
+![Super Links Awakening Items Demo](demo-controls.gif)
+
+Use the shoulder buttons to change either equipped item.
 * Press `L` to change the item in `Y`
 * Press `R` to change the item in `X`
 * Use `L+Y` or `R+X` change to previous item
 
 ![Super Links Awakening Items Demo](demo-items.gif)
 
-### Pause / Inventory Menu Controls
+### Inventory Menu Controls
 The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
 
 Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
@@ -38,13 +42,13 @@ Your inventory has 10 different slots.  Each slot can have a different item.  A 
 ![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
 ## How?
-The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer with the `Super Game Boy` for some games.
+The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer for `Game Boy` games.
 
 | Street Fighter 2 | Bomberman |
 | ---- | ---- |
 | ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
 
-The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional controller 2 inputs.
+The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional button inputs.
 
 ## Setup
 
