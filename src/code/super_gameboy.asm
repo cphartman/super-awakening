@@ -6,9 +6,11 @@
 ; and upload the colored frame data if needed.
 SuperGameBoyInit::
     ; If running on GBC, return immediately
-    ldh  a, [hIsGBC]                              ; $6A22: $F0 $FE
-    and  a                                        ; $6A24: $A7
-    ret  nz                                       ; $6A25: $C0
+    ; Super Awakening Hack: Run the 2 player detection for GBC mode
+    ; Only works in some emulators... 
+    ;ldh  a, [hIsGBC]                              ; $6A22: $F0 $FE
+    ;and  a                                        ; $6A24: $A7
+    ;ret  nz                                       ; $6A25: $C0
 
     ; Wait for 30 frames
     ld   bc, $1E                                  ; $6A26: $01 $1E $00
@@ -57,6 +59,7 @@ SuperGameBoyInit::
 
 .superGameBoyDetected
     ; Now that the detection is over, return to single-player mode.
+    ; Super Awakening Hack to keep 2 player enabled
     ;ld   hl, SGBRequestOnePlayerCmd               ; $6A76: $21 $02 $6A
     ;call SendUploadCommand                        ; $6A79: $CD $51 $6B
     ;call WaitFor3Frames                           ; $6A7C: $CD $86 $6B
