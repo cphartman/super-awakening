@@ -57,7 +57,7 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 
 ## Setup
 
-* This romhack must be played using a `Super Game Boy`
+* This romhack must be played using a `Super Game Boy` compatible system
 * `Super Game Boy` Controller 1 and Controller 2 should both map to a single `IRL controller`.
 
 ### Controller Mapping
@@ -93,7 +93,7 @@ This rom hack is fully supported on on original hardware.  `Game Boy Color` supp
 | ---- | ---- | ---- | ---- |
 | SNES | ✅ | ❌ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
 | Mesen | ✅ | ❌ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
-| BGB | ✅ | ⚠️ | Set `Emulated System` to  `Super Gameboy`.  Map the experi IRL controller/keyboard inputs to `joypad1`. `SGB+GCB` experimental. |
+| BGB | ✅ | ⚠️ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. `SGB+GCB` support is experimental. |
 | EmulatorJS | ⚠️ | ❌ | [Custom fork](https://github.com/cphartman/super-awakening-emulator) |
 | mGBA | ❌ | ❌ | Does not support controller 2 remapping |
 | Retroarch | ❌ | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
