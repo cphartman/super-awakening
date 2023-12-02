@@ -13,7 +13,7 @@
 * 💣 Items equipped to `X` / `Y` buttons 
 * 🏹 Change items with `R` / `L` buttons
 * 💼 Customizable item inventory
-* ⏩ Quick dash
+* 💨 Quick dash
 
 ![Super Controller Diagram](controller-gameplay.svg)
 
