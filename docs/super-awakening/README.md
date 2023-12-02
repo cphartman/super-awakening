@@ -1,6 +1,6 @@
 # Super Link's Awakening
 
-`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional gameplay functionality by using `Super Game Boy` functions.  The new gameplay features are designed to be played with an SNES controller.
+`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional gameplay functionality by using `Super Game Boy` system functions.  This enables new gameplay features that have been designed to be played on an SNES.
 
 ![Super Links Awakening Gameplay Demo](demo-gameplay.gif)
 
@@ -18,7 +18,7 @@
 ![Super Controller Diagram](controller-gameplay.svg)
 
 ### Expanded controls
-Your sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
+Your sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y`.  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
 
 ![Super Links Awakening Items Demo](demo-controls.gif)
 
