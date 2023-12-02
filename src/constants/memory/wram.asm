@@ -3850,6 +3850,7 @@ wDE0B:
   ds 1 ; DE0B
 
 wSuperAwakening::
+.Weapon_Start::
 ; This matches the wInventoryItems object, replaces it in DrawInventorySlots
 .Weapon4_Value:: ; Sync'd to Weapon_Inventory[Weapon4_Inventory_Index]
   ds 1
@@ -3865,6 +3866,12 @@ wSuperAwakening::
   ds 1
 
 .Weapon3_Inventory_Index:
+  ds 1
+
+.QuickDash_Timer:
+  ds 1
+
+.QuickDash_Direction:
   ds 1
 
 ; top of WRAM is used as Stack
