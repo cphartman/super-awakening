@@ -26,7 +26,7 @@ Your sword and shield are equipped to `A` and `B`.  There are 2 different items 
 Use the shoulder buttons to change either equipped item.
 * Press `L` to change the item in `Y`
 * Press `R` to change the item in `X`
-* Use `L+Y` or `R+X` change to previous item
+* Use `L+Y` or `R+X` to change to previous item
 
 ![Super Links Awakening Items Demo](demo-items.gif)
 
