@@ -42,11 +42,11 @@ Your inventory has 10 different slots.  Each slot can have a different item.  A 
 ![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
 ### Quick Dash
-Double tap any direction to automatically start a dash
+Double tap any direction to automatically start a dash.
 
 ![Super Links Awakening Quick Dash Demo](demo-quickdash.gif)
 
-## How?
+## Technical Background
 The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer for `Game Boy` games.
 
 | Street Fighter 2 | Bomberman |
