@@ -6723,6 +6723,9 @@ SuperAwakening_Inventory::
     cp INVENTORY_SHIELD
     jp z, .awakening_inventory_select_next_loop
 
+    cp INVENTORY_PEGASUS_BOOTS
+    jp z, .awakening_inventory_select_next_loop
+
     ld b, a ; reg_b holds desired inventory value (not empty)
     ld hl, wSuperAwakening.Weapon_Inventory
     ldi a, [hl]
@@ -6842,6 +6845,9 @@ SuperAwakening_Inventory::
     jp z, .awakening_inventory_select_prev_loop
 
     cp INVENTORY_SHIELD
+    jp z, .awakening_inventory_select_prev_loop
+
+    cp INVENTORY_PEGASUS_BOOTS
     jp z, .awakening_inventory_select_prev_loop
 
     ld b, a ; reg_b holds desired inventory value (not empty)
