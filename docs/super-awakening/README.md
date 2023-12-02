@@ -87,7 +87,7 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are not used in the romhack.  Pressing `A` or `B` on `SBG Controller 1` will have unexpected results in the games.
 
 ## System Compatibility
-This rom hack is fully supported on on original hardware.  `Game Boy Color` support is experimental. 
+This rom hack is fully supported on on original hardware.  `Game Boy Color` compatibility is experimental for supported systems. 
 
 | System | Compatibility | Color | Notes |
 | ---- | ---- | ---- | ---- |
