@@ -17,8 +17,8 @@
 
 ![Super Controller Diagram](controller-gameplay.svg)
 
-### New Controls
-The sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
+### Expanded Controls
+Your sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
 
 ![Super Links Awakening Items Demo](demo-controls.gif)
 
@@ -34,9 +34,9 @@ Use the shoulder buttons to change either equipped item.
 The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
 
 Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
-* Use `arrow keys` to select a slot.
-* Press `R` to change selected slot to the next item.
-* Press `L` to change selected slot to the previous item.
+* Use `arrow keys` to select an inventory slot
+* Press `R` to change selected inventory slot to the next item
+* Press `L` to change selected inventory slot to the previous item
 
 ![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
@@ -44,7 +44,6 @@ Your inventory has 10 different slots.  Each slot can have a different item.  A 
 Double tap any direction to automatically start a dash
 
 ![Super Links Awakening Quick Dash Demo](demo-quickdash.gif)
-
 
 ## How?
 The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer for `Game Boy` games.
@@ -87,16 +86,20 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are not used in the romhack.  Pressing `A` or `B` on `SBG Controller 1` will have unexpected results in the games.
 
 ## System Compatibility
-| System | Compatibility | Notes |
-| ---- | ---- | ---- |
-| SNES | ✅ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
-| Mesen | ✅ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
-| BGB | ✅ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. |
-| EmulatorJS | ⚠️ | [Custom fork here](https://github.com/cphartman/super-awakening-emulator) |
-| mGBA | ❌ | Does not support controller 2 remapping |
-| Retroarch | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
-| Analogue Pocket | ❌ | `Spiritualized.SuperGB` does not support controller 2 remapping |
+This rom hack is fully supported on on original hardware.  `Game Boy Color` support is experimental. 
+
+| System | Compatibility | Color | Notes |
+| ---- | ---- | ---- | ---- |
+| SNES | ✅ | ❌ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
+| Mesen | ✅ | ❌ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
+| BGB | ✅ | ⚠️ | Set `Emulated System` to  `Super Gameboy`.  Map the experi IRL controller/keyboard inputs to `joypad1`. `SGB+GCB` experimental. |
+| EmulatorJS | ⚠️ | ❌ | [Custom fork](https://github.com/cphartman/super-awakening-emulator) |
+| mGBA | ❌ | ❌ | Does not support controller 2 remapping |
+| Retroarch | ❌ | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
+| Analogue Pocket | ❌ | ❌ | `Spiritualized.SuperGB` does not support controller 2 remapping |
 
 ## Limitations
-* All items always available.  Item Progression is not tracked for new games.
-* Inventory does not save
+* All items are always available in the inventory
+* Item Progression is not tracked when obtaining new items
+* No save support
+* Occasional audio glitches
