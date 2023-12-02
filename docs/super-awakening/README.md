@@ -17,7 +17,7 @@
 
 ![Super Controller Diagram](controller-gameplay.svg)
 
-### Expanded Controls
+### Expanded controls
 Your sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y` .  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
 
 ![Super Links Awakening Items Demo](demo-controls.gif)
@@ -30,7 +30,7 @@ Use the shoulder buttons to change either equipped item.
 
 ![Super Links Awakening Items Demo](demo-items.gif)
 
-### Customize item inventory
+### Customize inventory items
 The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
 
 Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
