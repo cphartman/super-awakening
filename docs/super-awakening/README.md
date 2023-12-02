@@ -34,6 +34,7 @@ Use the shoulder buttons to change either equipped item.
 The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
 
 Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
+* Press `start` to open inventory menu
 * Use `arrow keys` to select an inventory slot
 * Press `R` to change selected inventory slot to the next item
 * Press `L` to change selected inventory slot to the previous item
