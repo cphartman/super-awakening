@@ -2398,7 +2398,12 @@ SpawnEnemyDrop::
     ld   a, ENTITY_GUARDIAN_ACORN                 ; $560A: $3E $34
     jp   .dropEntity                              ; $560C: $C3 $70 $56
 
+.acorn_drop_start:
+    nop
 .noGuardianAcornDrop:
+    nop ; Awakening hack to make some room in the rom bank
+    /*
+
     ; get an offset from the DestroyedEntityHealthGroupOffsetTable
     ; the value is used in combination with the destroyed entity type in further code as as offset by add HL, DE
     ld   hl, wEntitiesHealthGroup                 ; $560F: $21 $D0 $C4
@@ -2456,6 +2461,8 @@ SpawnEnemyDrop::
     jr   z, .dropRandomEntity                     ; $5650: $28 $03
     ; on low health load a drop table with higher chances of dropping something
     ld   hl, (RandomDropChanceTableLowHealth -1)  ; $5652: $21 $B8 $55
+*/
+.acorn_drop_end:
 
 .dropRandomEntity:
     add  hl, de                                   ; $5655: $19
@@ -4616,6 +4623,9 @@ PickSword::
     ld   d, INVENTORY_SHIELD                      ; $6470: $16 $04
 
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
+    ; [d] is the item to activate here
+    call SuperAwakening_Progression.AddItem
+
     ld   hl, wInventoryItems.BButtonSlot          ; $6472: $21 $00 $DB
     ld   e, $0C                                   ; $6475: $1E $0C
 
@@ -9555,3 +9565,13 @@ ApplyRecoilIfNeeded_03::
     call StopEntityRecoilOnCollision              ; $7FF1: $CD $AF $3E
 
     ret                                           ; $7FF4: $C9
+
+SuperAwakening_Progression::
+
+.AddItem
+    ld b, $00
+    ld c, d
+    ld hl, wSuperAwakening.Items_Unlocked
+    add hl, bc
+    ld [hl], $01
+    ret

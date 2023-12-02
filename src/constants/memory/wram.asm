@@ -3874,6 +3874,9 @@ wSuperAwakening::
 .QuickDash_Direction:
   ds 1
 
+.Items_Unlocked
+  ds INVENTORY_MAX
+
 ; top of WRAM is used as Stack
 wStack::
   ds $DFFF - @ + 1 ; DE04 - DFFF

@@ -6726,6 +6726,16 @@ SuperAwakening_Inventory::
     cp INVENTORY_PEGASUS_BOOTS
     jp z, .awakening_inventory_select_next_loop
 
+    ; Check if this item is unlocked
+    ld hl, wSuperAwakening.Items_Unlocked
+    ld b, $00
+    ld c, a
+    add hl, bc
+    ld a, [hl] ; Get the unlocked state of the item
+    cp $01 ; Test if this item is unlocked
+    ld a, c ; Put the target item index back into [a]
+    jp nz, .awakening_inventory_select_next_loop
+
     ld b, a ; reg_b holds desired inventory value (not empty)
     ld hl, wSuperAwakening.Weapon_Inventory
     ldi a, [hl]
