@@ -208,15 +208,25 @@ SuperAwakening::
 ; QuickDash
 ;
 ; Quick Dash State
-; 0 - Check for init
-; 1-DELAY
+; 0 : Check for init
+; 1->HOLD_DELAY
 ;   * Check if canceled
 ;       * State = 0
 ;   * Increment the delay counter
 ;   * Check for overflow
-; DELAY+1
-;   * Execute
+; HOLD_DELAY->IDLE_DELAY
+;   * Check if canceled
+;       * State = 0
+;   * Increment the delay counter
+;   * Check for overflow
+
 .quickdash
+
+    ; Are boots unlocked?
+    ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_PEGASUS_BOOTS)
+    ld a, [hl]
+    cp $01
+    jp nz, .quickdash_end
 
     ; Are we in quick dash timer?
  .quickdash_check_timer

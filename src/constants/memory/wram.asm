@@ -3853,8 +3853,10 @@ wSuperAwakening::
 .Weapon_Start::
 ; This matches the wInventoryItems object, replaces it in DrawInventorySlots
 .Weapon4_Value:: ; Sync'd to Weapon_Inventory[Weapon4_Inventory_Index]
+  ; Only used for display purpose on the hud
   ds 1
 
+  ; Only used for display purpose on the hud
 .Weapon3_Value:: ; Sync'd to Weapon_Inventory[Weapon3_Inventory_Index]
   ds 1
 

@@ -303,3 +303,9 @@ endm
     SET_DEFAULT GAMEOVER_OPTION_SAVE_QUIT_Y, 80
     SET_DEFAULT GAMEOVER_OPTION_CONTINUE_Y, 96
     SET_DEFAULT SAVE_OPTION_X, 28
+
+
+; If the inventory system allows all items
+; TRUE = Select any item in the inventory
+; FALSE = Only allow items unlocked from progression
+SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS = TRUE
