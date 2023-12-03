@@ -22,6 +22,7 @@ label_3935::
     ld   a, $03                                   ; $393D: $3E $03
     jp   SwitchBank                               ; $393F: $C3 $0C $08
 
+; Cut Grass trampoline
 label_3942::
     callsb func_003_53E4                          ; $3942: $3E $03 $EA $00 $21 $CD $E4 $53
     jp   ReloadSavedBank                          ; $394A: $C3 $1D $08

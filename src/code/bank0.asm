@@ -2332,6 +2332,7 @@ CheckStaticSwordCollision::
     ldh  [hIntersectedObjectTop], a               ; $15ED: $E0 $CD
 
     ; Set hObjectUnderEntity
+.set_hObjectUnderEntity
     or   c                                        ; $15EF: $B1
     ld   e, a                                     ; $15F0: $5F
     ld   hl, wRoomObjects                         ; $15F1: $21 $11 $D7
@@ -2343,6 +2344,7 @@ CheckStaticSwordCollision::
     ld   a, [hl]                                  ; $15FA: $7E
     ldh  [hObjectUnderEntity], a                  ; $15FB: $E0 $AF
 
+.before_GetObjectPhysicsFlags_trampoline
     ld   e, a                                     ; $15FD: $5F
     ld   a, [wIsIndoor]                           ; $15FE: $FA $A5 $DB
     ld   d, a                                     ; $1601: $57
@@ -2423,6 +2425,8 @@ label_1653::
     ld   [hl], a                                  ; $1676: $77
     ld   c, e                                     ; $1677: $4B
     ld   b, d                                     ; $1678: $42
+    
+    ; Something with the grass destroy gfx/sfx
     call label_3942                               ; $1679: $CD $42 $39
 
 .dropRandomItem

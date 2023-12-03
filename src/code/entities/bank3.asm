@@ -186,6 +186,7 @@ MasterStalfosDefeated:
     ld   [wRoomEventEffectExecuted], a            ; $48AF: $EA $8F $C1
     jp   UnloadEntityAndReturn                    ; $48B2: $C3 $8D $3F
 
+; AWAKENING - Executes on gameplay screen transition from Bank0
 EntityInitHandler::
     ; If the entity is a boss, and the room's boss is defeated, don't load the entity.
     ld   hl, wEntitiesOptions1Table               ; $48B5: $21 $30 $C4
@@ -2032,15 +2033,16 @@ label_003_52D7:
 
 include "code/entities/03_liftable_rock.asm"
 
+; bc is the entity index
 func_003_53E4::; likely cutting grass
     ld   hl, hNoiseSfx                            ; $53E4: $21 $F4 $FF
     ld   [hl], NOISE_SFX_CUT_GRASS                ; $53E7: $36 $05
     ld   e, $1F                                   ; $53E9: $1E $1F
     ldh  a, [hActiveEntitySpriteVariant]          ; $53EB: $F0 $F1
-    cp   $FF                                      ; $53ED: $FE $FF
+    cp   $FF                                      ; $53ED: $FE $FF ; Cutting Tall grass
     jr   z, .jr_53F9                              ; $53EF: $28 $08
 
-    cp   $01                                      ; $53F1: $FE $01
+    cp   $01                                      ; $53F1: $FE $01 ; Cutting a bush
     jr   z, .jr_53F9                              ; $53F3: $28 $04
 
     ld   [hl], $09                                ; $53F5: $36 $09
@@ -2049,7 +2051,12 @@ func_003_53E4::; likely cutting grass
 .jr_53F9
     ld   hl, wEntitiesPrivateCountdown1Table      ; $53F9: $21 $F0 $C2
     add  hl, bc                                   ; $53FC: $09
+    
+    ; This changes the countdown on Grass from $01 to $1f
+    ; There is probably a physics check on the wEntitiesPrivateCountdown1Table to see if this is already updated?
+
     ld   [hl], e                                  ; $53FD: $73
+
     ld   hl, wEntitiesPhysicsFlagsTable           ; $53FE: $21 $40 $C3
     add  hl, bc                                   ; $5401: $09
 IF __OPTIMIZATIONS_1__
@@ -2398,12 +2405,7 @@ SpawnEnemyDrop::
     ld   a, ENTITY_GUARDIAN_ACORN                 ; $560A: $3E $34
     jp   .dropEntity                              ; $560C: $C3 $70 $56
 
-.acorn_drop_start:
-    nop
 .noGuardianAcornDrop:
-    nop ; Awakening hack to make some room in the rom bank
-    /*
-
     ; get an offset from the DestroyedEntityHealthGroupOffsetTable
     ; the value is used in combination with the destroyed entity type in further code as as offset by add HL, DE
     ld   hl, wEntitiesHealthGroup                 ; $560F: $21 $D0 $C4
@@ -2419,7 +2421,10 @@ SpawnEnemyDrop::
     ; in general the needed value is lower, if the max health is lower
     ; so you get the piece of power more often in the early game
     ld   e, a                                     ; How many enemies to kill before a Piece of Power drops?
+
+    ld d, $FF ; Awakening hack to never drop power piece and make room in the bank
     ; early game
+    /*
     ld   d, PIECE_OF_POWER_COUNTER_MAX_LOW_MAX_HEALTH ; Max HP 0~6: 30
     ld   a, [wMaxHearts]                          ;
     cp   LOW_MAX_HEALTH                           ; If max HP <= 6, skip
@@ -2430,6 +2435,8 @@ SpawnEnemyDrop::
     jr   c, .pieceOfPowerDrop                     ; If max HP <= 11, skip
     ; late game
     ld   d, PIECE_OF_POWER_COUNTER_MAX_HIGH_MAX_HEALTH ; Max HP 11~14: 40
+    */
+    
 
 .pieceOfPowerDrop:
     ; increment kill counter
@@ -2461,8 +2468,6 @@ SpawnEnemyDrop::
     jr   z, .dropRandomEntity                     ; $5650: $28 $03
     ; on low health load a drop table with higher chances of dropping something
     ld   hl, (RandomDropChanceTableLowHealth -1)  ; $5652: $21 $B8 $55
-*/
-.acorn_drop_end:
 
 .dropRandomEntity:
     add  hl, de                                   ; $5655: $19
@@ -4625,6 +4630,12 @@ PickSword::
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
     ; [d] is the item to activate here
     call SuperAwakening_Progression.AddItem
+
+    ; There are some items we don't keep in the inventory
+    ld a, d
+    and (INVENTORY_SWORD | INVENTORY_SHIELD | INVENTORY_PEGASUS_BOOTS )
+    cp 0
+    jp nz, .return
 
     ld   hl, wSuperAwakening.Weapon_Inventory          ; $6472: $21 $00 $DB
     ld   e, $0C                                   ; $6475: $1E $0C

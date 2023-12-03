@@ -4,18 +4,18 @@
 ;
 
 DebugSaveFileData::
-    db INVENTORY_BOW          ; B button       ; $4667
-    db INVENTORY_BOMBS           ; A button       ; $4668
+    db INVENTORY_EMPTY          ; B button       ; $4667
+    db INVENTORY_EMPTY           ; A button       ; $4668
     db INVENTORY_BOW           ; Inventory slots ; $4669
     db INVENTORY_BOMBS      ; .              ; $466A
-    db INVENTORY_BOOMERANG             ; .              ; $466B
-    db INVENTORY_HOOKSHOT        ; .              ; $466C
-    db INVENTORY_PEGASUS_BOOTS       ; .              ; $466D
+    db INVENTORY_HOOKSHOT             ; .              ; $466B
+    db INVENTORY_MAGIC_ROD        ; .              ; $466C
+    db INVENTORY_OCARINA       ; .              ; $466D
     db INVENTORY_ROCS_FEATHER   ; .              ; $466E
-    db 0         ; .              ; $466F
-    db 0    ; .              ; $4670
-    db 0          ; .              ; $4671
-    db 0    ; .              ; $4672
+    db INVENTORY_SHOVEL         ; .              ; $466F
+    db INVENTORY_MAGIC_POWDER    ; .              ; $4670
+    db INVENTORY_POWER_BRACELET          ; .              ; $4671
+    db INVENTORY_PEGASUS_BOOTS    ; .              ; $4672
 
     db 1  ; Have Flippers                         ; $4673
     db 1  ; Have Medicine                         ; $4674
@@ -3252,72 +3252,43 @@ SuperAwakening_Load::
 
     ; Copy saved inventory into override inventory
     ; Weapon A and B are not really used on load, but should probably store the inventory index values (Weapon4_Inventory_Index)?
-    ld hl, (wInventoryItems + 2)
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 2
-    ld [hl], a
-    pop hl
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 3
-    ld [hl], a
-    pop hl
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 4
-    ld [hl], a
-    pop hl
+    ld b, $00
+    ld c, ($00 - 1) ; Slot index counter.  Start at $FF so that it will overflow to 0 on the first loop iteration
+    ld hl, wInventoryItems.subscreen - 1
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 5
-    ld [hl], a
-    pop hl
+.copy_saved_inventory_to_super_inventory_loop
 
+    ; Increment our counters
+    inc c
     ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 6
-    ld [hl], a
-    pop hl
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 7
-    ld [hl], a
-    pop hl
+    ; Check if we've loaded all items
+    ld a, c
+    cp $0A
+    jp z, .copy_saved_inventory_to_super_inventory_loop_end 
 
-    ldi a, [hl]
+    ; Don't add boots, sword, or shield to inventory
+    ld a, [hl] ; This increments the subscreen pointer value
+    cp INVENTORY_SWORD
+    jp z, .copy_saved_inventory_to_super_inventory_loop
+    cp INVENTORY_SHIELD
+    jp z, .copy_saved_inventory_to_super_inventory_loop
+    cp INVENTORY_PEGASUS_BOOTS
+    jp z, .copy_saved_inventory_to_super_inventory_loop
+    
+    ; Get the Weapon_Inventory location for this slot
     push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 8
-    ld [hl], a
-    pop hl
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, bc
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 9
+    ; Load the wInventoryItem value into Weapon_Inventory slot
     ld [hl], a
     pop hl
+    jp .copy_saved_inventory_to_super_inventory_loop
 
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 10
-    ld [hl], a
-    pop hl
-
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 11
-    ld [hl], a
-    pop hl
-
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Weapon4_Value + 12
-    ld [hl], a
-    pop hl
+.copy_saved_inventory_to_super_inventory_loop_end
 
     ; Set Weapon3/Weapon4 Inventory index default
     ld hl, wSuperAwakening.Weapon4_Inventory_Index

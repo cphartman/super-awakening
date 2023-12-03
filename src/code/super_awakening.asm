@@ -415,9 +415,19 @@ SuperAwakening::
     cp J_DOWN
     jp nz, .use_weapon_2_end
 
+    ; Check if sword is enabled
+    ld  a, [wSwordLevel]
+    and a
+    ld a, INVENTORY_SWORD ; [a] will be the slot item we set
+if SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS
+    jp nz, .use_weapon_2_update_inventory
+    ; We don't have a sword level, so set the slot item to empty
+    ld a, INVENTORY_EMPTY
+ENDC
+.use_weapon_2_update_inventory
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
-    ld [hl], INVENTORY_SWORD
+    ld [hl], a
 
 .use_weapon_2_end
 
