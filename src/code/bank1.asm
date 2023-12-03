@@ -3490,6 +3490,7 @@ SuperAwakening_Save::
 
     ; Move to the next inventory slot
     inc c
+    jp .inventory_load_loop
 
 .inventory_load_loop_end
     ret
