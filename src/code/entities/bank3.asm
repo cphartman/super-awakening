@@ -4626,7 +4626,7 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     ; [d] is the item to activate here
     call SuperAwakening_Progression.AddItem
 
-    ld   hl, wInventoryItems.BButtonSlot          ; $6472: $21 $00 $DB
+    ld   hl, wSuperAwakening.Weapon_Inventory          ; $6472: $21 $00 $DB
     ld   e, $0C                                   ; $6475: $1E $0C
 
 .checkInventorySlot:                              ; Check if we already have this item:
@@ -4637,7 +4637,7 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     dec  e                                        ; Otherwise, have we checked all slots?
     jr   nz, .checkInventorySlot                  ; If no, continue
 
-    ld   hl, wInventoryItems.BButtonSlot                         ; Otherwise, load the inventory start again...
+    ld   hl, wSuperAwakening.Weapon_Inventory                         ; Otherwise, load the inventory start again...
 
 .checkInventorySlotEmpty:
     ld   a, [hl]                                  ; Check if an item is equipped in this slot
