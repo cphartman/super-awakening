@@ -31,13 +31,12 @@ Use the shoulder buttons to change either equipped item.
 ![Super Links Awakening Items Demo](demo-items.gif)
 
 ### Customize inventory items
-The pause menu allows you to create your inventory.  Your inventory is used during gameplay to change between items.
+The pause menu allows you to customize your inventory.  Your inventory is used during gameplay to change between items.
 
-Your inventory has 10 different slots.  Each slot can have a different item.  A slot can also be set empty.  
-* Press `start` to open inventory menu
-* Use `arrow keys` to select an inventory slot
-* Press `R` to change selected inventory slot to the next item
-* Press `L` to change selected inventory slot to the previous item
+You have 10 inventory slots.  Each inventory slot can have a different item.  An inventory slot can also be set to empty.  
+* Press `Start` to open inventory menu
+* Use `Arrow Keys` to select an inventory slot
+* Press `R` or `L` to change item in the selected inventory slot
 
 ![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
@@ -47,18 +46,18 @@ Double tap any direction to automatically start a dash.
 ![Super Links Awakening Quick Dash Demo](demo-quickdash.gif)
 
 ## Technical Background
-The `Super Game Boy` exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to the `Game Boy` system.  This feature enables local multiplayer for `Game Boy` games.
+The `Super Game Boy` system exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) to `Game Boy` games.  This feature enables local multiplayer for `Game Boy` games.
 
 | Street Fighter 2 | Bomberman |
 | ---- | ---- |
 | ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
 
-The romhack takes advantage of this functionality by configuring a single IRL controller to use buttons for both `Super Game Boy` controllers inputs.  This double the number of inputs available for the game to use. The romhack implements custom functionality for the additional button inputs.
+The romhack takes advantage of this functionality by reading both `Super Game Boy` controllers inputs.  This double the number of buttons available to the game.  Custom functionality is implemented for the additional button inputs.
 
 ## Setup
 
-* This romhack must be played using a `Super Game Boy` compatible system
-* `Super Game Boy` Controller 1 and Controller 2 should both map to a single `IRL controller`.
+* `Super Game Boy` compatible system
+* Both `SGB Controllers` should both map to a single `IRL controller`.
 
 ### Controller Mapping
 
@@ -84,23 +83,17 @@ The romhack takes advantage of this functionality by configuring a single IRL co
 *Diagram showing the `IRL Controller` with `SGB Controller` button mapping*
 
 ### Unused `Super Game Boy` controller buttons
-The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are not used in the romhack.  Pressing `A` or `B` on `SBG Controller 1` will have unexpected results in the games.
+The `A` and `B` buttons on both `SGB Controller 1` and `SGB Controller 2` are **not** used in the romhack.  Pressing `A` or `B` on either controller will have unexpected results in the games.
 
 ## System Compatibility
-This rom hack is fully supported on on original hardware.  `Game Boy Color` compatibility is experimental for supported systems. 
+This romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  Not all emulators support the required `Super Game Boy` functions for this romhack.  `Game Boy Color` compatibility is experimental for supported systems. 
 
-| System | Compatibility | Color | Notes |
-| ---- | ---- | ---- | ---- |
-| SNES | ✅ | ❌ | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
-| Mesen | ✅ | ❌ | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
-| BGB | ✅ | ⚠️ | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. `SGB+GCB` support is experimental. |
-| EmulatorJS | ⚠️ | ❌ | [Custom fork](https://github.com/cphartman/super-awakening-emulator) |
-| mGBA | ❌ | ❌ | Does not support controller 2 remapping |
-| Retroarch | ❌ | ❌ | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
-| Analogue Pocket | ❌ | ❌ | `Spiritualized.SuperGB` does not support controller 2 remapping |
-
-## Limitations
-* All items are always available in the inventory
-* Item Progression is not tracked when obtaining new items
-* No save support
-* Occasional audio glitches
+| System | Compatibility  | Notes |
+| ---- | ----  | ---- |
+| Super Nintendo | ✅  | Use [Blueretro](https://github.com/darthcloud/BlueRetro) to map the `Src` controller to `Dest ID Output 2` |
+| BGB | 🌈 | Set `Emulated System` to  `Super Gameboy`.  Map the required IRL controller/keyboard inputs to `joypad1`. `SGB+GCB` support is experimental. |
+| Mesen | ✅  | Set `Gameboy` model to  `Super Game Boy`.  Map the required IRL controller/keyboard inputs to `SNES Port 2 Controller`. |
+| EmulatorJS | ⚠️  | [Custom fork](https://github.com/cphartman/super-awakening-emulator) |
+| mGBA | ❌  | Does not support controller 2 remapping |
+| Retroarch | ❌  | Crashes with `mgba`, `mesen-s`, and `gambatte` cores |
+| Analogue Pocket | ❌  | `Spiritualized.SuperGB` does not support controller 2 remapping |
