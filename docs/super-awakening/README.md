@@ -30,7 +30,7 @@ Use the shoulder buttons to change either equipped item.
 
 ![Super Links Awakening Items Demo](demo-items.gif)
 
-### Customize inventory items
+### Customizable item inventory
 The pause menu allows you to customize your inventory.  Your inventory is used during gameplay to change between items.
 
 You have 10 inventory slots.  Each inventory slot can have a different item.  An inventory slot can also be set to empty.  
