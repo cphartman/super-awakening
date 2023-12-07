@@ -767,5 +767,6 @@ include "code/photos_bg.asm"
 ; Unused banks; make blank sections so they are filled with $00 instead of $ff to match
 ; the rom
 section "bank3E",romx[$4000],bank[$3E]
+include "code/super_awakening.asm"
 section "bank3F",romx[$4000],bank[$3F]
 include "text/dialog_5.asm"

@@ -7524,3 +7524,12 @@ ReloadColorDungeonNpcTiles::
     ld   a, BANK(InventoryEntryPoint)             ; $3FE9: $3E $20
     ld   [rSelectROMBank], a                      ; $3FEB: $EA $00 $21
     ret                                           ; $3FEE: $C9
+
+SuperAwakening_Trampolines::
+.GiveInventoryItem_trampoline
+    ld   a, BANK(SuperAwakening)
+    ld   [rSelectROMBank], a
+    call SuperAwakening.GiveInventoryItem
+    ld   a, BANK(GiveInventoryItem)
+    ld   [rSelectROMBank], a
+    ret

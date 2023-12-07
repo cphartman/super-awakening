@@ -4629,7 +4629,7 @@ PickSword::
 
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
     ; [d] is the item to activate here
-    call SuperAwakening_Progression.AddItem
+    call SuperAwakening_Trampolines.GiveInventoryItem_trampoline
 
     ; There are some items we don't keep in the inventory
     ld a, d
@@ -9576,13 +9576,3 @@ ApplyRecoilIfNeeded_03::
     call StopEntityRecoilOnCollision              ; $7FF1: $CD $AF $3E
 
     ret                                           ; $7FF4: $C9
-
-SuperAwakening_Progression::
-
-.AddItem
-    ld b, $00
-    ld c, d
-    ld hl, wSuperAwakening.Items_Unlocked
-    add hl, bc
-    ld [hl], $01
-    ret
