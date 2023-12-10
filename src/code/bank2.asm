@@ -7130,13 +7130,24 @@ jr_002_728E:
     ; If you have the Power Bracelet equippped, don't
     ; show the "This looks pretty heavy" dialog when
     ; touching an OBJECT_LIFTABLE_ROCK
-    ld   a, [wInventoryItems.AButtonSlot]         ; $72D5: $FA $01 $DB
-    cp   INVENTORY_POWER_BRACELET                 ; $72D8: $FE $03
-    jr   z, .checkPegasusBoots                    ; $72DA: $28 $1E
+    ;ld   a, [wInventoryItems.AButtonSlot]         ; $72D5: $FA $01 $DB
+    ;cp   INVENTORY_POWER_BRACELET                 ; $72D8: $FE $03
+    ;jr   z, .checkPegasusBoots                    ; $72DA: $28 $1E
 
-    ld   a, [wInventoryItems.BButtonSlot]         ; $72DC: $FA $00 $DB
-    cp   INVENTORY_POWER_BRACELET                 ; $72DF: $FE $03
-    jr   z, .checkPegasusBoots                    ; $72E1: $28 $17
+    ;ld   a, [wInventoryItems.BButtonSlot]         ; $72DC: $FA $00 $DB
+    ;cp   INVENTORY_POWER_BRACELET                 ; $72DF: $FE $03
+    ;jr   z, .checkPegasusBoots                    ; $72E1: $28 $17
+
+    ; Equip bracelet when touching a heavy item
+.auto_lift
+    ld a, [wPowerBraceletLevel]
+    cp 0
+    jp z, .auto_lift_end
+
+    ld a, INVENTORY_POWER_BRACELET
+    ld [wInventoryItems.AButtonSlot], a
+    jr .checkPegasusBoots
+.auto_lift_end
 
     ; If you have instrument #2, don't show the
     ; "This looks pretty heavy" dialog when touching
