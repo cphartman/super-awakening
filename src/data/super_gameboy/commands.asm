@@ -113,15 +113,15 @@ SGBPatch7Cmd::
 
 SGBPatch8Cmd::
     sgb_data_send_cmd $0810, $0, 11
+    ;db  $4C, $00, $0f       ; jmp $0820
+    db $5C, $00, $00, $7F ; jump into our hook with: jpl 7f0000
     db  $4C, $20, $08       ; jmp $0820
-    db  $EA                 ; nop
-    db  $EA                 ; nop
-    db  $EA                 ; nop
-    db  $EA                 ; nop
     db  $EA                 ; nop
     db  $60                 ; rts
     db  $EA                 ; nop
     db  $EA                 ; nop
+
+include "data/super_gameboy/injection_data.asm"
 
 SGBSetPal01Cmd::
     sgb_cmd SGB_PAL01, 1
@@ -206,3 +206,4 @@ SGBRequestTwoPlayersCmd::
     sgb_cmd SGB_MLT_REQ, 1
     db   1  ; players count
     ds   14 ; padding
+

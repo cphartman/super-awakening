@@ -3010,6 +3010,7 @@ DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
     ld   hl, wSuperAwakening.Weapon_Start       ; Show weapon slots 3 and 4
+    ;ld   hl, wInventoryItems.BButtonSlot       ; debug
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
     ldh  [hMultiPurpose1], a                      ; $5CA3: $E0 $D8
