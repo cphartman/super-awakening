@@ -113,8 +113,7 @@ SGBPatch7Cmd::
 
 SGBPatch8Cmd::
     sgb_data_send_cmd $0810, $0, 11
-    ;db  $4C, $00, $0f       ; jmp $0820
-    db $5C, $00, $00, $7F ; jump into our hook with: jpl 7f0000
+    db $5C, $00, $00, $7F   ; NEW: jump into our hook with: jpl 7f0000
     db  $4C, $20, $08       ; jmp $0820
     db  $EA                 ; nop
     db  $60                 ; rts
