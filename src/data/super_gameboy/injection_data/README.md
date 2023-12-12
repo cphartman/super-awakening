@@ -1,9 +1,16 @@
 # SNES SGB Injection
 
-1) Build the snes code
+Patch in SNES assembly to SGB via the LA boot sequence.
+
+> bash build.sh
+
+or
+
+1) Build the SNES code
     * `cl65 -v -C smc.cfg -o snes_out.smc snes_in.asm`
 1) Generate GB patch data from the SNES code
     * `> convert_sfc_to_packets.py > gb_data.asm`
+        * The path to the smc is hardcoded :/
 1) Add a loader to [`src/code/super_gameboy.asm`](https://github.com/cphartman/super-awakening/blob/4bb393bb9c20ecfa0e6dccdc8e2788dc3b1782b5/src/code/super_gameboy.asm#L126-L149)
 1) Patch a hook into into our code from existing SGB Code.
     * Hijack `SGBPatch8Cmd` by adding a [JUMP to our code](https://github.com/cphartman/super-awakening/blob/5248fabb56cb0a3eab1dd258387af7f743026fd3/src/data/super_gameboy/commands.asm#L116-L117)
