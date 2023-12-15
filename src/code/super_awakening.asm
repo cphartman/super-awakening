@@ -202,8 +202,19 @@ SuperAwakening::
     ld hl, hPressedButtonsMask
     ld [hl], a
 .update_p1_a_mask_from_left_end
+    nop
 
+.debug
+    ldh  a, [hJoypadState]
+    cp J_UP
+    jp nz, .debug_end
 
+    ;call SuperAwakening_Trampolines.SendUploadCommand_trampoline                       ; $6AE2: $CD $51 $6B
+    ;ld   bc, $06                                  ; $6AE5: $01 $06 $00
+    ;call WaitForBCFrames                          ; $6AE8: $CD $92 $6B
+    jp .debug_end
+
+.debug_end
 ;
 ; QuickDash
 ;

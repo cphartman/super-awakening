@@ -206,3 +206,6 @@ SGBRequestTwoPlayersCmd::
     db   1  ; players count
     ds   14 ; padding
 
+Awakening_Moasic_Shader_Command::
+	sgb_data_send_cmd $0100, $7F, 11
+	db $88, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00

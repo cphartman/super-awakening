@@ -6,17 +6,59 @@
 .segment "CODE"
 CODE:
 
-   ; testing memory writing
-   lda #$04
-   sta $7f0F00
+MOSAIC_SHADER:
+
+MOSAIC_SHADER_LOOP:
+   ; Load counter value
+   lda $7f0100
+
+   ; Break if counter empty
+   CMP $00
+   BEQ MOSAIC_SHADER_LOOP_end
+
+   ; Decrement counter value
+   dec
+   CMP $00
+   BEQ STORE_COUNTER
+
+   dec
+   CMP $00
+   BEQ STORE_COUNTER
+
+   dec
+   CMP $00
+   BEQ STORE_COUNTER
+
+   dec
+   CMP $00
+   BEQ STORE_COUNTER
    
-   ; Testing injected label addresses
+   dec
+   CMP $00
+   BEQ STORE_COUNTER
+
+STORE_COUNTER:
+   sta $7f0100
+
+Do_MOASIC:
+
+   ; Moasic value is high bits, so we will just clip off the low bits of the counter
+   and #$F0
+
+   ; Set 3layer flag (0100)
+   ora #$04
+   ; Set PPU flag
+   sta MOSAIC 
+
+MOSAIC_SHADER_LOOP_end:
+
    JMP @injected_label
 
 @some_data:
-   .byte $DE,$AD,$BE,$EF
-   .byte $13,$37
-   .byte $13,$37
+   .byte $01,$02,$01,$00
+
+@counter1:
+   .byte $00
 
 @injected_label:
    JML $000814
