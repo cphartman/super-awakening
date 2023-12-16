@@ -113,12 +113,24 @@ SGBPatch7Cmd::
 
 SGBPatch8Cmd::
     sgb_data_send_cmd $0810, $0, 11
-    db $5C, $00, $00, $7F   ; NEW: jump into our hook with: jpl 7f0000
     db  $4C, $20, $08       ; jmp $0820
+    db  $EA                 ; nop
+    db  $EA                 ; nop
+    db  $EA                 ; nop
+    db  $EA                 ; nop
     db  $EA                 ; nop
     db  $60                 ; rts
     db  $EA                 ; nop
     db  $EA                 ; nop
+
+AwakeningHookPatchCmd::
+    sgb_data_send_cmd $0808, $0, 5
+    db $5C, $00, $00, $7F   ; jump into our hook with: jpl 7f0000
+    ; Return with the new stack address
+    db $60      ; rts
+
+    ; Note that this replaces a 1 byte `rts`, so we're actually stomping over bytes :/
+    ; I put in a rwx breakpoint, and didn't get any hits so we'll just hope this is ok...
 
 include "data/super_gameboy/injection_data.asm"
 
