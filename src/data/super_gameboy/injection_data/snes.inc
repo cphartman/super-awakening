@@ -128,6 +128,8 @@ KEY_B_MASK = $7F
 KEY_Y_MASK = $BF
 KEY_A_MASK = $7F
 KEY_X_MASK = $BF
+KEY_L_MASK = $DF
+KEY_R_MASK = $EF
 
 
 ; DMA/HDMA Registers
