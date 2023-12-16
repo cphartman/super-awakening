@@ -1,21 +1,42 @@
 Awakening_Patch_Data:
 Awakening_Patch_Data_0:
 	sgb_data_send_cmd $0000, $7F, 11
-	db $af, $00, $01, $7f, $c5, $00, $f0, $24, $3a, $c5, $00
+	db $e2, $20, $ad, $11, $0f, $c9, $10, $d0, $08, $ad, $14
 Awakening_Patch_Data_1:
 	sgb_data_send_cmd $000b, $7F, 11
-	db $f0, $14, $3a, $c5, $00, $f0, $0f, $3a, $c5, $00, $f0
+	db $0f, $09, $10, $8d, $14, $0f, $ad, $11, $0f, $c9, $20
 Awakening_Patch_Data_2:
 	sgb_data_send_cmd $0016, $7F, 11
-	db $0a, $3a, $c5, $00, $f0, $05, $3a, $c5, $00, $f0, $00
+	db $d0, $08, $ad, $14, $0f, $09, $20, $8d, $14, $0f, $ad
 Awakening_Patch_Data_3:
 	sgb_data_send_cmd $0021, $7F, 11
-	db $8f, $00, $01, $7f, $29, $f0, $09, $04, $8d, $06, $21
+	db $11, $0f, $c9, $40, $d0, $10, $ad, $14, $0f, $09, $08
 Awakening_Patch_Data_4:
 	sgb_data_send_cmd $002c, $7F, 11
-	db $4c, $34, $00, $01, $02, $01, $00, $00, $5c, $14, $08
+	db $8d, $14, $0f, $ad, $11, $0f, $29, $bf, $8d, $11, $0f
 Awakening_Patch_Data_5:
 	sgb_data_send_cmd $0037, $7F, 11
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ad, $12, $0f, $c9, $40, $d0, $10, $ad, $14, $0f, $09
+Awakening_Patch_Data_6:
+	sgb_data_send_cmd $0042, $7F, 11
+	db $02, $8d, $14, $0f, $ad, $12, $0f, $29, $bf, $8d, $12
+Awakening_Patch_Data_7:
+	sgb_data_send_cmd $004d, $7F, 11
+	db $0f, $ad, $11, $0f, $c9, $80, $d0, $10, $ad, $14, $0f
+Awakening_Patch_Data_8:
+	sgb_data_send_cmd $0058, $7F, 11
+	db $09, $01, $8d, $14, $0f, $ad, $11, $0f, $29, $7f, $8d
+Awakening_Patch_Data_9:
+	sgb_data_send_cmd $0063, $7F, 11
+	db $11, $0f, $ad, $12, $0f, $c9, $80, $d0, $10, $ad, $14
+Awakening_Patch_Data_10:
+	sgb_data_send_cmd $006e, $7F, 11
+	db $0f, $09, $04, $8d, $14, $0f, $ad, $12, $0f, $29, $7f
+Awakening_Patch_Data_11:
+	sgb_data_send_cmd $0079, $7F, 11
+	db $8d, $12, $0f, $5c, $0c, $08, $00, $08, $e2, $30, $28
+Awakening_Patch_Data_12:
+	sgb_data_send_cmd $0084, $7F, 11
+	db $5c, $7c, $00, $7f, $00, $00, $00, $00, $00, $00, $00
 
-AWAKENING_LOAD_PACKETS = 6
+AWAKENING_LOAD_PACKETS = 13

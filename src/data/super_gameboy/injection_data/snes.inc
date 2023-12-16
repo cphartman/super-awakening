@@ -111,6 +111,25 @@ JOY3H       =   $421D   ;   Controller Port Data Registers (Pad 3 - High)   sing
 JOY4L       =   $421E   ;   Controller Port Data Registers (Pad 4 - Low)   single   read   any time that is not auto-joypad
 JOY4H       =   $421F   ;   Controller Port Data Registers (Pad 4 - High)   single   read   any time that is not auto-joypad
 
+KEY_B      = $80
+KEY_Y      = $40
+KEY_SELECT = $20
+KEY_START  = $10
+KEY_UP     = $08
+KEY_DOWN   = $04
+KEY_LEFT   = $02
+KEY_RIGHT  = $01
+KEY_A      = $80
+KEY_X      = $40
+KEY_L      = $20
+KEY_R      = $10
+
+KEY_B_MASK = $7F
+KEY_Y_MASK = $BF
+KEY_A_MASK = $7F
+KEY_X_MASK = $BF
+
+
 ; DMA/HDMA Registers
 DMAPx       =   $4300   ;   (H)DMA Control Register
 BBADx       =   $4301   ;   (H)DMA Destination Register
@@ -123,5 +142,52 @@ DASBx       =   $4307   ;   HDMA Indirect Address Registers
 A2AxL       =   $4308   ;   HDMA Mid Frame Table Address Registers (Low)
 A2AxH       =   $4309   ;   HDMA Mid Frame Table Address Registers (High)
 NTLRx       =   $430A   ;   HDMA Line Counter Register
+
+; MACRO PACK ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Macros to change the accumulator and index width.
+; For best results, use .smart which lets the assembler follow
+; SEP/REP and generate appropriately wide immediate values.
+
+;;
+; Sets the X and Y registers to use 8-bit values.
+; The upper bits are treated as cleared.
+.macro setxy8
+  sep #$10
+.endmacro
+
+;;
+; Sets the X and Y registers to use 16-bit values.
+.macro setxy16
+  rep #$10
+.endmacro
+
+;;
+; Sets the accumulator (A) and memory-only data manipulation
+; instructions (such as STZ and ROR) to use 8-bit data.
+; The upper 8 bits of A can be swapped in and out with the
+; XBA instruction.
+.macro seta8
+  sep #$20
+.endmacro
+
+;;
+; Sets the accumulator and memory-only data manipulation
+; instructions to use 16-bit data.
+.macro seta16
+  rep #$20
+.endmacro
+
+;;
+; Equivalent to seta8 and setxy8.
+.macro setaxy8
+  sep #$30
+.endmacro
+
+;;
+; Equivalent to seta16 and setxy16.
+.macro setaxy16
+  rep #$30
+.endmacro
 
 .endif

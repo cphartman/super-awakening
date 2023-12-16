@@ -122,8 +122,14 @@ SuperGameBoyInit::
     call SendUploadCommand                        ; $6AE2: $CD $51 $6B
     ld   bc, $06                                  ; $6AE5: $01 $06 $00
     call WaitForBCFrames                          ; $6AE8: $CD $92 $6B
+.SGBPatch8Cmd:
+    ld   hl, SGBPatch8Cmd                         ; $6AEB: $21 $F0 $68
+    call SendUploadCommand                        ; $6AEE: $CD $51 $6B
+    ld   bc, $06                                  ; $6AF1: $01 $06 $00
+    call WaitForBCFrames                          ; $6AF4: $CD $92 $6B
 
 .Awakening_Patch:
+
     ld   hl, Awakening_Patch_Data
 
 .Awakening_Patch_Loop:
@@ -148,11 +154,11 @@ SuperGameBoyInit::
 
 .Awakening_Patch_end:
 
-.SGBPatch8Cmd:
-    ld   hl, SGBPatch8Cmd                         ; $6AEB: $21 $F0 $68
-    call SendUploadCommand                        ; $6AEE: $CD $51 $6B
-    ld   bc, $06                                  ; $6AF1: $01 $06 $00
-    call WaitForBCFrames                          ; $6AF4: $CD $92 $6B
+.AwakeningHookPatchCmd:
+    ld   hl, AwakeningHookPatchCmd                
+    call SendUploadCommand                        
+    ld   bc, $06                                  
+    call WaitForBCFrames                          
 
     ; Upload the standard palette used by the game
     ld   hl, SGBSetPal01Cmd                       ; $6AF7: $21 $00 $69
