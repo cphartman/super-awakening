@@ -7533,3 +7533,16 @@ SuperAwakening_Trampolines::
     ld   a, BANK(GiveInventoryItem)
     ld   [rSelectROMBank], a
     ret
+
+.SendUploadCommand_trampoline
+    ld   a, BANK(SendUploadCommand)
+    ld   [rSelectROMBank], a
+
+    ld   hl, Awakening_Moasic_Shader_Command ; $6ADF: $21 $E0 $68
+    call SendUploadCommand
+    ;ld   bc, $06                                  ; $6AB5: $01 $06 $00
+    ;call WaitForBCFrames                          ; $6AB8: $CD $92 $6B
+
+    ld   a, $02
+    ld   [rSelectROMBank], a
+    ret

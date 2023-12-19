@@ -5112,6 +5112,7 @@ UpdateHealth:
     ld   a, [wSubtractHealthBuffer]               ; $6385: $FA $94 $DB
     and  a                                        ; $6388: $A7
     jr   z, .return2                              ; $6389: $28 $17
+
     ; decrement the buffer
     dec  a                                        ; $638B: $3D
     ld   [wSubtractHealthBuffer], a               ; $638C: $EA $94 $DB
@@ -5121,6 +5122,9 @@ UpdateHealth:
     jr   z, .skipDecrementHealth                  ; $6393: $28 $04
     dec  a                                        ; $6395: $3D
     ld   [wHealth], a                             ; $6396: $EA $5A $DB
+    
+    ; Update Moasic shader
+    call SuperAwakening_Trampolines.SendUploadCommand_trampoline
 
 .skipDecrementHealth:
     call LoadHeartsCount                          ; $6399: $CD $14 $64

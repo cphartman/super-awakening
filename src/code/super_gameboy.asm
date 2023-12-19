@@ -87,46 +87,78 @@ SuperGameBoyInit::
     ;  - https://tcrf.net/Notes:Super_Game_Boy#DATA_SND
     ;  - https://forums.nesdev.com/viewtopic.php?f=12&t=16610#p206526
     ;
-
+.SGBPatch1Cmd:
     ld   hl, SGBPatch1Cmd                         ; $6A97: $21 $80 $68
     call SendUploadCommand                        ; $6A9A: $CD $51 $6B
     ld   bc, $06                                  ; $6A9D: $01 $06 $00
     call WaitForBCFrames                          ; $6AA0: $CD $92 $6B
-
+.SGBPatch2Cmd:
     ld   hl, SGBPatch2Cmd                         ; $6AA3: $21 $90 $68
     call SendUploadCommand                        ; $6AA6: $CD $51 $6B
     ld   bc, $06                                  ; $6AA9: $01 $06 $00
     call WaitForBCFrames                          ; $6AAC: $CD $92 $6B
-
+.SGBPatch3Cmd:
     ld   hl, SGBPatch3Cmd                         ; $6AAF: $21 $A0 $68
     call SendUploadCommand                        ; $6AB2: $CD $51 $6B
     ld   bc, $06                                  ; $6AB5: $01 $06 $00
     call WaitForBCFrames                          ; $6AB8: $CD $92 $6B
-
+.SGBPatch4Cmd:
     ld   hl, SGBPatch4Cmd                         ; $6ABB: $21 $B0 $68
     call SendUploadCommand                        ; $6ABE: $CD $51 $6B
     ld   bc, $06                                  ; $6AC1: $01 $06 $00
     call WaitForBCFrames                          ; $6AC4: $CD $92 $6B
-
+.SGBPatch5Cmd:
     ld   hl, SGBPatch5Cmd                         ; $6AC7: $21 $C0 $68
     call SendUploadCommand                        ; $6ACA: $CD $51 $6B
     ld   bc, $06                                  ; $6ACD: $01 $06 $00
     call WaitForBCFrames                          ; $6AD0: $CD $92 $6B
-
+.SGBPatch6Cmd:
     ld   hl, SGBPatch6Cmd                         ; $6AD3: $21 $D0 $68
     call SendUploadCommand                        ; $6AD6: $CD $51 $6B
     ld   bc, $06                                  ; $6AD9: $01 $06 $00
     call WaitForBCFrames                          ; $6ADC: $CD $92 $6B
-
+.SGBPatch7Cmd:
     ld   hl, SGBPatch7Cmd                         ; $6ADF: $21 $E0 $68
     call SendUploadCommand                        ; $6AE2: $CD $51 $6B
     ld   bc, $06                                  ; $6AE5: $01 $06 $00
     call WaitForBCFrames                          ; $6AE8: $CD $92 $6B
-
+.SGBPatch8Cmd:
     ld   hl, SGBPatch8Cmd                         ; $6AEB: $21 $F0 $68
     call SendUploadCommand                        ; $6AEE: $CD $51 $6B
     ld   bc, $06                                  ; $6AF1: $01 $06 $00
     call WaitForBCFrames                          ; $6AF4: $CD $92 $6B
+
+.Awakening_Patch:
+
+    ld   hl, Awakening_Patch_Data
+
+.Awakening_Patch_Loop:
+    push hl
+    call SendUploadCommand
+    ld   bc, $06
+    call WaitForBCFrames
+
+    ; Increment the address counter
+    pop hl
+    ld b, 0
+    ld c, $10
+    add hl, bc
+
+    ; Check if we're at the last address
+    ld a, h
+    cp HIGH(Awakening_Patch_Data+(16*AWAKENING_LOAD_PACKETS))
+    jp nz, .Awakening_Patch_Loop
+    ld a, l
+    cp LOW(Awakening_Patch_Data+(16*AWAKENING_LOAD_PACKETS))
+    jp nz, .Awakening_Patch_Loop
+
+.Awakening_Patch_end:
+
+.AwakeningHookPatchCmd:
+    ld   hl, AwakeningHookPatchCmd                
+    call SendUploadCommand                        
+    ld   bc, $06                                  
+    call WaitForBCFrames                          
 
     ; Upload the standard palette used by the game
     ld   hl, SGBSetPal01Cmd                       ; $6AF7: $21 $00 $69
@@ -153,6 +185,11 @@ SuperGameBoyInit::
     ld   hl, SGBFrameTilemap                      ; $6B21: $21 $00 $60
     ld   de, SGBTransfertBorderCmd                ; $6B24: $11 $50 $69
     call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
+
+    ; Upload frame tilemap and palettes
+    ;ld   hl, SGBFrameTilemap                      ; $6B21: $21 $00 $60
+    ;ld   de, SGBTransfertBorderCmd                ; $6B24: $11 $50 $69
+    ;call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
 
     ld   hl, vTiles0                              ; $6B2A: $21 $00 $80
     ld   bc, $2000                                ; $6B2D: $01 $00 $20
