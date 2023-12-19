@@ -15,7 +15,5 @@ or
 1) Send generated packets to the SNES during the boot sequence
     * [`src/code/super_gameboy.asm`](https://github.com/cphartman/super-awakening/blob/sgb-injection/src/code/super_gameboy.asm#L126-L149)
 1) Add a hook from the SGB Bios into our injected code
-    * Hijack `SGBPatch8Cmd` by adding a [JUMP to our code](https://github.com/cphartman/super-awakening/blob/sgb-injection/src/data/super_gameboy/commands.asm#L116-L117)
+    * Send a new patch `AwakeningHookPatchCmd` which adds a [JUMP to our code](https://github.com/cphartman/super-awakening/blob/sgb-injection/src/data/super_gameboy/commands.asm#L116-L117)
     * Make sure to [jump back](https://github.com/cphartman/super-awakening/blob/sgb-injection/src/data/super_gameboy/injection_data/injection_script.asm#L22)
-        * Maybe this could be a function or something nicer
-        * There are probably better points to hook in, but will require analysis of the rom.  It looks like we're deep in the call stack at this hook point.
