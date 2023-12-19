@@ -1,6 +1,22 @@
-# SNES Code Injection
+# `SGB` Code Injection Toolchain
 
-Toolchain for `SNES` code injection from `LADX` via `Super Gameboy`.  Use `make build` to include injected `SNES` assembly when the game boots.  The injected code will be called once per `SGB` game frame.  Data can be sent from the `GB` to the `SNES` on a game frame.
+Toolchain for injecting `SNES` code from `LADX` via `Super Gameboy`.  Use `make build` to include injected `SNES` assembly when the game boots.  The injected code will be called once per `SGB` game frame.  Data can be sent from the `GB` to the `SNES` on a game frame.
+
+# Injection Toolchain
+
+The steps list out how the `SNES` assembly gets built, injected, and executed on the `SNES`.
+
+### 1) Build the `SNES` injection payload
+The `SNES` assembly from `entry.asm` is compiled into into `snes_injection_data.smc`.  This file contains the code that will be injected into the `SNES`.
+
+### 2) Build `SGB` injection packet data
+The script `convert_sfc_to_packets.py` formats `snes_injection_data.smc` into packet data that can easily be ready by the `GB` and sent to the `SGB`.  This packet data is written to the file `injection_packets.asm`.
+
+### 3) Send injection packet data to `SGB`
+`GB` Code is added to the `LADX` boot sequence [to send the injection packet data](https://github.com/cphartman/super-awakening/blob/f63f1c053b0411459c79dcac2076e0bdb2083555/src/code/super_gameboy.asm#L81-L89) to the `SGB`.  The payload is uploaded to `WRAM` at `$7f0000`.
+
+### 4) Hook into the `SGB` bios gameloop 
+Send a data packet to patch `$000808`.  The patch will add a jump to our injected code at `$7f0000`.
 
 # File Structure
 
@@ -23,22 +39,6 @@ Toolchain for `SNES` code injection from `LADX` via `Super Gameboy`.  Use `make 
 | ---- | ---- |
 | `/snes_injection_data.smc` | `SNES` code payload to send |
 | `/src/data/super_gameboy/injection_packets.asm` | `GB` will send these packets to the `SGB` |
-
-# Injection Toolchain
-
-The steps list out how the `SNES` assembly gets built, injected, and executed on the `SNES`.
-
-### 1) Build the `SNES` injection payload
-The `SNES` assembly from `/src/data/super_gameboy/injection/entry.asm` is compiled into into `/snes_injection_data.smc`.  This file contains the code that will be injected into the `SNES`.
-
-### 2) Build `SGB` injection packet data
-The script `/tools/convert_sfc_to_packets.py` formats `snes_injection_data.smc` into packet data that can easily be ready by the `GB` and sent to the `SGB`.  This packet data is written to the file `/src/data/super_gameboy/injection_packets.asm`.
-
-### 3) Send injection packet data to `SGB`
-`GB` Code is added to the `LADX` boot sequence [to send the injection packet data](https://github.com/cphartman/super-awakening/blob/f63f1c053b0411459c79dcac2076e0bdb2083555/src/code/super_gameboy.asm#L81-L89) to the `SGB`.  The payload is uploaded to `WRAM` at `$7f0000`.
-
-### 4) Hook into the `SGB` bios gameloop 
-Send a data packet to patch `$000808`.  The patch will add a jump to our injected code at `$7f0000`.
 
 
 # `SGB` bios hook
