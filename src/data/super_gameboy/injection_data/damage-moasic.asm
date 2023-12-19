@@ -1,5 +1,4 @@
 
-.if 0
 MOSAIC_SHADER:
 
 MOSAIC_SHADER_LOOP:
@@ -46,13 +45,5 @@ Do_MOASIC:
 
 MOSAIC_SHADER_LOOP_end:
 
-   JMP @injected_label
-
-@some_data:
-   .byte $01,$02,$01,$00
-
 @counter1:
    .byte $00
-
-@injected_label:
-   ;JML $000814

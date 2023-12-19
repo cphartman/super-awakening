@@ -67,6 +67,7 @@ default: build test
 asm_files =  $(shell find src     -type f -name '*.asm' -o -name '*.inc')
 gfx_files =  $(shell find src/gfx -type f -name '*.png')
 bin_files =  $(shell find src     -type f -name '*.tilemap.encoded' -o -name '*.attrmap.encoded')
+injection_sources =  $(shell find src/data/super_gameboy/injection_data     -type f -name '*.asm' -o -name '*.inc')
 
 # Compile an PNG file for OAM memory to a 2BPP file
 # (inverting the palette and de-interleaving the tiles).
@@ -84,7 +85,7 @@ oam_%.2bpp: oam_%.png
 # we don't compile the different ASM files separately.)
 # Locale-specific rules below (e.g. `src/main.azlj.o`) will add their own
 # pre-requisites to the ones defined by this rule.
-src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(bin_files)
+src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(bin_files) src/data/super_gameboy/injection_data.asm
 	$(ASM) $(ASFLAGS) $($*_ASFLAGS) -i src/ -o $@ $<
 
 # Link object files into a GBC executable rom
@@ -177,6 +178,24 @@ src/main.azle-r2.o: azlf-r1.gbc
 azle-r2_ASFLAGS = -DLANG=EN -DVERSION=2
 azle-r2_LDFLAGS = -O azlf-r1.gbc
 azle-r2_FXFLAGS = --rom-version 2 --non-japanese --title "ZELDA" --game-id "AZLE"
+
+#
+# SGB Injection
+#
+# 1) Compile the SNES ASM
+#   src/data/super_gameboy/injection_data/*.asm => snes_injection_data.smc
+#
+
+snes_injection_data.smc: $(injection_sources)
+	cl65 -C src/data/super_gameboy/injection_data/smc.cfg -o snes_injection_data.smc src/data/super_gameboy/injection_data/injection_script.asm
+
+#
+# 2) Convert SNES asm into SGB injection packet
+#   snes_injection_data.smc => src/data/super_gameboy/injection_data.asm
+# 
+src/data/super_gameboy/injection_data.asm: snes_injection_data.smc
+	python3 tools/convert_sfc_to_packets.py > src/data/super_gameboy/injection_data.asm
+
 
 #
 # Main targets

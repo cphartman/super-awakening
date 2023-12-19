@@ -43,9 +43,6 @@ Awakening_Patch_Data_13:
 	db $0f, $ad, $12, $0f, $29, $7f, $8d, $12, $0f, $5c, $0c
 Awakening_Patch_Data_14:
 	sgb_data_send_cmd $009a, $7F, 11
-	db $08, $00, $08, $e2, $30, $28, $5c, $98, $00, $7f, $00
-Awakening_Patch_Data_15:
-	sgb_data_send_cmd $00a5, $7F, 11
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $08, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-AWAKENING_LOAD_PACKETS = 16
+AWAKENING_LOAD_PACKETS = 15

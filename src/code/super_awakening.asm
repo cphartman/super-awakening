@@ -590,7 +590,7 @@ ENDC
 .dec_weapon4
     ; Check for both buttons button down
     ldh a, [hPressedButtonsMask2]
-    and (J_SELECT | J_LEFT)
+    and (J_SELECT | J_LEFT) 
     cp  (J_SELECT | J_LEFT)
     jp nz, .dec_weapon4_end
 
