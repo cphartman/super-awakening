@@ -3509,9 +3509,14 @@ jr_020_5FC1:
     or   [hl]                                     ; $5FC7: $B6
     jp   nz, ret_020_604A                         ; $5FC8: $C2 $4A $60
 
+; Check if pressing A on the inventory screen
+.Check_Inventory_Press_A
     ldh  a, [hJoypadState]                        ; $5FCB: $F0 $CC
     and  J_A                                      ; $5FCD: $E6 $10
-    jr   z, jr_020_5FED                           ; $5FCF: $28 $1C
+    
+    ; We want to igore the A button inventory stuff
+    ;jr   z, Check_Inventory_Press_B                           ; $5FCF: $28 $1C
+    jp   Check_Inventory_Press_B                  
 
     ld   a, [wInventoryItems.AButtonSlot]         ; $5FD1: $FA $01 $DB
     push af                                       ; $5FD4: $F5
@@ -3532,10 +3537,14 @@ label_020_5FDB:
     jr   jr_020_600D                              ; $5FEB: $18 $20
 
 ; Swap B inventory slot on button press
-jr_020_5FED:
+Check_Inventory_Press_B:
     ldh  a, [hJoypadState]                        ; $5FED: $F0 $CC
     and  J_B                                      ; $5FEF: $E6 $20
-    jr   z, ret_020_604A                          ; $5FF1: $28 $57
+    
+    ; We want to ignore the B button inventory stuff
+    ;jr   z, ret_020_604A                          ; $5FF1: $28 $57
+    jp   ret_020_604A
+
     ; Push the curent B button onto stack
     ld   a, [wInventoryItems.BButtonSlot]         ; $5FF3: $FA $00 $DB
     push af                                       ; $5FF6: $F5

@@ -670,7 +670,6 @@ ENDC
 .inc_weapon3_end
 .change_weapon3_end
 
-
 .change_weapon4
 .dec_weapon4
     ; Check for both buttons button down
@@ -735,9 +734,6 @@ ENDC
     and J_SELECT
     cp J_SELECT
     jp nz, .inc_weapon4_end
-
-    ld d, $00 ; reg_d is a loop counter
-.inc_weapon4_loop
 
 .inc_weapon4_ocarina
     ; Check if we have ocarina equiped
@@ -823,6 +819,9 @@ ENDC
 
 .inc_weapon4_ocarina_end
 
+
+    ld d, 0 ; reg_d is a loop counter
+.inc_weapon4_loop
     inc d
     ld a, d
     cp $0A
@@ -853,7 +852,7 @@ ENDC
     cp INVENTORY_EMPTY
     jp z, .inc_weapon4_loop
     
-.weapon_inc_loop_end
+.inc_weapon4_loop_end
     ; a is the new value, b is the new inventory index value
     ; write weapon4 value to display
     ld hl, wSuperAwakening.Weapon4_Value
