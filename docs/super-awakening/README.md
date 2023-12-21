@@ -1,12 +1,11 @@
 # Super Link's Awakening
 
-`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that enables additional gameplay functionality by using `Super Game Boy` functions.  This enables new gameplay features that have been designed to be played with a `Super Nintendo` controller.
+`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that uses the `Super Game Boy` to enable new gameplay features.  The romhack is designed to be played with a `Super Nintendo` controller.
 
 ![Super Links Awakening Gameplay Demo](demo-gameplay.gif)
 
 ## Play now
 * Download the IPS patch from the latest [Release](https://github.com/cphartman/super-awakening/releases)
-* Load the patched rom into the [Super Links Awakening Emulator.](https://cphartman.github.io/projects/super-links-awakening/)
 
 ## New Gameplay Features
 * 🗡 Sword and Shield equipped to `A` / `B` buttons
@@ -58,19 +57,18 @@ The `Super Game Boy` system exposes up to [4 controller inputs](https://gbdev.io
 | ---- | ---- |
 | ![Street Fighter 2](streetfighter2_sgb_enhanced.png) | ![Bomberman](bombermap_sgb_enhanced.png) |
 
-The `Super Game Boy` forwards button inputs from the `Super Nintendo` to button inputs on the `Game Boy`.  However, the `Game Boy` can only support 8 buttons per controller.  As a result, the additional `X`/`Y`/`R`/`L` buttons on the `Super Nintendo` controller are ignored.
+The `Super Game Boy` forwards button inputs from the `Super Nintendo` to button inputs on the `Game Boy`.  The `Game Boy` controller can only support 8 buttons.  As a result, the additional `X/Y/R/L` buttons on the `Super Nintendo` controller are not sent to the `Game Boy`.
 
-The romhack takes advantage of this functionality by instructing the `Super Game Boy` to send the `X`/`Y`/`R`/`L` buttons from controller 1 to the `Up`/`Down`/`Left`/`Right` buttons for the `Game Boy` controller 2.  This allow a single controller from the `Super Nintendo` to send all 12 button inputs to the `Game Boy`.  The romhack implements custom functionality for the additional controller inputs.
+The romhack instructs the `Super Game Boy` to send the controller 1 `X/Y/R/L` buttons to the `Game Boy` controller 2 as `A/B/Left/Right` buttons.  This allow a single `Super Nintendo` controller to send all 12 button inputs to the `Game Boy`.  The romhack implements custom functionality for the additional controller inputs.
 
 ## System Compatibility
-This romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  Not all emulators support the required `Super Game Boy` functions for this romhack.  `Game Boy Color` compatibility is experimental for supported systems. 
+The romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  `SGB + GBC` is supported in emulators where available.  Some emulators require additional configurations to set the `X/Y/R/L` buttons to controller 2.
 
-| System | Compatibility |
-| ---- | ---- |
-| Super Nintendo | ✅  |
-| BGB | 🌈 |
-| Mesen | ✅  |
-| Analogue Pocket | ✅ |
-| EmulatorJS | ⚠️  |
-| mGBA | ❌  |
-| Retroarch | ❌  |
+| System | Compatibility | Notes |
+| ---- | ---- | ---- | 
+| Super Nintendo | ✅ | Verified `SuperNt`+`SGB1`+`EverDrive-GBx7` |
+| Analogue Pocket | ✅ | Use [openFPGA-Super-GB](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
+| BGB | 🌈 | Set `Emulated System` to `SGB + GBC`. Set `X/Y/L/R` button inputs to `A/B/Left/Right` on joypad1. |
+| Mesen | ✅ | Set `Game Boy model` to `Super Game Boy`. Set buttons for `SNES Port 1 Controller`. |
+| mGBA | ❌ | Does not support Controller 2 inputs |
+| Retroarch | ❌ | Cores do not support Controller 2 inputs |
