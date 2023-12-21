@@ -39,6 +39,12 @@
     and  (J_A | J_B)
     cp 0
     jp z, .map_P2AB_to_P1A_end
+    ; If left or right is held, dont use item (cycle inventory backwards)
+    ldh  a, [hPressedButtonsMask2]
+    and  J_LEFT | J_RIGHT
+    cp 0
+    jp nz, .map_P2AB_to_P1A_end
+    ; Set the new joypad state
     ld hl, hJoypadState
     ld a, [hl]
     or J_A ; Set A
@@ -50,6 +56,12 @@
     and  (J_A | J_B)
     cp 0
     jp z, .map_P2AB_to_P1A_mask_end
+     ; If left or right is held, dont use item (cycle inventory backwards)
+    ldh  a, [hPressedButtonsMask2]
+    and  J_LEFT | J_RIGHT
+    cp 0
+    jp nz, .map_P2AB_to_P1A_mask_end
+    ; Set the new joypad state
     ld hl, hPressedButtonsMask
     ld a, [hl]
     or J_A ; Set A
