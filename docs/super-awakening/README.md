@@ -36,7 +36,7 @@ The pause menu allows you to customize your inventory.  Your inventory is used d
 You have 10 inventory slots.  Each inventory slot can have a different item.  An inventory slot can also be set to empty.  
 * Press `Start` to open inventory menu
 * Use `Arrow Keys` to select an inventory slot
-* Press `R` or `L` to change item in the selected inventory slot
+* Press `A` or `B` to change item in the selected inventory slot
 
 ![Super Links Awakening Inventory Demo](demo-inventory.gif)
 
