@@ -8,7 +8,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="500"
-   height="212"
+   height="250"
    id="svg4871"
    version="1.1"
    inkscape:version="0.48.4 r9939"
@@ -336,16 +336,19 @@
         font-size: 13px;
         fill: #FFF;
         background: #000;
-        font-weight: bold;
+        font-weight: 600;
+        letter-spacing: 1px;
         
-         paint-order: stroke;
-        stroke: rgba(0,0,0,.5);
+      paint-order: stroke;
+        stroke: rgba(0,0,0,.7);
         stroke-width: 2px;
         stroke-linecap: butt;
         stroke-linejoin: miter;
     }
     .label-bg { 
         fill: #F00;
+        stroke-width: 2px;
+        stroke: rgba(0,0,0,.4);
     }
   </style>
   <g
@@ -365,10 +368,10 @@
 <rect style="fill:#ffc431" x="325" y="130" width="73" height="20" rx="5" class="label-bg" />
 <text x="360" y="145" class="labels" text-anchor="middle">Sword</text>
 
-<rect style="fill:#8a72e7" x="40" y="1" width="110" height="20" rx="5" class="label-bg" />
-<text x="95" y="15" class="labels" text-anchor="middle">Change Item Y</text>
+<rect style="fill:#8a72e7" x="30" y="-23" width="130" height="20" rx="5" class="label-bg" />
+<text x="95" y="-8" class="labels" text-anchor="middle">Change Item Y</text>
 
-<rect style="fill:#b8b6db" x="305" y="1" width="110" height="20" rx="5" class="label-bg" />
-<text x="360" y="15" class="labels" text-anchor="middle">Change Item X</text>
+<rect style="fill:#9794cb" x="280" y="-23" width="130" height="20" rx="5" class="label-bg" />
+<text x="345" y="-8" class="labels" text-anchor="middle">Change Item X</text>
 </g>
 </svg>

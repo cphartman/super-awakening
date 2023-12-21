@@ -1,11 +1,12 @@
-# Super Link's Awakening
+# Super Awakening
 
-`Super Link's Awakening` is a `Legend of Zelda: Link's Awakening` romhack that uses the `Super Game Boy` to enable new gameplay features.  The romhack is designed to be played with a `Super Nintendo` controller.
+`Super Awakening` is a `Legend of Zelda: Link's Awakening` romhack that uses the `Super Game Boy` to enable new gameplay features.  The romhack is designed to be played with a `Super Nintendo` controller.
 
-![Super Links Awakening Gameplay Demo](demo-gameplay.gif)
+![Super Awakening Gameplay Demo](demo-gameplay.gif)
 
 ## Play now
 * Download the IPS patch from the latest [Release](https://github.com/cphartman/super-awakening/releases)
+* Load the patched rom into the [Super Awakening Emulator](https://cphartman.github.io/projects/super-links-awakening/).
 
 ## New Gameplay Features
 * 🗡 Sword and Shield equipped to `A` / `B` buttons
@@ -68,6 +69,7 @@ The romhack is fully supported on an original `Super Nintendo` system using a `S
 | ---- | ---- | ---- | 
 | Super Nintendo | ✅ | Verified `SuperNt`+`SGB1`+`EverDrive-GBx7` |
 | Analogue Pocket | ✅ | Use [openFPGA-Super-GB](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
+| Web Browser| ✅ | [EmulatorJS fork here](https://cphartman.github.io/projects/super-links-awakening/) |
 | BGB | 🌈 | Set `Emulated System` to `SGB + GBC`. Set `X/Y/L/R` button inputs to `A/B/Left/Right` on joypad1. |
 | Mesen | ✅ | Set `Game Boy model` to `Super Game Boy`. Set buttons for `SNES Port 1 Controller`. |
 | mGBA | ❌ | Does not support Controller 2 inputs |
