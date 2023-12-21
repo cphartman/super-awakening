@@ -5,105 +5,53 @@
 ;
 
 .map_controller2_to_controller1
-    ; Mapping: P2_R, P2_D => P1_B
-.update_p1_b_state
-    ldh  a, [hJoypadState2]
-    and  J_RIGHT | J_DOWN
-    cp 0
-    jp z, .update_p1_b_state_end
-    ld a, [hJoypadState]
-    or J_B
+
+.map_P1A_to_P1B
     ld hl, hJoypadState
+    ld  a, [hl]
+    ld b, a
+    and  J_A
+    cp J_A
+    jp nz, .map_P1A_to_P1B_end
+    ld a, b
+    and (~J_A) ; Mask off A
+    or J_B ; Set B
     ld [hl], a
-.update_p1_b_state_end
+.map_P1A_to_P1B_end
 
-.update_p1_b_mask
-    ldh  a, [hPressedButtonsMask2]
-    and  J_RIGHT | J_DOWN
-    cp 0
-    jp z, .update_p1_b_mask_end
-    ld a, [hPressedButtonsMask]
-    or J_B
+.map_P1A_to_P1B_mask
     ld hl, hPressedButtonsMask
+    ld  a, [hl]
+    ld b, a
+    and  J_A
+    cp J_A
+    jp nz, .map_P1A_to_P1B_mask_end
+    ld a, b
+    and (~J_A) ; Mask off A
+    or J_B ; Set B
     ld [hl], a
-.update_p1_b_mask_end
+.map_P1A_to_P1B_mask_end
 
-.update_p1_a_state_from_up
-    ; Check left press
-    ldh  a, [hJoypadState2]
-    and  J_UP
+; -----------------------
+
+.map_P2AB_to_P1A
+    ld  a, [hJoypadState2]
+    and  (J_A | J_B)
     cp 0
-    jp z, .update_p1_a_state_from_up_end ; Not pressing
-
-    ; Ignore if holding start
-    ldh  a, [hPressedButtonsMask2]
-    and  J_START
-    cp 0
-    jp nz, .update_p1_a_state_from_up_end ; Not pressing
-
-    ; Simulate A press
-    ld a, [hJoypadState]
-    or J_A
+    jp z, .map_P2AB_to_P1A_end
     ld hl, hJoypadState
+    ld a, [hl]
+    or J_A ; Set A
     ld [hl], a
-.update_p1_a_state_from_up_end
+.map_P2AB_to_P1A_end
 
-.update_p1_a_mask_from_up
-    ; Check left press
-    ldh  a, [hPressedButtonsMask2]
-    and  J_UP
+.map_P2AB_to_P1A_mask
+    ld  a, [hPressedButtonsMask2]
+    and  (J_A | J_B)
     cp 0
-    jp z, .update_p1_a_mask_from_up_end ; Not pressing
-
-    ; Ignore if holding start
-    ldh  a, [hPressedButtonsMask2]
-    and  J_START
-    cp 0
-    jp nz, .update_p1_a_mask_from_up_end ; Not pressing
-
-    ; Simulate A press
-    ld a, [hPressedButtonsMask]
-    or J_A
+    jp z, .map_P2AB_to_P1A_mask_end
     ld hl, hPressedButtonsMask
+    ld a, [hl]
+    or J_A ; Set A
     ld [hl], a
-.update_p1_a_mask_from_up_end
-
-.update_p1_a_state_from_left
-    ; Check left press
-    ldh  a, [hJoypadState2]
-    and  J_LEFT
-    cp 0
-    jp z, .update_p1_a_state_from_left_end ; Not pressing
-
-    ; Ignore if holding select, used for inventory decrement
-    ldh  a, [hPressedButtonsMask2]
-    and  J_SELECT
-    cp 0
-    jp nz, .update_p1_a_state_from_left_end ; Not pressing
-
-    ; Simulate A press
-    ld a, [hJoypadState]
-    or J_A
-    ld hl, hJoypadState
-    ld [hl], a
-.update_p1_a_state_from_left_end
-
-.update_p1_a_mask_from_left
-    ; Check left press
-    ldh  a, [hPressedButtonsMask2]
-    and  J_LEFT
-    cp 0
-    jp z, .update_p1_a_mask_from_left_end ; Not pressing
-
-    ; Ignore if holding select, used for inventory decrement
-    ldh  a, [hPressedButtonsMask2]
-    and  J_SELECT
-    cp 0
-    jp nz, .update_p1_a_mask_from_left_end ; Not pressing
-
-    ; Simulate A press
-    ld a, [hPressedButtonsMask]
-    or J_A
-    ld hl, hPressedButtonsMask
-    ld [hl], a
-.update_p1_a_mask_from_left_end
+.map_P2AB_to_P1A_mask_end

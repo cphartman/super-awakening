@@ -7,7 +7,7 @@
 
 INJECTION_START:
 
-   .include "map-snes1-to-gb2.asm" 
+   ;.include "map-snes1-to-gb2.asm" 
 
 INJECTION_END:
    JML $00080C

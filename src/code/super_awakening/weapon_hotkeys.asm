@@ -1,32 +1,32 @@
 ;
 ; Weapon Hotkeys
-; P2_Right => Weapon 1 => B Slot
-; P2_Down => Weapon 2 => B Slot
-; P2_Up => Weapon 3 => A Slot
-; P2_Left => Weapon 4 => A Slot
+; P1_A => Shield => B Slot
+; P1_B => Sword => B Slot
+; P2_A => Weapon 3 => A Slot
+; P2_B => Weapon 4 => A Slot
 ;
 
-.use_weapon_1
+.use_weapon_shield
 
-    ; Check for button input on weapon1
-    ldh  a, [hJoypadState2]                    
-    and  J_RIGHT
-    cp J_RIGHT
-    jp nz, .use_weapon_1_end
+    ; Check for button input
+    ldh  a, [hJoypadState]                    
+    and  J_A
+    cp J_A
+    jp nz, .use_weapon_shield_end
 
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
     ld [hl], INVENTORY_SHIELD
 
-.use_weapon_1_end
+.use_weapon_shield_end
 
-.use_weapon_2
+.use_weapon_sword
 
-    ; Check for button input on weapon2
-    ldh  a, [hJoypadState2]                    
-    and  J_DOWN
-    cp J_DOWN
-    jp nz, .use_weapon_2_end
+    ; Check for button input
+    ldh  a, [hJoypadState]                    
+    and  J_B
+    cp J_B
+    jp nz, .use_weapon_sword_end
 
     ; Check if sword is enabled
     ld  a, [wSwordLevel]
@@ -42,14 +42,14 @@ ENDC
     ld hl, wInventoryItems.BButtonSlot
     ld [hl], a
 
-.use_weapon_2_end
+.use_weapon_sword_end
 
 .use_weapon_3
     
     ; Check for button input on weapon3
     ldh  a, [hJoypadState2]                    
-    and  J_UP
-    cp J_UP
+    and  J_A
+    cp J_A
     jp nz, .use_weapon_3_end
 
     ; Set weapon Slot A
@@ -63,8 +63,8 @@ ENDC
     
     ; Check for button input on weapon4
     ldh  a, [hJoypadState2]                    
-    and  J_LEFT
-    cp J_LEFT
+    and  J_B
+    cp J_B
     jp nz, .use_weapon_4_end
 
     ; Set weapon Slot A
