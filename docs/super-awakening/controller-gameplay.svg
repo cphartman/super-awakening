@@ -368,10 +368,10 @@
 <rect style="fill:#ffc431" x="325" y="130" width="73" height="20" rx="5" class="label-bg" />
 <text x="360" y="145" class="labels" text-anchor="middle">Sword</text>
 
-<rect style="fill:#8a72e7" x="30" y="-23" width="130" height="20" rx="5" class="label-bg" />
-<text x="95" y="-8" class="labels" text-anchor="middle">Change Item Y</text>
+<rect style="fill:#8a72e7" x="60" y="-8" width="130" height="20" rx="5" class="label-bg" />
+<text x="125" y="6" class="labels" text-anchor="middle">Change Item Y</text>
 
-<rect style="fill:#9794cb" x="280" y="-23" width="130" height="20" rx="5" class="label-bg" />
-<text x="345" y="-8" class="labels" text-anchor="middle">Change Item X</text>
+<rect style="fill:#9794cb" x="250" y="-8" width="130" height="20" rx="5" class="label-bg" />
+<text x="315" y="6" class="labels" text-anchor="middle">Change Item X</text>
 </g>
 </svg>
