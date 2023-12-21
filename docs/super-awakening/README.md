@@ -63,13 +63,13 @@ The `Super Game Boy` forwards button inputs from the `Super Nintendo` to button 
 The romhack instructs the `Super Game Boy` to send the controller 1 `X/Y/R/L` buttons to the `Game Boy` controller 2 as `A/B/Left/Right` buttons.  This allow a single `Super Nintendo` controller to send all 12 button inputs to the `Game Boy`.  The romhack implements custom functionality for the additional controller inputs.
 
 ## System Compatibility
-The romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  `SGB + GBC` is supported in emulators where available.  Some emulators require additional configurations to set the `X/Y/R/L` buttons to controller 2.
+The romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  `Game Boy Color` is supported in emulators where available.  Some emulators require additional configurations to set the `X/Y/R/L` buttons to controller 2.
 
 | System | Compatibility | Notes |
 | ---- | ---- | ---- | 
 | Super Nintendo | ✅ | Verified `SuperNt`+`SGB1`+`EverDrive-GBx7` |
 | Analogue Pocket | ✅ | Use [openFPGA-Super-GB](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
-| Web Browser| ✅ | [EmulatorJS fork here](https://cphartman.github.io/projects/super-links-awakening/) |
+| Web Browser| ✅ | [`EmulatorJS` + `mGBA` compatible fork](https://cphartman.github.io/projects/super-links-awakening/) |
 | BGB | 🌈 | Set `Emulated System` to `SGB + GBC`. Set `X/Y/L/R` button inputs to `A/B/Left/Right` on joypad1. |
 | Mesen | ✅ | Set `Game Boy model` to `Super Game Boy`. Set buttons for `SNES Port 1 Controller`. |
 | mGBA | ❌ | Does not support Controller 2 inputs |
