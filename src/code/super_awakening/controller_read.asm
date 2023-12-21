@@ -46,12 +46,14 @@
     and  $F0                                      ; $2875: $E6 $F0
     or   b                                        ; $2877: $B0
     ld   c, a                                     ; $2878: $4F
-    ldh  a, [hPressedButtonsMask]                 ; $2879: $F0 $CB
+    ld  a, [wSuperAwakening.PressedButtonsMask]                 ; $2879: $F0 $CB
     xor  c                                        ; $287B: $A9
     and  c                                        ; $287C: $A1
     ldh  [hJoypadState], a                        ; $287D: $E0 $CC
+    ld  [wSuperAwakening.JoypadState], a                        ; $287D: $E0 $CC
     ld   a, c                                     ; $287F: $79
     ldh  [hPressedButtonsMask], a                 ; $2880: $E0 $CB
+    ld  [wSuperAwakening.PressedButtonsMask], a                 ; $2880: $E0 $CB
     ld   a, J_BUTTONS | J_DPAD                    ; $2882: $3E $30
     ld   [rP1], a                                 ; $2884: $E0 $00
 
@@ -82,12 +84,12 @@
     and  $F0                                      ; $2875: $E6 $F0
     or   b                                        ; $2877: $B0
     ld   c, a                                     ; $2878: $4F
-    ldh  a, [hPressedButtonsMask2]                 ; $2879: $F0 $CB
+    ld  a, [wSuperAwakening.PressedButtonsMask2]                 ; $2879: $F0 $CB
     xor  c                                        ; $287B: $A9
     and  c                                        ; $287C: $A1
-    ldh  [hJoypadState2], a                        ; $287D: $E0 $CC
+    ld  [wSuperAwakening.JoypadState2], a                        ; $287D: $E0 $CC
     ld   a, c                                     ; $287F: $79
-    ldh  [hPressedButtonsMask2], a                 ; $2880: $E0 $CB
+    ld  [wSuperAwakening.PressedButtonsMask2], a                 ; $2880: $E0 $CB
     ld   a, J_BUTTONS | J_DPAD                    ; $2882: $3E $30
     ld   [rP1], a                                 ; $2884: $E0 $00
 .readController2_end

@@ -302,7 +302,7 @@ hDMARoutine::
   ds $A ; FFC0 - FFC9
 
 ; Unused
-;ds 1 ; FFCA
+ds 1 ; FFCA
 
 ; The pressed buttons on the joypad.
 ; During all the time a button is pressed, the matching bit on this variable is set.
@@ -311,18 +311,12 @@ hDMARoutine::
 hPressedButtonsMask::
   ds 1 ; FFCB
 
-hPressedButtonsMask2::
-  ds 1 ; FFCB
-
 ; The buttons newly pressed on the joypad.
 ; The matching bit is set only during the first frame the button is pressed.
 ; Afterwards, the bit is cleared.
 ;
 ; See J_* constants for values.
 hJoypadState::
-  ds 1 ; FFCC
-
-hJoypadState2::
   ds 1 ; FFCC
 
 ; Topmost corner of the object intersected by Link or Link's sword
@@ -543,7 +537,7 @@ hLinkFinalRoomPosition::
   ds 1 ; FFFB
 
 ; Unused
-;ds 1 ; FFFC
+ds 1 ; FFFC
 
 ; Is the engine currently rendering a frame.
 ; 0 = rendering is done, a frame is ready to be copied to VRAM,

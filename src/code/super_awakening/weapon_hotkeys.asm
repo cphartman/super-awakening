@@ -47,7 +47,7 @@ ENDC
 .use_weapon_3
     
     ; Check for button input on weapon3
-    ldh  a, [hJoypadState2]                    
+    ld  a, [wSuperAwakening.JoypadState2]                    
     and  J_A
     cp J_A
     jp nz, .use_weapon_3_end
@@ -62,7 +62,7 @@ ENDC
 .use_weapon_4
     
     ; Check for button input on weapon4
-    ldh  a, [hJoypadState2]                    
+    ld  a, [wSuperAwakening.JoypadState2]                    
     and  J_B
     cp J_B
     jp nz, .use_weapon_4_end

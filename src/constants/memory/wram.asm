@@ -3876,6 +3876,18 @@ wSuperAwakening::
 .QuickDash_Direction:
   ds 1
 
+.JoypadState:
+  ds 1 ; FFCC
+
+.PressedButtonsMask:
+  ds 1 ; FFCB
+
+.JoypadState2:
+  ds 1 ; FFCC
+
+.PressedButtonsMask2:
+  ds 1 ; FFCB
+
 .Items_Unlocked
   ds INVENTORY_MAX
 

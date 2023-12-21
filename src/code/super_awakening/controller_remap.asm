@@ -41,12 +41,12 @@ jp nz, .map_controller2_to_controller1_end
 ; -----------------------
 
 .map_P2AB_to_P1A
-    ld  a, [hJoypadState2]
+    ld  a, [wSuperAwakening.JoypadState2]
     and  (J_A | J_B)
     cp 0
     jp z, .map_P2AB_to_P1A_end
     ; If left or right is held, dont use item (cycle inventory backwards)
-    ldh  a, [hPressedButtonsMask2]
+    ld  a, [wSuperAwakening.PressedButtonsMask2]
     and  J_LEFT | J_RIGHT
     cp 0
     jp nz, .map_P2AB_to_P1A_end
@@ -58,12 +58,12 @@ jp nz, .map_controller2_to_controller1_end
 .map_P2AB_to_P1A_end
 
 .map_P2AB_to_P1A_mask
-    ld  a, [hPressedButtonsMask2]
+    ld  a, [wSuperAwakening.PressedButtonsMask2]
     and  (J_A | J_B)
     cp 0
     jp z, .map_P2AB_to_P1A_mask_end
      ; If left or right is held, dont use item (cycle inventory backwards)
-    ldh  a, [hPressedButtonsMask2]
+    ld  a, [wSuperAwakening.PressedButtonsMask2]
     and  J_LEFT | J_RIGHT
     cp 0
     jp nz, .map_P2AB_to_P1A_mask_end

@@ -9,13 +9,13 @@
 .change_weapon3
 .dec_weapon3
     ; Check for both buttons button down
-    ldh a, [hPressedButtonsMask2]
+    ld a, [wSuperAwakening.PressedButtonsMask2]
     and (J_RIGHT | J_A)
     cp  (J_RIGHT | J_A)
     jp nz, .dec_weapon3_end
 
     ; check if a toggled this frame
-    ldh a, [hJoypadState2]
+    ld a, [wSuperAwakening.JoypadState2]
     and J_A
     cp  J_A
     jp z, .dec_weapon3_loop
@@ -66,7 +66,7 @@
 
 .inc_weapon3
     ; Check for button press
-    ldh a, [hJoypadState2]
+    ld a, [wSuperAwakening.JoypadState2]
     and J_RIGHT
     cp J_RIGHT
     jp nz, .inc_weapon3_end
@@ -199,13 +199,13 @@
 .change_weapon4
 .dec_weapon4
     ; Check for both buttons button down
-    ldh a, [hPressedButtonsMask2]
+    ld a, [wSuperAwakening.PressedButtonsMask2]
     and (J_LEFT | J_B) 
     cp  (J_LEFT | J_B) 
     jp nz, .dec_weapon4_end
 
     ; check if b toggled this frame
-    ldh a, [hJoypadState2]
+    ld a, [wSuperAwakening.JoypadState2]
     and J_B
     cp  J_B
     jp z, .dec_weapon4_loop
@@ -256,7 +256,7 @@
 
 .inc_weapon4
     ; Check for button press
-    ldh a, [hJoypadState2]
+    ld a, [wSuperAwakening.JoypadState2]
     and J_LEFT
     cp J_LEFT
     jp nz, .inc_weapon4_end
