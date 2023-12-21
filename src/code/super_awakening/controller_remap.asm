@@ -4,7 +4,13 @@
 ; Player2 Left/Up => Plater 1 A
 ;
 
+; Skip all of this if we're not in the overworld
 .map_controller2_to_controller1
+
+ld a, [wGameplayType]
+cp GAMEPLAY_WORLD
+jp nz, .map_controller2_to_controller1_end
+
 
 .map_P1A_to_P1B
     ld hl, hJoypadState
@@ -67,3 +73,5 @@
     or J_A ; Set A
     ld [hl], a
 .map_P2AB_to_P1A_mask_end
+
+.map_controller2_to_controller1_end

@@ -3478,7 +3478,8 @@ jr_020_5F59:
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
-    jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
+    ;jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
+    jr   jr_020_5FB2 ; Never open ocarina menu
 
     ld   a, [wOcarinaSongFlags]                   ; $5F9F: $FA $49 $DB
     and  a                                        ; $5FA2: $A7
@@ -6692,16 +6693,15 @@ jr_020_7ec8:
     ret                                           ; $7F19: $C9
 ENDC
 
-
 SuperAwakening_Inventory::
     ; Handle inventory select code
 .awakening_inventory_select
     
 .awakening_inventory_select_next
     ; Check for next pressed
-    ldh  a, [hJoypadState2]
-    and  J_START
-    cp J_START
+    ldh  a, [hJoypadState]
+    and  J_A
+    cp J_A
     jp nz, .awakening_inventory_select_next_end
 
     ; Load inventory address into HL
@@ -6833,9 +6833,9 @@ ENDC
 
 .awakening_inventory_select_prev
     ; Check for prev pressed
-    ldh  a, [hJoypadState2]
-    and  J_SELECT
-    cp J_SELECT
+    ldh  a, [hJoypadState]
+    and  J_B
+    cp J_B
     jp nz, .awakening_inventory_select_prev_end
 
     ; Load inventory address into HL
@@ -6966,6 +6966,8 @@ ENDC
 .awakening_inventory_select_prev_refresh_end
 
 .awakening_inventory_select_prev_end
+
+
 .awakening_inventory_select_end
     ret
 

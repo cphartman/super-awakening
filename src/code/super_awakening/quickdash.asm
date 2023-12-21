@@ -16,6 +16,11 @@
 
 .quickdash
 
+    ; Skip all of this if we're not in the overworld
+    ld a, [wGameplayType]
+    cp GAMEPLAY_WORLD
+    jp nz, .quickdash_end
+
     ; Are boots unlocked?
     ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_PEGASUS_BOOTS)
     ld a, [hl]
