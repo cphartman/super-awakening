@@ -347,7 +347,7 @@
     }
     .label-bg { 
         fill: #F00;
-        stroke-width: 2px;
+        stroke-width: 1px;
         stroke: rgba(0,0,0,.4);
     }
   </style>
