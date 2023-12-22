@@ -67,10 +67,14 @@ The romhack is fully supported on an original `Super Nintendo` system using a `S
 
 | System | Compatibility | Notes |
 | ---- | ---- | ---- | 
-| Super Nintendo | ✅ | Verified `SuperNt`+`SGB1`+`EverDrive-GBx7` |
-| Analogue Pocket | ✅ | Use [openFPGA-Super-GB](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
-| Web Browser| ✅ | [`EmulatorJS` + `mGBA` compatible fork](https://cphartman.github.io/projects/super-links-awakening/) |
+| Super Nintendo | ✅ |  `SuperNt`+`SGB1`+`EverDrive-GBx7` |
+| Analogue Pocket | ✅ | [`Spiritualized.SuperGB`](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
+| Web Browser| ✅ | [`EmulatorJS` + `mGBA` fork](https://cphartman.github.io/projects/super-links-awakening/) |
 | BGB | 🌈 | Set `Emulated System` to `SGB + GBC`. Set `X/Y/L/R` button inputs to `A/B/Left/Right` on joypad1. |
 | Mesen | ✅ | Set `Game Boy model` to `Super Game Boy`. Set buttons for `SNES Port 1 Controller`. |
 | mGBA | ❌ | Does not support Controller 2 inputs |
 | Retroarch | ❌ | Cores do not support Controller 2 inputs |
+
+## Issue List
+* Like Like does not steal items
+* Must equip and use items before entering shops
