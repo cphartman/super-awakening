@@ -349,11 +349,11 @@
 .inc_weapon4_reset_song_1
     ld hl, wOcarinaSongFlags
     ld a, [hl]
-    and FROGS_SONG_OF_THE_SOUL_FLAG
-    cp FROGS_SONG_OF_THE_SOUL_FLAG
+    and BALLAD_OF_THE_WIND_FISH_FLAG
+    cp BALLAD_OF_THE_WIND_FISH_FLAG
     jp nz, .inc_weapon4_reset_song_2
     ld hl, wSelectedSongIndex
-    ld [hl], FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX
+    ld [hl], BALLAD_OF_THE_WIND_FISH_SELECTED_INDEX
     jp .inc_weapon4_ocarina_end
 
     ; Check if song 2 is unlocked
@@ -370,7 +370,7 @@
     ; If you don't have 0, 1 or 2, you must have song 3 (...?)
 .inc_weapon4_reset_song_3
     ld hl, wSelectedSongIndex
-    ld [hl], BALLAD_OF_THE_WIND_FISH_SELECTED_INDEX
+    ld [hl], FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX
 
 .inc_weapon4_ocarina_end
 
