@@ -841,10 +841,10 @@ MarkTriggerAsResolved::
 
     ; wC1CF = 0
     ld   [wC1CF], a                               ; $0C67: $EA $CF $C1
-    ; wRoomEventEffectExecuted = wC5A6 = 1
+    ; wRoomEventEffectExecuted = wObjectTouchDialogCounter = 1
     inc  a                                        ; $0C6A: $3C
     ld   [wRoomEventEffectExecuted], a            ; $0C6B: $EA $8F $C1
-    ld   [wC5A6], a                               ; $0C6E: $EA $A6 $C5
+    ld   [wObjectTouchDialogCounter], a                               ; $0C6E: $EA $A6 $C5
 
     ; If wC19D == 0…
     ld   a, [wC19D]                               ; $0C71: $FA $9D $C1

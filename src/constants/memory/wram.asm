@@ -1446,7 +1446,7 @@ wC5A5::
   ds 1 ; C5A5
 
 ; Unlabeled
-wC5A6::
+wObjectTouchDialogCounter::
   ds 1 ; C5A6
 
 ; When reaching zero, play the WAVE_SFX_BOSS_DEATH_CRY sound effect

@@ -5811,12 +5811,12 @@ label_002_6B66:
     cp   $8A                                      ; $6B86: $FE $8A
     jr   nz, .jr_6B99                             ; $6B88: $20 $0F
 
-    ld   a, [wC5A6]                               ; $6B8A: $FA $A6 $C5
+    ld   a, [wObjectTouchDialogCounter]                               ; $6B8A: $FA $A6 $C5
     and  a                                        ; $6B8D: $A7
     jr   nz, .jr_6B99                             ; $6B8E: $20 $09
 
     inc  a                                        ; $6B90: $3C
-    ld   [wC5A6], a                               ; $6B91: $EA $A6 $C5
+    ld   [wObjectTouchDialogCounter], a                               ; $6B91: $EA $A6 $C5
     call_open_dialog Dialog051                    ; $6B94
 
 .jr_6B99
@@ -7107,10 +7107,18 @@ jr_002_728E:
     cp   OBJECT_DASHABLE_ROCK_3                   ; $72B7: $FE $88
     jr   nz, .jr_002_72C3                         ; $72B9: $20 $08
 
+; Is touching a dashable rock
 .jr_72BB
     ld   a, [wIsRunningWithPegasusBoots]          ; $72BB: $FA $4A $C1
     and  a                                        ; $72BE: $A7
     jr   nz, .checkPegasusBoots                   ; $72BF: $20 $39
+.awakening_skip_boots_dialog
+    ; Skip if boots unlocked
+    ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_PEGASUS_BOOTS)
+    ld a, [hl]
+    cp $01
+    jp z, .checkPegasusBoots
+.awakening_skip_boots_dialog_end
 
     jr   .jr_002_72EC                             ; $72C1: $18 $29
 
@@ -7163,12 +7171,12 @@ jr_002_728E:
     ld_dialog_low e, Dialog08D ; "This looks pretty heavy" ; $72EA: $1E $8D
 
 .jr_002_72EC:
-    ld   a, [wC5A6]                               ; $72EC: $FA $A6 $C5
+    ld   a, [wObjectTouchDialogCounter]                               ; $72EC: $FA $A6 $C5
     and  a                                        ; $72EF: $A7
     jr   nz, .checkPegasusBoots                   ; $72F0: $20 $08
 
     inc  a                                        ; $72F2: $3C
-    ld   [wC5A6], a                               ; $72F3: $EA $A6 $C5
+    ld   [wObjectTouchDialogCounter], a                               ; $72F3: $EA $A6 $C5
 
     ld   a, e                                     ; $72F6: $7B
     call OpenDialogInTable0AndClearIncrement      ; $72F7: $CD $FE $74

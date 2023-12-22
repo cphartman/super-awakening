@@ -1,0 +1,40 @@
+# Baserom
+
+File: Legend of Zelda, The - Link's Awakening DX (USA, Europe) (SGB Enhanced).gbc
+Database match: Legend of Zelda, The - Link's Awakening DX (USA, Europe) (SGB Enhanced) (GB Compatible)
+Database: No-Intro: Game Boy/Color (v. 20210227-015730)
+SHA1: D90AC17E9BF17B6C61624AD9F05447BDB5EFC01A
+MD5: 07C211479386825042EFB4AD31BB525F
+CRC32: 97822948
+
+# Tools
+
+https://www.romhacking.net/hash/
+https://www.romhacking.net/patch/
+
+# Changelog
+
+Release 1.2
+* Fix bug: Duplicate inventory items appearing
+
+Release 1.1
+* Fix bug: Rapid shield on hold
+
+Release 1.0
+* Quick lift
+* Ocarina song toggle
+* P2 buttons changed to A/B/Left/Right
+* SGB controller injection
+
+Tech Demo 2.3
+* Items unlock with story progression
+* Save/Load item unlocks
+
+Tech Demo 2.2
+* Quick Dash
+* Experimental SGB+GBC support
+
+Tech Demo 2.1
+* A/B/X/Y item Buttons
+* R/L Toggle
+* 10 slot configurable nventory

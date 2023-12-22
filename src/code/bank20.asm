@@ -1409,7 +1409,7 @@ ResetRoomVariables::
     ld   [wInBossBattle], a                       ; $4CC6: $EA $BE $C1
     ld   [wC50E], a                               ; $4CC9: $EA $0E $C5
     ld   [wIsMarinSinging], a                     ; $4CCC: $EA $C8 $C3
-    ld   [wC5A6], a                               ; $4CCF: $EA $A6 $C5
+    ld   [wObjectTouchDialogCounter], a                               ; $4CCF: $EA $A6 $C5
     ld   [wCompassSfxCountdown], a                ; $4CD2: $EA $62 $D4
     ld   [wC3CD], a                               ; $4CD5: $EA $CD $C3
     ld   [wColorDungonCorrectTombStones], a       ; $4CD8: $EA $D9 $DD
