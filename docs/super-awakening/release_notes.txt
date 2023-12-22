@@ -16,6 +16,7 @@ https://www.romhacking.net/patch/
 
 Release 1.2
 * Fix bug: Duplicate inventory items appearing
+* Disable dashable rock dialog when boots are unlocked
 
 Release 1.1
 * Fix bug: Rapid shield on hold
