@@ -71,6 +71,13 @@
     cp J_RIGHT
     jp nz, .inc_weapon3_end
 
+; If we already have the ocarina equiped
+;   increment the song counter
+;       if the song counter overflows
+;           reset the song counter
+;           do increment the weapon counter
+;       else
+;          skip increment the weapon conter
 .inc_weapon3_ocarina
     ; Check if we have ocarina equiped
     ld hl, wSuperAwakening.Weapon3_Value
@@ -92,20 +99,20 @@
 
     ; Check if we're on song 3
 .inc_weapon3_ocarina_validate_song_3
-    cp $02 ; song is 0 indexed
+    cp FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX ; song is 0 indexed
     jp nz, .inc_weapon3_ocarina_validate_song_2
     ; Check if we have song 3 unlocked
     ld hl, wOcarinaSongFlags
     ld a, [hl]
     and FROGS_SONG_OF_THE_SOUL_FLAG
     cp FROGS_SONG_OF_THE_SOUL_FLAG
-    jp nz, .inc_weapon3_ocarina_end ; Song 3 not unlocked, continue to next weapon
+    jp nz, .inc_weapon3_reset_song ; Song 3 not unlocked, continue to next weapon
     jp .inc_weapon3_end ; Song is unlocked, keep the song index
 
     ; Check if we're on song 2
 .inc_weapon3_ocarina_validate_song_2
-    cp $01 ; song is 0 indexed
-    jp nz, .inc_weapon3_ocarina_validate_song_1
+    cp MANBO_MAMBO_SELECTED_INDEX ; song is 0 indexed
+    jp nz, .inc_weapon3_reset_song ; I'm noty sure this case is ever hit?
     ; Check if we have song 2 unlocked
     ld hl, wOcarinaSongFlags
     ld a, [hl]
@@ -114,44 +121,47 @@
     jp nz, .inc_weapon3_ocarina_inc_loop ; Song 3 not unlocked, loop
     jp .inc_weapon3_end ; Song is unlocked, keep the song index
 
-    ; Check if we're on song 1
-.inc_weapon3_ocarina_validate_song_1
-    ; Check if we have song 1 unlocked
-    ld hl, wOcarinaSongFlags
-    ld a, [hl]
-    and FROGS_SONG_OF_THE_SOUL_FLAG
-    cp FROGS_SONG_OF_THE_SOUL_FLAG
-    jp nz, .inc_weapon3_ocarina_inc_loop ; Song 3 not unlocked, loop
-    jp .inc_weapon3_end ; Song is unlocked, keep the song index
+; We will never switch to song 1 in here because it should always start from at least 1
 
 .inc_weapon3_reset_song
     ; We overflowd the song index, reset to the first unlocked song
 
+; check if no songs unlocked
+.inc_weapon3_reset_song_0
+    ld hl, wOcarinaSongFlags
+    ld a, [hl]
+    cp $00
+    jp nz, .inc_weapon3_reset_song_1
+    ld hl, wSelectedSongIndex
+    ld [hl], 0
+    jp .inc_weapon3_ocarina_end
+    
     ; Check if song 0 is unlocked
 .inc_weapon3_reset_song_1
     ld hl, wOcarinaSongFlags
     ld a, [hl]
-    and $01
-    cp $01
+    and FROGS_SONG_OF_THE_SOUL_FLAG
+    cp FROGS_SONG_OF_THE_SOUL_FLAG
     jp nz, .inc_weapon3_reset_song_2
     ld hl, wSelectedSongIndex
-    ld [hl], 0
+    ld [hl], FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX
     jp .inc_weapon3_ocarina_end
 
     ; Check if song 1 is unlocked
 .inc_weapon3_reset_song_2
     ld hl, wOcarinaSongFlags
     ld a, [hl]
-    and $02
-    cp $02
+    and MANBO_MAMBO_FLAG
+    cp MANBO_MAMBO_FLAG
     jp nz, .inc_weapon3_reset_song_3
     ld hl, wSelectedSongIndex
-    ld [hl], 1
+    ld [hl], MANBO_MAMBO_SELECTED_INDEX
     jp .inc_weapon3_ocarina_end
 
-    ; If you don't have 1 or 2, you must have song 3 (...?)
+    ; If you don't have none, 1 or 2, you must have song 3 (...?)
 .inc_weapon3_reset_song_3
-    ld [hl], 2
+    ld hl, wSelectedSongIndex
+    ld [hl], BALLAD_OF_THE_WIND_FISH_SELECTED_INDEX
 
 .inc_weapon3_ocarina_end
 
@@ -195,6 +205,7 @@
 
 .inc_weapon3_end
 .change_weapon3_end
+
 
 .change_weapon4
 .dec_weapon4
@@ -261,14 +272,21 @@
     cp J_LEFT
     jp nz, .inc_weapon4_end
 
+; If we already have the ocarina equiped
+;   increment the song counter
+;       if the song counter overflows
+;           reset the song counter
+;           do increment the weapon counter
+;       else
+;          skip increment the weapon conter
 .inc_weapon4_ocarina
-    ; Check if we have ocarina equiped
+    ; Check if we already have ocarina equiped
     ld hl, wSuperAwakening.Weapon4_Value
     ld a, [hl]
     cp INVENTORY_OCARINA
     jp nz, .inc_weapon4_ocarina_end
 
-    ; Get the ocarina counter
+; We have the orcarina equipped, check for incrementing the song
  .inc_weapon4_ocarina_inc_loop
     ; Increment the song index
     ld hl, wSelectedSongIndex
@@ -282,20 +300,20 @@
 
     ; Check if we're on song 3
 .inc_weapon4_ocarina_validate_song_3
-    cp $02 ; song is 0 indexed
+    cp FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX ; song is 0 indexed
     jp nz, .inc_weapon4_ocarina_validate_song_2
     ; Check if we have song 3 unlocked
     ld hl, wOcarinaSongFlags
     ld a, [hl]
     and FROGS_SONG_OF_THE_SOUL_FLAG
     cp FROGS_SONG_OF_THE_SOUL_FLAG
-    jp nz, .inc_weapon4_ocarina_end ; Song 3 not unlocked, continue to next weapon
+    jp nz, .inc_weapon4_reset_song ; Song 3 not unlocked, reset song and continue to next
     jp .inc_weapon4_end ; Song is unlocked, keep the song index
 
     ; Check if we're on song 2
 .inc_weapon4_ocarina_validate_song_2
-    cp $01 ; song is 0 indexed
-    jp nz, .inc_weapon4_ocarina_validate_song_1
+    cp MANBO_MAMBO_SELECTED_INDEX ; song is 0 indexed
+    jp nz, .inc_weapon4_reset_song ; I'm noty sure this case is ever hit?
     ; Check if we have song 2 unlocked
     ld hl, wOcarinaSongFlags
     ld a, [hl]
@@ -317,31 +335,42 @@
 .inc_weapon4_reset_song
     ; We overflowd the song index, reset to the first unlocked song
 
-    ; Check if song 0 is unlocked
-.inc_weapon4_reset_song_1
+; check if no songs unlocked
+.inc_weapon4_reset_song_0
     ld hl, wOcarinaSongFlags
     ld a, [hl]
-    and $01
-    cp $01
-    jp nz, .inc_weapon4_reset_song_2
+    cp $00
+    jp nz, .inc_weapon4_reset_song_1
     ld hl, wSelectedSongIndex
     ld [hl], 0
     jp .inc_weapon4_ocarina_end
 
     ; Check if song 1 is unlocked
+.inc_weapon4_reset_song_1
+    ld hl, wOcarinaSongFlags
+    ld a, [hl]
+    and FROGS_SONG_OF_THE_SOUL_FLAG
+    cp FROGS_SONG_OF_THE_SOUL_FLAG
+    jp nz, .inc_weapon4_reset_song_2
+    ld hl, wSelectedSongIndex
+    ld [hl], FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX
+    jp .inc_weapon4_ocarina_end
+
+    ; Check if song 2 is unlocked
 .inc_weapon4_reset_song_2
     ld hl, wOcarinaSongFlags
     ld a, [hl]
-    and $02
-    cp $02
+    and MANBO_MAMBO_FLAG
+    cp MANBO_MAMBO_FLAG
     jp nz, .inc_weapon4_reset_song_3
     ld hl, wSelectedSongIndex
-    ld [hl], 1
+    ld [hl], MANBO_MAMBO_SELECTED_INDEX
     jp .inc_weapon4_ocarina_end
 
-    ; If you don't have 1 or 2, you must have song 3 (...?)
+    ; If you don't have 0, 1 or 2, you must have song 3 (...?)
 .inc_weapon4_reset_song_3
-    ld [hl], 2
+    ld hl, wSelectedSongIndex
+    ld [hl], BALLAD_OF_THE_WIND_FISH_SELECTED_INDEX
 
 .inc_weapon4_ocarina_end
 

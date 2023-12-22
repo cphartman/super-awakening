@@ -282,6 +282,9 @@ BALLAD_OF_THE_WIND_FISH_FLAG      equ 4
 FROGS_SONG_OF_THE_SOUL_FLAG_BIT   equ 0
 MANBO_MAMBO_FLAG_BIT              equ 1
 BALLAD_OF_THE_WIND_FISH_FLAG_BIT  equ 2
+FROGS_SONG_OF_THE_SOUL_SELECTED_INDEX  equ 2
+MANBO_MAMBO_SELECTED_INDEX             equ 1
+BALLAD_OF_THE_WIND_FISH_SELECTED_INDEX equ 0
 
 LOW_HEALTH_SFX_PAUSE              equ $30 ; pause beetween low health SFX beeps
 MUSIC_FADE_OUT_TIMER_MAX          equ $38 ; reset value for hMusicFadeOutTimer

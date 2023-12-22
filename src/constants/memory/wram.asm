@@ -3103,6 +3103,10 @@ wOcarinaSongFlags::
   ds 1 ; DB49
 
 ; Which song is selected (zero based)
+; Opposite order of the wOcarinaSongFlags
+;   0: Ballad of the Wind Fish
+;   1: Manbo's Mambo
+;   2: Frog's Song of the Soul
 wSelectedSongIndex::
   ds 1 ; DB4A
 
