@@ -5,6 +5,12 @@
     ld c, d
     ld hl, wSuperAwakening.Items_Unlocked
     add hl, bc
+    ld a, [hl]
+    
+    ; Check if this item is already unlocked
+    cp 0
+    jp nz, .TryAddToInventory_end
+    
     ld [hl], $01
 
 .TryAddToInventory
