@@ -14,12 +14,15 @@ https://www.romhacking.net/patch/
 
 # Changelog
 
-Release 1.2
-* Fix bug: Duplicate inventory items appearing
+
+Release 1.1.0
+* Quick restock empty items by spending rupees
+* Bug fix: Duplicate inventory items appearing
+* Bug fix: Incorrect Ocarina song on toggle
 * Disable dashable rock dialog when boots are unlocked
 
-Release 1.1
-* Fix bug: Rapid shield on hold
+Release 1.0.1
+* Bug fix: Rapid shield
 
 Release 1.0
 * Quick lift

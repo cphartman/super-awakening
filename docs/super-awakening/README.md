@@ -15,6 +15,7 @@
 * 💼 Customizable item inventory
 * 💨 Quick dash
 * 💪 Quick lift
+* 💰 Quick restock
 
 ![Super Controller Diagram](controller-gameplay.svg)
 
@@ -51,6 +52,11 @@ Push against a heavy object and press `X` or `Y` to automatically lift the objec
 
 ![Super Links Awakening Quick Lift Demo](demo-quicklift.gif)
 
+### Quick Restock
+Spend rupees to automatically restock empty consumable items.
+
+![Super Links Awakening Quick Dash Demo](demo-quickrestock.gif)
+
 ## Technical Background
 The `Super Game Boy` system exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) for `Game Boy` games.  This feature enables local multiplayer for `Game Boy` games.
 
@@ -76,5 +82,6 @@ The romhack is fully supported on an original `Super Nintendo` system using a `S
 | Retroarch | ❌ | Cores do not support Controller 2 inputs |
 
 ## Issue List
-* Like Like does not steal items
-* Must equip and use items before entering shops
+* Like-Like does not steal items
+* Must equip and use items before entering shops or interacting with NPCs
+* Cannot trade shovel for boomerang
