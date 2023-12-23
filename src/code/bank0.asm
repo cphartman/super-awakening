@@ -1908,6 +1908,9 @@ PlaceBomb::
     cp   $01                                      ; $135D: $FE $01
     ret  nc                                       ; $135F: $D0
 
+    ld b, INVENTORY_BOMBS
+    call SuperAwakening_Trampolines.CheckPurchaseConsumable_trampoline
+
     ld   a, [wBombCount]                          ; $1360: $FA $4D $DB
     and  a                                        ; $1363: $A7
     jp   z, PlayWrongAnswerJingle                 ; $1364: $CA $20 $0C
@@ -1977,7 +1980,8 @@ ShootArrow::
     jr   nc, label_140F.return                    ; $13C7: $30 $65
     ld   a, $10                                   ; $13C9: $3E $10
     ld   [wIsShootingArrow], a                    ; $13CB: $EA $4C $C1
-    call SuperAwakening_Trampolines.CheckArrowForRupee_trampoline
+    ld b, INVENTORY_BOW
+    call SuperAwakening_Trampolines.CheckPurchaseConsumable_trampoline
     ld   a, [wArrowCount]                         ; $13CE: $FA $45 $DB
     and  a
     jp   z, PlayWrongAnswerJingle                 ; $13D2: $CA $20 $0C
@@ -2126,6 +2130,9 @@ UseMagicPowder::
     ret                                           ; $14A6: $C9
 
 .jr_14A7
+    ld b, INVENTORY_MAGIC_POWDER
+    call SuperAwakening_Trampolines.CheckPurchaseConsumable_trampoline
+    ld b, $00
     ld   a, [wMagicPowderCount]                   ; $14A7: $FA $4C $DB
     and  a                                        ; $14AA: $A7
     jp   z, PlayWrongAnswerJingle                 ; $14AB: $CA $20 $0C
@@ -7535,7 +7542,7 @@ SuperAwakening_Trampolines::
     ld   a, BANK(GiveInventoryItem)
     ld   [rSelectROMBank], a
     ret
-
+/*
 .SendUploadCommand_trampoline
     ld   a, BANK(SendUploadCommand)
     ld   [rSelectROMBank], a
@@ -7548,15 +7555,13 @@ SuperAwakening_Trampolines::
     ld   a, $02
     ld   [rSelectROMBank], a
     ret
+*/
+.CheckPurchaseConsumable_trampoline
 
-.CheckArrowForRupee_trampoline
-    ;ld b, a ; store arrow count
     ld   a, BANK(SuperAwakening)
     ld   [rSelectROMBank], a
-    ;ld a, b ; restore arrow count
-    call SuperAwakening.CheckArrowForRupee
-    
+    call SuperAwakening.CheckPurchaseConsumable
     ld   a, BANK(JoypadToLinkDirection)
     ld   [rSelectROMBank], a
+    
     ret
-.CheckArrowForRupee_end

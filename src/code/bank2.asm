@@ -5124,7 +5124,7 @@ UpdateHealth:
     ld   [wHealth], a                             ; $6396: $EA $5A $DB
     
     ; Update Moasic shader
-    call SuperAwakening_Trampolines.SendUploadCommand_trampoline
+    ;call SuperAwakening_Trampolines.SendUploadCommand_trampoline
 
 .skipDecrementHealth:
     call LoadHeartsCount                          ; $6399: $CD $14 $64
