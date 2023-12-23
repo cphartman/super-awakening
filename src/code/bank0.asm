@@ -1977,13 +1977,15 @@ ShootArrow::
     jr   nc, label_140F.return                    ; $13C7: $30 $65
     ld   a, $10                                   ; $13C9: $3E $10
     ld   [wIsShootingArrow], a                    ; $13CB: $EA $4C $C1
+    call SuperAwakening_Trampolines.CheckArrowForRupee_trampoline
     ld   a, [wArrowCount]                         ; $13CE: $FA $45 $DB
-    and  a                                        ; $13D1: $A7
+    and  a
     jp   z, PlayWrongAnswerJingle                 ; $13D2: $CA $20 $0C
+.decrement_arrow_count
     sub  a, $01                                   ; $13D5: $D6 $01
     daa                                           ; $13D7: $27
     ld   [wArrowCount], a                         ; $13D8: $EA $45 $DB
-    call func_157C                                ; $13DB: $CD $7C $15
+    call SetArrowDirection                                ; $13DB: $CD $7C $15
     ld   a, ENTITY_ARROW                          ; $13DE: $3E $00
     call SpawnPlayerProjectile                    ; $13E0: $CD $2F $14
     ret  c                                        ; $13E3: $D8
@@ -2227,7 +2229,7 @@ UseSword::
     ld   a, [hl]                                  ; $1550: $7E
     ldh  [hNoiseSfx], a                           ; $1551: $E0 $F4
 
-    call func_157C                                ; $1553: $CD $7C $15
+    call SetArrowDirection                                ; $1553: $CD $7C $15
     ld   a, [wIsLinkInTheAir]                     ; $1556: $FA $46 $C1
     and  a                                        ; $1559: $A7
     jr   nz, label_1562                           ; $155A: $20 $06
@@ -2252,7 +2254,7 @@ label_1562::
 
     ret                                           ; $157B: $C9
 
-func_157C::
+SetArrowDirection::
     ldh  a, [hPressedButtonsMask]                 ; $157C: $F0 $CB
     and  J_RIGHT | J_LEFT | J_UP | J_DOWN         ; $157E: $E6 $0F
     ld   e, a                                     ; $1580: $5F
@@ -2702,7 +2704,7 @@ ApplyLinkMotionState::
     or   [hl]                                     ; $17FB: $B6
     jr   nz, .magicRodEnd                         ; $17FC: $20 $16
     ; … fire a magic rod fireball projectile
-    call func_157C                                ; $17FE: $CD $7C $15
+    call SetArrowDirection                                ; $17FE: $CD $7C $15
     ld   a, ENTITY_MAGIC_ROD_FIREBALL             ; $1801: $3E $04
     call SpawnPlayerProjectile                    ; $1803: $CD $2F $14
     jr   c, .magicRodEnd                          ; $1806: $38 $0C
@@ -7546,3 +7548,15 @@ SuperAwakening_Trampolines::
     ld   a, $02
     ld   [rSelectROMBank], a
     ret
+
+.CheckArrowForRupee_trampoline
+    ;ld b, a ; store arrow count
+    ld   a, BANK(SuperAwakening)
+    ld   [rSelectROMBank], a
+    ;ld a, b ; restore arrow count
+    call SuperAwakening.CheckArrowForRupee
+    
+    ld   a, BANK(JoypadToLinkDirection)
+    ld   [rSelectROMBank], a
+    ret
+.CheckArrowForRupee_end

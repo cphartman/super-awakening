@@ -2840,13 +2840,16 @@ jr_020_5B8B:
     inc  hl                                       ; $5B9E: $23
     ret                                           ; $5B9F: $C9
 
+; Drat arrow counts
 jr_020_5BA0:
     ld   a, [wArrowCount]                         ; $5BA0: $FA $45 $DB
     jr   func_020_5BA8                            ; $5BA3: $18 $03
 
+; Draw bomb counts
 jr_020_5BA5:
     ld   a, [wBombCount]                          ; $5BA5: $FA $4D $DB
 
+; Draw counter for hud
 func_020_5BA8::
     push af                                       ; $5BA8: $F5
     and  $0F                                      ; $5BA9: $E6 $0F

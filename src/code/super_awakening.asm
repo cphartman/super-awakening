@@ -10,3 +10,4 @@ include "code/super_awakening/quickdash.asm"
 ret
 ; Helper routines
 include "code/super_awakening/give_inventory_item.asm"
+include "code/super_awakening/rupeearrow.asm"
