@@ -62,6 +62,21 @@
     ld hl, wSuperAwakening.Weapon3_Value
     ld [hl], a ; Set item at weapon 3 value
 
+.RefreshInventory_check_duplicate_equipped
+    ; Make sure the inventory slots don't point to the same value
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld b, a
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    cp b
+    jp nz, .RefreshInventory_check_duplicate_equipped_end
+    ; Same slot equipped, increment weapon4 slot index to prevent duplicate
+    ; This will refresh next
+    ; This could overflow...
+    inc a
+    ld [wSuperAwakening.Weapon4_Inventory_Index], a
+.RefreshInventory_check_duplicate_equipped_end
+
+
     ; Inventory item may have change, so refresh their values and re-draw
     ld a, [wSuperAwakening.Weapon4_Inventory_Index]
     ld c, a
