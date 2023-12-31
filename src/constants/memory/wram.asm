@@ -3893,7 +3893,7 @@ wSuperAwakening::
   ds 1 ; FFCB
 
 .Items_Unlocked
-  ds INVENTORY_MAX
+  ds (INVENTORY_MAX+1)
 
 ; top of WRAM is used as Stack
 wStack::

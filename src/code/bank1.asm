@@ -3249,219 +3249,103 @@ UpdateMinimapEntranceArrowAndReturn::
 include "code/intro.asm"
 
 SuperAwakening_Load::
-
-    ; Copy saved inventory into override inventory
-    ; Weapon A and B are not really used on load, but should probably store the inventory index values (Weapon4_Inventory_Index)?
-
-
+    
+    ; inventory index counter
     ld b, $00
-    ld c, ($00 - 1) ; Slot index counter.  Start at $FF so that it will overflow to 0 on the first loop iteration
-    ld hl, wInventoryItems.subscreen - 1
+    ld c, (INVENTORY_BOMBS-1) ; Start from first item - 1
 
-.copy_saved_inventory_to_super_inventory_loop
+    ; inventory slot index counter
+    ld d, $00
+    ld e, $00 ; Start from first item - 1
 
-    ; Increment our counters
+.load_loop
+    ; Increment the index counter
     inc c
-    ldi a, [hl]
 
-    ; Check if we've loaded all items
+    ; Check if we're done with the inventory
     ld a, c
-    cp $0A
-    jp z, .copy_saved_inventory_to_super_inventory_loop_end 
+    cp (INVENTORY_MAX+1)
+    jp z, .load_loop_end
 
-    ; Don't add boots, sword, or shield to inventory
-    ld a, [hl] ; This increments the subscreen pointer value
-    cp INVENTORY_SWORD
-    jp z, .copy_saved_inventory_to_super_inventory_loop
+    ; Load Inventory Item
+    ld hl, (wInventoryItems-2)
+    add hl, bc
+    ld a, [hl]
+
+    ; Check if shield
     cp INVENTORY_SHIELD
-    jp z, .copy_saved_inventory_to_super_inventory_loop
+    jp z, .load_loop_add_to_progression
+
+    ; Check if boots
     cp INVENTORY_PEGASUS_BOOTS
-    jp z, .copy_saved_inventory_to_super_inventory_loop
-    
-    ; Get the Weapon_Inventory location for this slot
-    push hl
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
+    jp z, .load_loop_add_to_progression
 
-    ; Load the wInventoryItem value into Weapon_Inventory slot
+    ; Check if item is unlocked
+    cp 0
+    jp z, .load_loop_add_to_progression
+
+.load_loop_add_to_inventory_slot
+    ld hl, wSuperAwakening.Weapon_Inventory
+    add hl, de
+    inc e
     ld [hl], a
-    pop hl
-    jp .copy_saved_inventory_to_super_inventory_loop
+    jp .load_loop_add_to_progression
 
-.copy_saved_inventory_to_super_inventory_loop_end
-
-    ; Set Weapon3/Weapon4 Inventory index default
-    ld hl, wSuperAwakening.Weapon4_Inventory_Index
-    ld a, 0
-    ldi [hl], a
-    inc a
-    ldi [hl], a
-
-    ; Refresh inventory 3 value
-    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
+.load_loop_add_to_progression
+    cp 0
+    jp z, .load_loop_add_to_progression_assign
+    ld a, 1
+.load_loop_add_to_progression_assign
+    ld hl, wSuperAwakening.Items_Unlocked
     add hl, bc
-    ld a, [hl] ; Load inventory item at weapon3 index
-    ld hl, wSuperAwakening.Weapon3_Value
-    ld [hl], a ; Set item at weapon 3 value
+    ld [hl], a
+    jp .load_loop
 
-    ; Refresh inventory 4 value
-    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
-    ld a, [hl] ; Load inventory item at weapon4 index
-    ld hl, wSuperAwakening.Weapon4_Value
-    ld [hl], a ; Set item at weapon4 value
-    
-    ; Use the saved inventory slots (skipping a/b) to set the current unlock progression
-    ; unrolled loop to set [wSuperAwakening.Items_Unlocked + [wInventoryItems_i] ] = 1
-.unlock_progression_from_inventory
-    ld hl, wInventoryItems.subscreen
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
+.load_loop_end
 
-    ; Item 2
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 3
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 4
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 5
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 6
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 7
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 8
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 9
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
-
-    ; Item 10
-    ldi a, [hl]
-    push hl
-    ld hl, wSuperAwakening.Items_Unlocked 
-    ld b, $00
-    ld c, a
-    add hl, bc  ; Get the progression location
-    ld [hl], $01
-    pop hl
+    ld a, [wSuperAwakening.Weapon_Inventory]
+    ld [wSuperAwakening.Weapon4_Value], a
+    ld a, [wSuperAwakening.Weapon_Inventory+1]
+    ld [wSuperAwakening.Weapon3_Value], a
 
     ret
 
-; Write progression items to the old inventory so it will be saved
+; Save progression items into inventory slots
+; Map $02-$0D of wSuperAwakening.Items_Unlocked
+; to $00-$0C of wInventoryItems
 SuperAwakening_Save::
-    
-    ; [c] will increment through the inventory slots and will be the index offset wInventoryItems.subscreen
+
+    ; index counter
     ld b, $00
-    ld c, $00
+    ld c, (INVENTORY_BOMBS-1) ; Start from first item - 1
     
-    ; [e] will increment through progression item values
-    ld d, $00
-    ld e, $01 ; Skip EMPTY and SWORD, note that it increments on loop start from SWORD to BOMBS
+.save_loop
 
-    ; [hl] will increment through the progression item addresses
-    ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_BOMBS) ; Start from the bombs, because the first 2 items are EMPTY and SWORD
-
-.inventory_load_loop
-
-    ; Move to next progression item value
-    inc e
-
-    ; Check if we have looped all progression items
-    ; (Maybe this should check if we've looped all inventory slots?)
-    ld a, e
-    cp (INVENTORY_MAX+1)
-    jp z, .inventory_load_loop_end
-
-    ; Check if the progression item is enabled
-    ldi a, [hl]
-    cp $01
-    jp nz, .inventory_load_loop ; Progression item is not unlocked, iterate to next progression item
-
-    ; Update the inventory slot with the progression item
-    push hl
-    ld hl, wInventoryItems.subscreen
-    add hl, bc
-    ld [hl], e
-    pop hl
-
-    ; Move to the next inventory slot
+    ; Increment the counter
     inc c
-    jp .inventory_load_loop
 
-.inventory_load_loop_end
+    ; Check if we're done with the inventory
+    ld a, c
+    cp (INVENTORY_MAX+1)
+    jp z, .save_loop_end
+
+    ; Load wSuperAwakening.Items_Unlocked
+    ld hl, (wSuperAwakening.Items_Unlocked)
+    add hl, bc
+    ld a, [hl]
+
+    ; Check if item is unlocked
+    cp 0
+    ld d, c ; store inventory index into [d]
+    jp nz, .save_loop_assign
+    ld d, 0 ; no item, so put 0 in [d]
+
+    ; Load progression value
+.save_loop_assign
+    ld hl, (wInventoryItems-2) ; Index starts at $02
+    add hl, bc
+    ld [hl], d ; [c] is the item index
+    jp .save_loop
+
+.save_loop_end
     ret
