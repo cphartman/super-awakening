@@ -17,6 +17,7 @@ https://www.romhacking.net/patch/
 Release 1.1.1
 * Bug Fix: Save/Load issues after obtaining Magic Rod
 * Bug Fix: Boomeranging trading with Secret Goriya
+* Remove debug save file
 
 Release 1.1.0
 * Quick restock empty items by spending rupees
