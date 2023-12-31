@@ -63,8 +63,7 @@ InitSaveFiles::
     ld   a, [ROM_DebugTool1]                      ; $46BC: $FA $03 $00
     and  a                                        ; $46BF: $A7
     
-    ; Always write debug save file
-    nop ; jp   z, .return                               ; $46C0: $CA $93 $47
+    jp   z, .return                               ; $46C0: $CA $93 $47
 
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00
