@@ -84,4 +84,3 @@ The romhack is fully supported on an original `Super Nintendo` system using a `S
 ## Issue List
 * Like-Like does not steal items
 * Must equip and use items before entering shops or interacting with NPCs
-* Cannot trade shovel for boomerang
