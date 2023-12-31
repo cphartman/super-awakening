@@ -126,7 +126,7 @@ GoriyaState1Handler::
     and  a                                        ; $4699: $A7
     jr   nz, jr_019_46DB                          ; $469A: $20 $3F
 
-    ld   a, [wInventoryItems.BButtonSlot]         ; $469C: $FA $00 $DB
+    ld   a, [wSuperAwakening.Weapon4_Value]         ; $469C: $FA $00 $DB
     and  a                                        ; $469F: $A7
     jr   z, jr_019_46DB                           ; $46A0: $28 $39
 
@@ -153,8 +153,10 @@ GoriyaState1Handler::
     jr   z, jr_019_46E1                           ; $46BC: $28 $23
 
     ld   [wBoomerangTradedItem], a                ; $46BE: $EA $7D $DB
-    ld   a, INVENTORY_BOOMERANG                   ; $46C1: $3E $0D
-    ld   [wInventoryItems.BButtonSlot], a         ; $46C3: $EA $00 $DB
+    ; ld   a, INVENTORY_BOOMERANG                   ; $46C1: $3E $0D
+    ; ld   [wInventoryItems.BButtonSlot], a         ; $46C3: $EA $00 $DB
+    call SuperAwakening_GoriyaTradeItem
+
     ld   hl, wEntitiesPrivateState1Table          ; $46C6: $21 $B0 $C2
     add  hl, bc                                   ; $46C9: $09
     ld   [hl], a                                  ; $46CA: $77
@@ -180,30 +182,43 @@ GoriyaState3Handler::
     ld   [hl], $02                                ; $46ED: $36 $02
     ld   a, [wDialogAskSelectionIndex]            ; $46EF: $FA $77 $C1
     and  a                                        ; $46F2: $A7
-    jr   nz, jr_019_4725                          ; $46F3: $20 $30
+    jr   nz, .boomerang_return_canceled                          ; $46F3: $20 $30
 
-    ld   hl, wInventoryItems.BButtonSlot          ; $46F5: $21 $00 $DB
+    call SuperAwakening_GoriyaTradeReturnItem
+/*
+.find_boomerang_inventory_slot_loop_init
+    ld   hl, [wSuperAwakening.Weapon4_Value]
+    ;ld   hl, wInventoryItems.BButtonSlot          ; $46F5: $21 $00 $DB
     ld   de, $0000                                ; $46F8: $11 $00 $00
 
-.loop_46FB
+.find_boomerang_inventory_slot_loop
     ld   a, [hl]                                  ; $46FB: $7E
     cp   INVENTORY_BOOMERANG                      ; $46FC: $FE $0D
-    jr   z, .jr_4707                              ; $46FE: $28 $07
+    jr   z, .find_boomerang_inventory_slot_loop_end  ; $46FE: $28 $07
 
     inc  hl                                       ; $4700: $23
     inc  e                                        ; $4701: $1C
     ld   a, e                                     ; $4702: $7B
     cp   INVENTORY_SLOT_COUNT                     ; $4703: $FE $0C
-    jr   nz, .loop_46FB                           ; $4705: $20 $F4
+    jr   nz, .find_boomerang_inventory_slot_loop  ; $4705: $20 $F4
+.find_boomerang_inventory_slot_loop_end
 
-.jr_4707
+.set_inventory_to_traded_item
     ld   a, [wBoomerangTradedItem]                ; $4707: $FA $7D $DB
     ld   [hl], a                                  ; $470A: $77
+*/
+
+.set_next_goriya_state
+    ld   a, [wBoomerangTradedItem]
+
     ld   hl, wEntitiesPrivateState1Table          ; $470B: $21 $B0 $C2
     add  hl, bc                                   ; $470E: $09
     ld   [hl], a                                  ; $470F: $77
+
+.set_traded_item_to_boomerang
     ld   a, $0D                                   ; $4710: $3E $0D
     ld   [wBoomerangTradedItem], a                ; $4712: $EA $7D $DB
+
     call GetEntityTransitionCountdown             ; $4715: $CD $05 $0C
     ld   [hl], $80                                ; $4718: $36 $80
     ld   a, $01                                   ; $471A: $3E $01
@@ -212,7 +227,7 @@ GoriyaState3Handler::
     ld   [wMusicTrackToPlay], a                   ; $4721: $EA $68 $D3
     ret                                           ; $4724: $C9
 
-jr_019_4725:
+.boomerang_return_canceled:
     ld   [hl], b                                  ; $4725: $70
     jp_open_dialog Dialog223                      ; $4726
 
@@ -269,3 +284,5 @@ jr_019_476A:
     ld   de, Data_019_472B                        ; $478D: $11 $2B $47
     call RenderActiveEntitySprite                 ; $4790: $CD $77 $3C
     jp   CopyEntityPositionToActivePosition       ; $4793: $C3 $8A $3D
+
+include "code/super_awakening/goriya_trade.asm"
