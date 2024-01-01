@@ -14,6 +14,9 @@ https://www.romhacking.net/patch/
 
 # Changelog
 
+Release 1.1.2
+* Bug Fix: Crane game button text
+
 Release 1.1.1
 * Bug Fix: Save/Load issues after obtaining Magic Rod
 * Bug Fix: Boomeranging trading with Secret Goriya
