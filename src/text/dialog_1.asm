@@ -426,7 +426,7 @@ Dialog03B:: ; Trendy Gamester
     db "    Play No<ask>"
 
 Dialog03C:: ; Trendy Gamester
-    db "The A and B     "
+    db "The A and X     "
     db "Buttons move the"
     db "crane...The rest"
     db "is just timing! "
