@@ -82,5 +82,6 @@ The romhack is fully supported on an original `Super Nintendo` system using a `S
 | Retroarch | ❌ | Cores do not support Controller 2 inputs |
 
 ## Issue List
-* Like-Like does not steal items
-* Must equip and use items before entering shops or interacting with NPCs
+* Like-Like does not steal shield
+* Must equip and press item button when entering shops or interacting with NPCs
+* Pieces of Power overlays inventory HUD 

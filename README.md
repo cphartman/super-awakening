@@ -1,10 +1,10 @@
 # Super Awakening Documentation
 [Super Awakening Readme](./docs/super-awakening/README.md)
 
-## Usage
+## Build
 
 1. Install Python 3 and [rgbds](https://github.com/rednex/rgbds#1-installing-rgbds) (version >= 0.5.0 required);
-2. `make build`.
+2. `make build`
 
 ## Contributors
 
