@@ -51,4 +51,4 @@ Tech Demo 2.2
 Tech Demo 2.1
 * A/B/X/Y item Buttons
 * R/L Toggle
-* 10 slot configurable nventory
+* 10 slot configurable inventory
