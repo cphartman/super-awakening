@@ -1,7 +1,13 @@
 ; [d] - inventory item to give
 .GiveInventoryItem
-
+    
 .UnlockProgression
+    ; Bug:
+    ;   Steps: Activate the owl on the sword screen, leave the screen and re-enter, pick up the sword
+    ;   Actual: Link hold shield, game locks
+    ;   Fix: It looks like [bc] stores the entity index of the sword pickup event. It needs to be restored
+    push bc
+
     ld b, $00
     ld c, d
     ld hl, wSuperAwakening.Items_Unlocked
@@ -118,5 +124,6 @@
 
 
 .GiveInventoryItem_end
+    pop bc
     ret
     
