@@ -14,6 +14,9 @@ https://www.romhacking.net/patch/
 
 # Changelog
 
+Release 1.1.4
+* Bug Fix: Cannot open save dialog with A/B/Start/Select
+
 Release 1.1.3
 * Bug Fix: Game may freeze when picking up sword
 
