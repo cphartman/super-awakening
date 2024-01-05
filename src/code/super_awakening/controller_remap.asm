@@ -11,6 +11,13 @@ ld a, [wGameplayType]
 cp GAMEPLAY_WORLD
 jp nz, .map_controller2_to_controller1_end
 
+; Normally, A/B both map to A, so to trigger Save Dialog you actually need to press A/X or B/Y
+; This check skips the button mapping if the user presses the save screen button combo
+.check_for_save_button_combo
+    ldh  a, [hPressedButtonsMask]
+    cp   J_A | J_B | J_START | J_SELECT
+    jr   z, .map_controller2_to_controller1_end
+.check_for_save_button_combo_end
 
 .map_P1A_to_P1B
     ld hl, hJoypadState
