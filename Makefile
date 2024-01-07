@@ -85,7 +85,7 @@ oam_%.2bpp: oam_%.png
 # we don't compile the different ASM files separately.)
 # Locale-specific rules below (e.g. `src/main.azlj.o`) will add their own
 # pre-requisites to the ones defined by this rule.
-src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(bin_files) src/data/super_gameboy/injection_data.asm
+src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(bin_files) src/data/super_gameboy/injection_data.asm src/gfx/super_awakening/sgb_fail_screen.tilemap
 	$(ASM) $(ASFLAGS) $($*_ASFLAGS) -i src/ -o $@ $<
 
 # Link object files into a GBC executable rom
@@ -185,7 +185,6 @@ azle-r2_FXFLAGS = --rom-version 2 --non-japanese --title "ZELDA" --game-id "AZLE
 # 1) Compile the SNES ASM
 #   src/data/super_gameboy/injection_data/*.asm => snes_injection_data.smc
 #
-
 snes_injection_data.smc: $(injection_sources)
 	cl65 -C src/data/super_gameboy/injection_data/smc.cfg -o snes_injection_data.smc src/data/super_gameboy/injection_data/injection_script.asm
 
@@ -195,6 +194,9 @@ snes_injection_data.smc: $(injection_sources)
 # 
 src/data/super_gameboy/injection_data.asm: snes_injection_data.smc
 	python3 tools/convert_sfc_to_packets.py > src/data/super_gameboy/injection_data.asm
+
+src/gfx/super_awakening/sgb_fail_screen.tilemap: src/gfx/super_awakening/sgb_fail_screen.png
+	rgbgfx -P -T -u -o src/gfx/super_awakening/sgb_fail_screen.2bpp src/gfx/super_awakening/sgb_fail_screen.png
 
 
 #

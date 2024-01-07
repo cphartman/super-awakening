@@ -48,7 +48,8 @@ SuperGameBoyInit::
     and  J_RIGHT | J_LEFT                         ; $6A65: $E6 $03
     cp   J_RIGHT | J_LEFT                         ; $6A67: $FE $03
     jr   nz, .superGameBoyDetected                ; $6A69: $20 $0B
-
+    jp SuperAwakening_SgbFailScreen.Show
+    
     ; No valid Super GameBoy detected.
     ; Reset the multiplayer configuration (just in case) and return.
     ld   hl, SGBRequestOnePlayerCmd               ; $6A6B: $21 $02 $6A
@@ -338,3 +339,5 @@ SendVRAMCommand::
     xor  a                                        ; $6BDA: $AF
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9
+
+include "code/super_awakening/sbg_check_fail.asm"

@@ -14,6 +14,9 @@ https://www.romhacking.net/patch/
 
 # Changelog
 
+Release 1.2.0
+* Show error message if Super Game Boy not detected
+
 Release 1.1.4
 * Bug Fix: Cannot open save dialog with A/B/Start/Select
 
