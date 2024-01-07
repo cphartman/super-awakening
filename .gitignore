@@ -3,6 +3,8 @@
 *.gbc
 *.1bpp
 *.2bpp
+*.tilemap
+*.pal
 
 # bin
 Z80Dis
