@@ -65,7 +65,7 @@ default: build test
 
 # Dependencies for the base version (English 1.0)
 asm_files =  $(shell find src     -type f -name '*.asm' -o -name '*.inc')
-gfx_files =  $(shell find src/gfx -type f -name '*.png')
+gfx_files =  $(shell find src/gfx -type f -name '*.png' ! -name 'sgb_fail_screen.png' )
 bin_files =  $(shell find src     -type f -name '*.tilemap.encoded' -o -name '*.attrmap.encoded')
 injection_sources =  $(shell find src/data/super_gameboy/injection_data     -type f -name '*.asm' -o -name '*.inc')
 
@@ -228,3 +228,5 @@ clean:
 	rm -f $(azlj_gfx:.png=.2bpp)
 	rm -f $(azlg_gfx:.png=.2bpp)
 	rm -f $(azlf_gfx:.png=.2bpp)
+	rm -f src/gfx/super_awakening/sgb_fail_screen.tilemap
+	rm -f src/gfx/super_awakening/sgb_fail_screen.pal
