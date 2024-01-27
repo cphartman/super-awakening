@@ -123,17 +123,6 @@ SGBPatch8Cmd::
     db  $EA                 ; nop
     db  $EA                 ; nop
 
-AwakeningHookPatchCmd::
-    sgb_data_send_cmd $0808, $0, 5
-    db $5C, $00, $00, $7F   ; jump into our hook with: jpl 7f0000
-    ; Return with the new stack address
-    db $60      ; rts
-
-    ; Note that this replaces a 1 byte `rts`, so we're actually stomping over bytes :/
-    ; I put in a rwx breakpoint, and didn't get any hits so we'll just hope this is ok...
-
-include "data/super_gameboy/injection_data.asm"
-
 SGBSetPal01Cmd::
     sgb_cmd SGB_PAL01, 1
 ; Palette0
@@ -218,6 +207,17 @@ SGBRequestTwoPlayersCmd::
     db   1  ; players count
     ds   14 ; padding
 
-Awakening_Moasic_Shader_Command::
-	sgb_data_send_cmd $0100, $7F, 11
-	db $88, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; Note that this replaces a 1 byte `rts`, so we're actually stomping over bytes :/
+; I put in a rwx breakpoint, and didn't get any hits so we'll just hope this is ok...
+AwakeningHookPatchCmd::
+    sgb_data_send_cmd $0808, $0, 5
+    db $5C, $00, $00, $7F   ; jpl $7f:0000
+    db $60                  ; rts
+
+AwakeningSendPayloadCmd::
+    sgb_cmd SGB_DATA_TRN, 1
+    db $00, $00, $7f ; Put payload at $7f:0000 in WRAM
+    ds 12 ; padding
+
+AwakeningSgbPayloadData::
+    incbin "../snes_injection_data.smc"

@@ -131,35 +131,18 @@ SuperGameBoyInit::
 
 .Awakening_Patch:
 
-    ld   hl, Awakening_Patch_Data
-
-.Awakening_Patch_Loop:
-    push hl
-    call SendUploadCommand
-    ld   bc, $06
-    call WaitForBCFrames
-
-    ; Increment the address counter
-    pop hl
-    ld b, 0
-    ld c, $10
-    add hl, bc
-
-    ; Check if we're at the last address
-    ld a, h
-    cp HIGH(Awakening_Patch_Data+(16*AWAKENING_LOAD_PACKETS))
-    jp nz, .Awakening_Patch_Loop
-    ld a, l
-    cp LOW(Awakening_Patch_Data+(16*AWAKENING_LOAD_PACKETS))
-    jp nz, .Awakening_Patch_Loop
-
-.Awakening_Patch_end:
-
 .AwakeningHookPatchCmd:
+    ; Upload injection payload
+    ld   hl, AwakeningSgbPayloadData
+    ld   de, AwakeningSendPayloadCmd
+    call SendVRAMCommand
+
+    ; Upload gameloop hook
     ld   hl, AwakeningHookPatchCmd                
     call SendUploadCommand                        
     ld   bc, $06                                  
     call WaitForBCFrames                          
+.Awakening_Patch_end:
 
     ; Upload the standard palette used by the game
     ld   hl, SGBSetPal01Cmd                       ; $6AF7: $21 $00 $69

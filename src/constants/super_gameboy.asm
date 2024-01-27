@@ -14,3 +14,4 @@ SGB_PCT_TRN  equ $14
 SGB_MASK_EN  equ $17
 SGB_OBJ_TRN  equ $18
 SGB_PAL_PRI  equ $19
+SGB_DATA_TRN equ $10
