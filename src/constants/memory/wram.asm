@@ -3850,6 +3850,8 @@ wDE0A:
 wDE0B:
   ds 1 ; DE0B
 
+include "super-awakening/constants/wram.asm"
+
 ; top of WRAM is used as Stack
 wStack::
   ds $DFFF - @ + 1 ; DE04 - DFFF

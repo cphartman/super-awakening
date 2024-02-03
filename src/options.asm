@@ -303,3 +303,5 @@ endm
     SET_DEFAULT GAMEOVER_OPTION_SAVE_QUIT_Y, 80
     SET_DEFAULT GAMEOVER_OPTION_CONTINUE_Y, 96
     SET_DEFAULT SAVE_OPTION_X, 28
+
+include "super-awakening/constants/options.asm"

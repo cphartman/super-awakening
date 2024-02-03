@@ -58,11 +58,13 @@ InitSaveFiles::
     ld   de, SaveGame3 - SaveGame1                ; $46B6: $11 $5A $07
     call func_001_4794                            ; $46B9: $CD $94 $47
 
+if !SUPER_AWAKENING_DEBUG
     ; POI: If DebugTool1 is enabled,
     ; write a default save file with everything unlocked
     ld   a, [ROM_DebugTool1]                      ; $46BC: $FA $03 $00
     and  a                                        ; $46BF: $A7
     jp   z, .return                               ; $46C0: $CA $93 $47
+ENDC
 
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00

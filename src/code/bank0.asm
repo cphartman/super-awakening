@@ -4306,6 +4306,7 @@ ReadJoypadState::
     ret                                           ; $2851: $C9
 
 .readState
+IF SUPER_AWAKENING_HIDE_CODE
     ld   a, J_BUTTONS                             ; $2852: $3E $20
     ld   [rP1], a                                 ; $2854: $E0 $00
     ld   a, [rP1]                                 ; $2856: $F0 $00
@@ -4336,7 +4337,9 @@ ReadJoypadState::
     ldh  [hPressedButtonsMask], a                 ; $2880: $E0 $CB
     ld   a, J_BUTTONS | J_DPAD                    ; $2882: $3E $30
     ld   [rP1], a                                 ; $2884: $E0 $00
-
+ENDC
+    ld hl, SuperAwakening_UpdateLoop
+    call SuperAwakening_Trampoline.jumpTo3E
 .return
     ret                                           ; $2886: $C9
 
@@ -7544,3 +7547,20 @@ ReloadColorDungeonNpcTiles::
     ld   a, BANK(InventoryEntryPoint)             ; $3FE9: $3E $20
     ld   [rSelectROMBank], a                      ; $3FEB: $EA $00 $21
     ret                                           ; $3FEE: $C9
+
+; SuperAwakening trampoline
+SuperAwakening_Trampoline::
+.jumpTo3E
+    ; Jump to hl in $3E
+    ld   a, $3E
+    ld   [rSelectROMBank], a
+    jp hl
+.jumpTo3F
+    ; Jump to hl in $3F
+    ld   a, $3F
+    ld   [rSelectROMBank], a
+    jp hl
+.returnToBank
+   ; Return to bank in [a]
+   ld   [rSelectROMBank], a
+   ret

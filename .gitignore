@@ -35,3 +35,7 @@ DumpBanks
 # save files
 *.sav
 *.ss*
+
+# Super Awakening generated files
+azle.mlb
+sgb_payload.vice
