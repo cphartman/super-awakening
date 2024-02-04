@@ -1,22 +1,14 @@
-; [b] is the inventory item we're checking
-.CheckPurchaseConsumable
-    ld a, b
-    cp INVENTORY_MAGIC_POWDER
-    jp z, .Powder_Check
-    cp INVENTORY_BOMBS
-    jp z, .Bomb_Check
-    ; Default
-    jp .Arrow_Check
+SuperAwakening_QuickRestock::
 
-.Powder_Check
+.Powder:
     ; Skip if we have powder
     ld   a, [wMagicPowderCount]
     cp $00
-    jp nz, .CheckPurchaseConsumable_end
+    jp nz, .return
     ; Skip if we have the toadstool
     ld   a, [wHasToadstool]
     cp $00
-    jp nz, .CheckPurchaseConsumable_end
+    jp nz, .return
     ; Check if we have rupees
     ld a, [wRupeeCountLow]
     cp $00
@@ -24,7 +16,7 @@
     ld a, [wRupeeCountHigh]
     cp $00
     jp nz, .Powder_Purchase
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
 
 .Powder_Purchase    
@@ -40,13 +32,13 @@
     inc a
     inc a
     ld [hl], a
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
-.Arrow_Check
+.Arrow:
     ; Skip if we have powder
     ld   a, [wArrowCount]
     cp $00
-    jp nz, .CheckPurchaseConsumable_end
+    jp nz, .return
     ; Check if we have rupees
     ld a, [wRupeeCountLow]
     cp $00
@@ -54,7 +46,7 @@
     ld a, [wRupeeCountHigh]
     cp $00
     jp nz, .Arrow_Purchase
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
 .Arrow_Purchase    
     ld a, $01
@@ -63,13 +55,13 @@
     ld a, [hl]
     inc a
     ld [hl], a
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
-.Bomb_Check
+.Bomb:
     ; Skip if we have powder
     ld   a, [wBombCount]
     cp $00
-    jp nz, .CheckPurchaseConsumable_end
+    jp nz, .return
     ; Check if we have rupees
     ld a, [wRupeeCountLow]
     cp $00
@@ -77,7 +69,7 @@
     ld a, [wRupeeCountHigh]
     cp $00
     jp nz, .Bomb_Purchase
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
 .Bomb_Purchase    
     ld a, $01
@@ -93,7 +85,9 @@
     inc a
     inc a
     ld [hl], a
-    jp .CheckPurchaseConsumable_end
+    jp .return
 
-.CheckPurchaseConsumable_end
-    ret
+.return
+    ; Restore the rombank
+    ld   a, BANK(JoypadToLinkDirection)
+    jp SuperAwakening_Trampoline.returnToBank

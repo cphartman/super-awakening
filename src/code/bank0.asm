@@ -1905,6 +1905,10 @@ PlaceBomb::
     cp   $01                                      ; $135D: $FE $01
     ret  nc                                       ; $135F: $D0
 
+    ld hl, SuperAwakening_QuickRestock.Bomb
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ; Check if the player has 0 bombs
     ld   a, [wBombCount]                          ; $1360: $FA $4D $DB
     and  a                                        ; $1363: $A7
     jp   z, PlayWrongAnswerJingle                 ; $1364: $CA $20 $0C
@@ -1974,9 +1978,15 @@ ShootArrow::
     jr   nc, label_140F.return                    ; $13C7: $30 $65
     ld   a, $10                                   ; $13C9: $3E $10
     ld   [wIsShootingArrow], a                    ; $13CB: $EA $4C $C1
+    
+    ld hl, SuperAwakening_QuickRestock.Arrow
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ; Check if arrow inventory is empty
     ld   a, [wArrowCount]                         ; $13CE: $FA $45 $DB
     and  a                                        ; $13D1: $A7
     jp   z, PlayWrongAnswerJingle                 ; $13D2: $CA $20 $0C
+    
     sub  a, $01                                   ; $13D5: $D6 $01
     daa                                           ; $13D7: $27
     ld   [wArrowCount], a                         ; $13D8: $EA $45 $DB
@@ -2121,6 +2131,11 @@ UseMagicPowder::
     ret                                           ; $14A6: $C9
 
 .jr_14A7
+    
+    ld hl, SuperAwakening_QuickRestock.Powder
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ; Check if inventory is empty
     ld   a, [wMagicPowderCount]                   ; $14A7: $FA $4C $DB
     and  a                                        ; $14AA: $A7
     jp   z, PlayWrongAnswerJingle                 ; $14AB: $CA $20 $0C

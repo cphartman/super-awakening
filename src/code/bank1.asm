@@ -118,7 +118,7 @@ ENDC
     ld   [SaveGame1.main + wSeashellsCount - wOverworldRoomStatus], a ; 0 secret seashells          ; $470D: $EA $14 $A4
     ld   a, %00000111 ; @TODO Ocarina song constants? ; $4710: $3E $07
     ld   [SaveGame1.main + wOcarinaSongFlags - wOverworldRoomStatus], a ; all 3 Ocarina songs         ; $4712: $EA $4E $A4
-    ld   a, $05                                   ; $4715: $3E $05
+    ld   a, $00                                   ; $4715: $3E $05
     ld   [SaveGame1.main + wRupeeCountHigh - wOverworldRoomStatus], a ; 5xx rupees                  ; $4717: $EA $62 $A4
     ld   a, $09                                   ; $471A: $3E $09
     ld   [SaveGame1.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
