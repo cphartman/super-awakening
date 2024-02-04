@@ -426,6 +426,10 @@ jr_001_531D::
     ldh  [hLinkDirection], a                      ; $538C: $E0 $9E
 
 .finish
+
+    ld hl, SuperAwakening_Load
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ld   a, TILEMAP_INVENTORY                     ; $538E: $3E $02
     ld   [wBGMapToLoad], a                        ; $5390: $EA $FF $D6
     ret                                           ; $5393: $C9
