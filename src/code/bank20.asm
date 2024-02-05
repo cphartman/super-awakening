@@ -3008,7 +3008,8 @@ InventoryTileMapPositions::
 DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
-    ld   hl, wInventoryItems                      ; $5C9E: $21 $00 $DB
+    ld   hl, wSuperAwakening.Weapon_Start       ; Show weapon slots 3 and 4
+    ;ld   hl, wInventoryItems       ; debug
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
     ldh  [hMultiPurpose1], a                      ; $5CA3: $E0 $D8
@@ -3133,6 +3134,10 @@ DrawInventorySlots::
 
 ; Draws the inventory slots
 InventoryLoad3Handler::
+
+    ld hl, SuperAwakening_Inventory.awakening_inventory_open
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ld   a, [wC154]                               ; $5D25: $FA $54 $C1
     ld   c, a                                     ; $5D28: $4F
     ld   b, $00                                   ; $5D29: $06 $00
@@ -3371,6 +3376,10 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
     db   $00, $FE, $02
 
 moveInventoryCursor::
+
+    ld hl, SuperAwakening_Inventory.awakening_inventory_select
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
     ld   [wC1B6], a                               ; $5F09: $EA $B6 $C1
     ld   a, [wOcarinaMenuOpening]                 ; $5F0C: $FA $B8 $C1
@@ -3465,10 +3474,16 @@ jr_020_5F59:
     ld   [hl], JINGLE_MOVE_SELECTION              ; $5F91: $36 $0A
     ld   e, a                                     ; $5F93: $5F
     ld   d, $00                                   ; $5F94: $16 $00
-    ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    
+    ; Use the super awakening inventory
+    ;ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
+    ; Never show the ocarina menu
+    ;jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
     jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
 
     ld   a, [wOcarinaSongFlags]                   ; $5F9F: $FA $49 $DB
@@ -3499,10 +3514,13 @@ jr_020_5FC1:
     ld   a, [wOcarinaMenuOpening]                 ; $5FC4: $FA $B8 $C1
     or   [hl]                                     ; $5FC7: $B6
     jp   nz, ret_020_604A                         ; $5FC8: $C2 $4A $60
-
+Check_Inventory_Press_A:
     ldh  a, [hJoypadState]                        ; $5FCB: $F0 $CC
     and  J_A                                      ; $5FCD: $E6 $10
-    jr   z, jr_020_5FED                           ; $5FCF: $28 $1C
+
+    ; We want to igore the A button inventory stuff    
+    ;jr   z, jr_020_5FED                           ; $5FCF: $28 $1C
+    jp   Check_Inventory_Press_B                  
 
     ld   a, [wInventoryItems.AButtonSlot]         ; $5FD1: $FA $01 $DB
     push af                                       ; $5FD4: $F5
@@ -3522,11 +3540,14 @@ label_020_5FDB:
     ld   e, $00                                   ; $5FE9: $1E $00
     jr   jr_020_600D                              ; $5FEB: $18 $20
 
-jr_020_5FED:
+Check_Inventory_Press_B:
     ldh  a, [hJoypadState]                        ; $5FED: $F0 $CC
     and  J_B                                      ; $5FEF: $E6 $20
-    jr   z, ret_020_604A                          ; $5FF1: $28 $57
-
+    
+    ; We want to ignore the B button inventory stuff
+    ;jr   z, ret_020_604A                          ; $5FF1: $28 $57
+    jp   ret_020_604A
+    
     ld   a, [wInventoryItems.BButtonSlot]         ; $5FF3: $FA $00 $DB
     push af                                       ; $5FF6: $F5
     ld   hl, wInventoryItems.subscreen            ; $5FF7: $21 $02 $DB

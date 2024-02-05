@@ -2414,7 +2414,10 @@ SpawnEnemyDrop::
     ; in general the needed value is lower, if the max health is lower
     ; so you get the piece of power more often in the early game
     ld   e, a                                     ; How many enemies to kill before a Piece of Power drops?
+
+    ld d, $FF ; Awakening hack to never drop power piece and make room in the bank
     ; early game
+IF SUPER_AWAKENING_HIDE_CODE
     ld   d, PIECE_OF_POWER_COUNTER_MAX_LOW_MAX_HEALTH ; Max HP 0~6: 30
     ld   a, [wMaxHearts]                          ;
     cp   LOW_MAX_HEALTH                           ; If max HP <= 6, skip
@@ -2425,6 +2428,7 @@ SpawnEnemyDrop::
     jr   c, .pieceOfPowerDrop                     ; If max HP <= 11, skip
     ; late game
     ld   d, PIECE_OF_POWER_COUNTER_MAX_HIGH_MAX_HEALTH ; Max HP 11~14: 40
+ENDC
 
 .pieceOfPowerDrop:
     ; increment kill counter
@@ -4616,7 +4620,17 @@ PickSword::
     ld   d, INVENTORY_SHIELD                      ; $6470: $16 $04
 
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
-    ld   hl, wInventoryItems.BButtonSlot          ; $6472: $21 $00 $DB
+    ; [d] is the item to activate here
+    ld hl, SuperAwakening_GiveInventoryItem
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ; There are some items we don't keep in the inventory
+    ld a, d
+    and (INVENTORY_SWORD | INVENTORY_SHIELD | INVENTORY_PEGASUS_BOOTS )
+    cp 0
+    jp nz, .return
+
+    ld   hl, wSuperAwakening.Weapon_Inventory          ; $6472: $21 $00 $DB
     ld   e, $0C                                   ; $6475: $1E $0C
 
 .checkInventorySlot:                              ; Check if we already have this item:
@@ -4627,7 +4641,7 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     dec  e                                        ; Otherwise, have we checked all slots?
     jr   nz, .checkInventorySlot                  ; If no, continue
 
-    ld   hl, wInventoryItems.BButtonSlot                         ; Otherwise, load the inventory start again...
+    ld   hl, wSuperAwakening.Weapon_Inventory                            ; Otherwise, load the inventory start again...
 
 .checkInventorySlotEmpty:
     ld   a, [hl]                                  ; Check if an item is equipped in this slot

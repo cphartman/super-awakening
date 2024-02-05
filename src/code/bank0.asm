@@ -7565,6 +7565,14 @@ ReloadColorDungeonNpcTiles::
 
 ; SuperAwakening trampoline
 SuperAwakening_Trampoline::
+.jumpToDrawInventorySlots
+    ; Jump to hl in $3E
+    ld   a, $20
+    ld   [rSelectROMBank], a
+    call DrawInventorySlots
+    ld   a, $3E
+    ld   [rSelectROMBank], a
+    ret
 .jumpTo3E
     ; Jump to hl in $3E
     ld   a, $3E
