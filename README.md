@@ -1,76 +1,100 @@
-# Links Awakening DX Disassembly
+# Super Awakening
 
-Disassembly of one of my favorite games. Taking it easy for now.
+`Super Awakening` is a `Legend of Zelda: Link's Awakening` romhack for the `Super Game Boy`.  The romhack enables additional controls and new gameplay feature that are designed to be played with a `Super Nintendo` controller.
 
-It builds the following ROMs:
+![Super Awakening Gameplay Demo](./docs/super-awakening/demo-gameplay.gif)
 
-- azlj.gbc (Japanese, v1.0) `
-md5: f75874e3654360094fc2b09bd1fed7e8`
-- azlj-r1.gbc (Japanese, v1.1) `
-md5: 6d8f9cd72201caabdfd0455a819af9ce`
-- azlj-r2.gbc (Japanese, v1.2) `
-md5: 2e2596c008d47df901394d28f5bd66ec`
-- azle.gbc (English, v1.0) `
-md5: 07c211479386825042efb4ad31bb525f`
-- azle-r1.gbc (English, v1.1) `
-md5: ccbb56212e3dbaa9007d389a17e9d075`
-- azle-r2.gbc (English, v1.2) `
-md5: 7351daa3c0a91d8f6fe2fbcca6182478`
-- azlg.gbc (German, v1.0) `
-md5: e91fd46e7092d32ca264f21853f09539`
-- azlg-r1.gbc (German, v1.1) `
-md5: b0080c2f1919a4bb0ea73b788f4a6786`
-- azlf.gbc (French, v1.0) `
-md5: 1043fd167d0ed9c4094e3c9d8e757f1e`
-- azlf-r1.gbc (French, v1.1) `
-md5: 68242187b65166b5f8225b20e2021659`
+## Play now
+* Download the IPS patch from the latest [Release](https://github.com/cphartman/super-awakening/releases)
+* Load the patched rom into the [Super Awakening Emulator](https://cphartman.github.io/projects/super-links-awakening/).
 
-Additionally, a wiki includes a [high-level overview of the game engine](https://github.com/zladx/LADX-Disassembly/wiki/Game-engine-documentation), and technical informations on the [data formats used](https://github.com/zladx/LADX-Disassembly/wiki/Maps-data-format) throughout the game.
+## New Gameplay Features
+* 🗡 Sword and Shield equipped to `A` / `B` buttons
+* 💣 Items equipped to `X` / `Y` buttons 
+* 🏹 Change items with `R` / `L` buttons
+* 💼 Customizable item inventory
+* 💨 Quick dash
+* 💪 Quick lift
+* 💰 Quick restock
 
-## Usage
+![Super Controller Diagram](./docs/super-awakening/controller-gameplay.svg)
 
-1. Install Python 3 and [rgbds](https://github.com/rednex/rgbds#1-installing-rgbds) (version >= 0.5.0 required);
-2. `make all`.
+### Expanded controls
+Your sword and shield are equipped to `A` and `B`.  There are 2 different items equipped to `X` and `Y`.  The items currently equipped to `X` and `Y` are displayed on screen during gameplay.  
 
-This will build both the games and their debug symbols. Once built, use [BGB](https://github.com/zladx/LADX-Disassembly/wiki/Tooling-for-reverse-engineering#bgb) to load the debug symbols into the debugger.
+![Super Links Awakening Items Demo](./docs/super-awakening/demo-controls.gif)
 
-## How to contribute
+### Change Items
+Use the shoulder buttons to change either equipped item.
+* Press `L` to change the item in `Y`
+* Press `R` to change the item in `X`
+* Use `L+Y` or `R+X` to change to previous item
 
-1. Fork this repository;
-2. Find a little piece of code to improve:
-  - Maybe a typo, a missing constant, an obvious label that could be renamed;
-  - Or start following a thread (Link's animations? The island fade-out special effect? Trading items constants?) and document some details along your read;
-  - You can also look at the [known improvements](https://github.com/zladx/LADX-Disassembly/issues) – especially [good first issues](https://github.com/zladx/LADX-Disassembly/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22);
-3. Submit a pull request.
+![Super Links Awakening Items Demo](./docs/super-awakening/demo-items.gif)
 
-Having questions, or do you need help? Join the discussion on [Discord](https://discord.gg/sSHrwdB).
-You can also read [disassembling How-Tos](https://github.com/zladx/LADX-Disassembly/wiki) in the Wiki, for some infos about the tools and disassembling processes.
+### Customizable item inventory
+The pause menu allows you to customize your inventory.  Your inventory is used during gameplay to change between items.
 
-## Resources
+You have 10 inventory slots.  Each inventory slot can have a different item.  An inventory slot can also be set to empty.  
+* Press `Start` to open inventory menu
+* Use `Arrow Keys` to select an inventory slot
+* Press `A` or `B` to change item in the selected inventory slot
 
-- [Artemis251's Link's Awakening Cache](http://artemis251.fobby.net/zelda/index.php): ROM map, maps data format
-- [Xkeeper's Link's Awakening depot](https://xkeeper.net/hacking/linksawakening/): maps tilesets and save format infos
-- [LALE](https://github.com/anotak/LALE): level editor, notes on maps data format
-- [The Legend of Zelda Link's Awakening /DX Speedrunning Wiki](http://spiraster.x10host.com/LADXWiki/index.php/) : infos on wrong warps and map data format
-- [Zelda III Disassembly](http://www.zeldix.net/t143-disassembly-zelda-docs) ([archive](https://web.archive.org/web/20180315181518/http://www.zeldix.net/t143-disassembly-zelda-docs)): good source on Zelda SNES source code, which has many similarities to LADX
-- [Disassembling Link's Awakening](https://zladx.github.io): a series of blog posts and progress reports
-- Discord: [LADX](https://discord.gg/sSHrwdB)
+![Super Links Awakening Inventory Demo](./docs/super-awakening/demo-inventory.gif)
 
-## Contributors
+### Quick Dash
+Double tap any direction to automatically start a dash.
 
-Thanks to these people for contributing:
+![Super Links Awakening Quick Dash Demo](./docs/super-awakening/demo-quickdash.gif)
 
-* mojobojo - https://github.com/mojobojo
-* kemenaran - https://github.com/kemenaran
-* Drenn1 - https://github.com/Drenn1
-* Sanqui - https://github.com/Sanqui
-* Kyle McGuffin - https://github.com/kcmcg
-* Marijn van der Werf - https://github.com/marijnvdwerf
-* samuel-flynn - https://github.com/samuel-flynn
-* Xkeeper - https://github.com/Xkeeper0
-* Vextrove - https://github.com/Vextrove
-* daid - https://github.com/daid
-* stephaneseng - https://github.com/stephaneseng
-* zelosos - https://gitlab.com/zelosos
+### Quick Lift
+Push against a heavy object and press `X` or `Y` to automatically lift the object.  Equip the `Power Bracelet` to lift other objects.
 
-([See contribution details here](https://github.com/zladx/LADX-Disassembly/graphs/contributors))
+![Super Links Awakening Quick Lift Demo](./docs/super-awakening/demo-quicklift.gif)
+
+### Quick Restock
+Spend rupees to automatically restock empty consumable items.
+
+![Super Links Awakening Quick Dash Demo](./docs/super-awakening/demo-quickrestock.gif)
+
+## Technical Background
+The `Super Game Boy` system exposes up to [4 controller inputs](https://gbdev.io/pandocs/Joypad_Input.html#usage-in-sgb-software) for `Game Boy` games.  This feature enables local multiplayer for `Game Boy` games.
+
+| Street Fighter 2 | Bomberman |
+| ---- | ---- |
+| ![Street Fighter 2](./docs/super-awakening/streetfighter2_sgb_enhanced.png) | ![Bomberman](./docs/super-awakening/bombermap_sgb_enhanced.png) |
+
+The `Super Game Boy` forwards button inputs from the `Super Nintendo` to button inputs on the `Game Boy`.  The `Game Boy` controller can only support 8 buttons.  As a result, the additional `X/Y/R/L` buttons on the `Super Nintendo` controller are not sent to the `Game Boy`.
+
+The romhack instructs the `Super Game Boy` to send the controller 1 `X/Y/R/L` buttons to the `Game Boy` controller 2 as `A/B/Left/Right` buttons.  This allow a single `Super Nintendo` controller to send all 12 button inputs to the `Game Boy`.  The romhack implements custom functionality for the additional controller inputs.
+
+## System Compatibility
+The romhack is fully supported on an original `Super Nintendo` system using a `Super Game Boy`.  `Game Boy Color` is supported in emulators where available.  Some emulators require additional configurations to set the `X/Y/R/L` buttons to controller 2.
+
+| System | Compatibility | Notes |
+| ---- | ---- | ---- | 
+| Super Nintendo | ✅ |  `SuperNt`+`SGB1`+`EverDrive-GBx7` |
+| Analogue Pocket | ✅ | [`Spiritualized.SuperGB`](https://github.com/spiritualized1997/openFPGA-Super-GB) core |
+| Web Browser| ✅ | [`EmulatorJS` + `mGBA` fork](https://cphartman.github.io/projects/super-links-awakening/) |
+| BGB | 🌈 | Set `Emulated System` to `SGB + GBC`. Set `X/Y/L/R` button inputs to `A/B/Left/Right` on joypad1. |
+| Mesen | ✅ | Set `Game Boy model` to `Super Game Boy`. Set buttons for `SNES Port 1 Controller`. |
+| bsnes | ✅ | Load SGB sfc, then load patched rom. |
+| mGBA, Retroarch | ❌ | Does not support Controller 2 inputs |
+
+## Issue List
+* Like-Like does not steal shield
+* Must equip and press item button when entering shops or interacting with NPCs
+* Piece of Power drops less frequently and will overlap Item Y on pickup
+
+## Build Instructions
+
+Run `make build`
+
+### Dependencies:
+* Python 3
+* [rgbds](https://github.com/rednex/rgbds#1-installing-rgbds)
+* [cc65](https://github.com/cc65/cc65)
+
+## Acknowledgements
+
+Thanks to all the [LADX Dissasembly](https://github.com/zladx/LADX-Disassembly/) and [SGB Bios Dissasembly](https://github.com/ISSOtm/sgb-bios) developers.  This romhack is only possible because of their work.

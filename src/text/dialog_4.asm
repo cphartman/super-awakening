@@ -1054,7 +1054,7 @@ Dialog221:: ; Secret Goriya
     db "on the beach... "
     db "I'll trade it to"
     db "you for what you"
-    db "have in your B  "
+    db "have in your Y  "
     db "Button...       "
     db "    Okay No<ask>"
 
