@@ -3013,7 +3013,7 @@ DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
     ld   hl, wSuperAwakening.Weapon_Start       ; Show weapon slots 3 and 4
-    ;ld   hl, wInventoryItems.BButtonSlot       ; debug
+    ;ld   hl, wInventoryItems       ; debug
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
     ldh  [hMultiPurpose1], a                      ; $5CA3: $E0 $D8
@@ -3140,7 +3140,8 @@ DrawInventorySlots::
 ; Draw entire inventory for the pause screen
 InventoryLoad3Handler::
 
-    call SuperAwakening_Inventory.awakening_inventory_open
+    ld hl, SuperAwakening_Inventory.awakening_inventory_open
+    call SuperAwakening_Trampoline.jumpTo3E
 
     ld   a, [wC154]                               ; $5D25: $FA $54 $C1
     ld   c, a                                     ; $5D28: $4F
@@ -3381,7 +3382,8 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
 
 moveInventoryCursor::
 
-    call SuperAwakening_Inventory.awakening_inventory_select
+    ld hl, SuperAwakening_Inventory.awakening_inventory_select
+    call SuperAwakening_Trampoline.jumpTo3E
 
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
     ld   [wC1B6], a                               ; $5F09: $EA $B6 $C1
@@ -3477,12 +3479,17 @@ jr_020_5F59:
     ld   [hl], JINGLE_MOVE_SELECTION              ; $5F91: $36 $0A
     ld   e, a                                     ; $5F93: $5F
     ld   d, $00                                   ; $5F94: $16 $00
-    ld   hl, wSuperAwakening.Weapon_Inventory            ; $5F96: $21 $02 $DB
+    
+    ; Use the super awakening inventory
+    ;ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
+    ; Never show the ocarina menu
     ;jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
-    jr   jr_020_5FB2 ; Never open ocarina menu
+    jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
 
     ld   a, [wOcarinaSongFlags]                   ; $5F9F: $FA $49 $DB
     and  a                                        ; $5FA2: $A7
@@ -3512,14 +3519,12 @@ jr_020_5FC1:
     ld   a, [wOcarinaMenuOpening]                 ; $5FC4: $FA $B8 $C1
     or   [hl]                                     ; $5FC7: $B6
     jp   nz, ret_020_604A                         ; $5FC8: $C2 $4A $60
-
-; Check if pressing A on the inventory screen
-.Check_Inventory_Press_A
+Check_Inventory_Press_A:
     ldh  a, [hJoypadState]                        ; $5FCB: $F0 $CC
     and  J_A                                      ; $5FCD: $E6 $10
-    
-    ; We want to igore the A button inventory stuff
-    ;jr   z, Check_Inventory_Press_B                           ; $5FCF: $28 $1C
+
+    ; We want to igore the A button inventory stuff    
+    ;jr   z, jr_020_5FED                           ; $5FCF: $28 $1C
     jp   Check_Inventory_Press_B                  
 
     ld   a, [wInventoryItems.AButtonSlot]         ; $5FD1: $FA $01 $DB
@@ -3540,7 +3545,6 @@ label_020_5FDB:
     ld   e, $00                                   ; $5FE9: $1E $00
     jr   jr_020_600D                              ; $5FEB: $18 $20
 
-; Swap B inventory slot on button press
 Check_Inventory_Press_B:
     ldh  a, [hJoypadState]                        ; $5FED: $F0 $CC
     and  J_B                                      ; $5FEF: $E6 $20
@@ -3548,8 +3552,7 @@ Check_Inventory_Press_B:
     ; We want to ignore the B button inventory stuff
     ;jr   z, ret_020_604A                          ; $5FF1: $28 $57
     jp   ret_020_604A
-
-    ; Push the curent B button onto stack
+    
     ld   a, [wInventoryItems.BButtonSlot]         ; $5FF3: $FA $00 $DB
     push af                                       ; $5FF6: $F5
     ; Get the current item number from the subscreen item list into a
@@ -6695,289 +6698,3 @@ jr_020_7ec8:
 
     ret                                           ; $7F19: $C9
 ENDC
-
-SuperAwakening_Inventory::
-    ; Handle inventory select code
-.awakening_inventory_select
-    
-.awakening_inventory_select_next
-    ; Check for next pressed
-    ldh  a, [hJoypadState]
-    and  J_A
-    cp J_A
-    jp nz, .awakening_inventory_select_next_end
-
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld c, a
-    ld b, $00
-    add  hl, bc
-    
-; in: reg_a = initial inventory.  
-; out: reg_b = final inventory value
-; increments until it doesnt match any .Weapon_Inventory values or 0
-    ld a, [hl]
-    ld [hl], $00 ; clear the inventory value
-.awakening_inventory_select_next_loop
-    inc a
-
-    cp (INVENTORY_MAX+1); Check for overflow
-    jp nz, .awakening_inventory_select_next_loop_test
-    ; empty inventory is always valid
-    ld b, 0
-    jp .awakening_inventory_select_next_loop_end
-
-; test weaponVal
-.awakening_inventory_select_next_loop_test
-    cp INVENTORY_SWORD
-    jp z, .awakening_inventory_select_next_loop
-
-    cp INVENTORY_SHIELD
-    jp z, .awakening_inventory_select_next_loop
-
-    cp INVENTORY_PEGASUS_BOOTS
-    jp z, .awakening_inventory_select_next_loop
-
-IF SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS
-    ; Check if this item is unlocked
-    ld hl, wSuperAwakening.Items_Unlocked
-    ld b, $00
-    ld c, a
-    add hl, bc
-    ld a, [hl] ; Get the unlocked state of the item
-    cp $01 ; Test if this item is unlocked
-    ld a, c ; Put the target item index back into [a]
-    jp nz, .awakening_inventory_select_next_loop
-ENDC
-
-    ld b, a ; reg_b holds desired inventory value (not empty)
-    ld hl, wSuperAwakening.Weapon_Inventory
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 1
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 2
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 3
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 4
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 5
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 6
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 7
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 8
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 9
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_next_loop ; inventory 10
-
-; store weaponVal
-.awakening_inventory_select_next_loop_end
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld e, a
-    ld d, $00
-    add  hl, de
-
-    ld  [hl], b ; store incremented weapon value into inventory
-
-.awakening_inventory_select_next_refresh
-    ; Redraw this inventory tile
-    ld   a, [wInventorySelection]
-    inc a
-    ld e, a
-    inc a
-    ld c, a
-    ld b, $00
-    call DrawInventorySlots
-
-    ; Inventory item may have change, so refresh their values and re-draw
-    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
-    ld a, [hl] ; Load inventory item at weapon3 index
-    ld hl, wSuperAwakening.Weapon3_Value
-    ld [hl], a ; Set item at weapon 3 value
-
-    ; Inventory item may have change, so refresh their values and re-draw
-    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
-    ld a, [hl] ; Load inventory item at weapon4 index
-    ld hl, wSuperAwakening.Weapon4_Value
-    ld [hl], a ; Set item at weapon4 value
- 
-    ; Refresh A/B inventory tiles
-    ld b, $00
-    ld c, $01
-    ld e, $FF
-    call DrawInventorySlots
-.awakening_inventory_select_next_refresh_end
-
-.awakening_inventory_select_next_end
-
-.awakening_inventory_select_prev
-    ; Check for prev pressed
-    ldh  a, [hJoypadState]
-    and  J_B
-    cp J_B
-    jp nz, .awakening_inventory_select_prev_end
-
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld c, a
-    ld b, $00
-    add  hl, bc
-    
-; in: reg_a = initial inventory.  
-; out: reg_b = final inventory value
-; increments until it doesnt match any .Weapon_Inventory values or 0
-    ld a, [hl]
-    ld [hl], $00 ; clear the inventory value
-.awakening_inventory_select_prev_loop
-    dec a
-    ld b, a
-    cp $00
-    jp z, .awakening_inventory_select_prev_loop_end  ; empty inventory is always valid
-
-    ; Check for out of bounds
-    cp $FF
-    jp nz, .awakening_inventory_select_prev_loop_test  ; loop
-    ld a, INVENTORY_MAX
-
-; test weaponVal
-.awakening_inventory_select_prev_loop_test
-    cp INVENTORY_SWORD
-    jp z, .awakening_inventory_select_prev_loop
-
-    cp INVENTORY_SHIELD
-    jp z, .awakening_inventory_select_prev_loop
-
-    cp INVENTORY_PEGASUS_BOOTS
-    jp z, .awakening_inventory_select_prev_loop
-
-IF SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS
-    ; Check if this item is unlocked
-    ld hl, wSuperAwakening.Items_Unlocked
-    ld b, $00
-    ld c, a
-    add hl, bc
-    ld a, [hl] ; Get the unlocked state of the item
-    cp $01 ; Test if this item is unlocked
-    ld a, c ; Put the target item index back into [a]
-    jp nz, .awakening_inventory_select_prev_loop
-ENDC
-
-    ld b, a ; reg_b holds desired inventory value (not empty)
-    ld hl, wSuperAwakening.Weapon_Inventory
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 1
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 2
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 3
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 4
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 5
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 6
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 7
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 8
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 9
-    ldi a, [hl]
-    cp b
-    jp z, .awakening_inventory_select_prev_loop ; inventory 10
-
-; store weaponVal
-.awakening_inventory_select_prev_loop_end
-    ; Load inventory address into HL
-    ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
-    ld e, a
-    ld d, $00
-    add  hl, de
-
-    ld  [hl], b ; store incremented weapon value into inventory
-
-.awakening_inventory_select_prev_refresh
-    ; Redraw this inventory tile
-    ld   a, [wInventorySelection]
-    inc a
-    ld e, a
-    inc a
-    ld c, a
-    ld b, $00
-    call DrawInventorySlots
-
-    ; Inventory item may have change, so refresh their values and re-draw
-    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
-    ld a, [hl] ; Load inventory item at weapon3 index
-    ld hl, wSuperAwakening.Weapon3_Value
-    ld [hl], a ; Set item at weapon 3 value
-
-    ; Inventory item may have change, so refresh their values and re-draw
-    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
-    ld c, a
-    ld b, $00
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, bc
-    ld a, [hl] ; Load inventory item at weapon4 index
-    ld hl, wSuperAwakening.Weapon4_Value
-    ld [hl], a ; Set item at weapon4 value
- 
-    ; Refresh A/B inventory tiles
-    ld b, $00
-    ld c, $01
-    ld e, $FF
-    call DrawInventorySlots
-.awakening_inventory_select_prev_refresh_end
-
-.awakening_inventory_select_prev_end
-
-
-.awakening_inventory_select_end
-    ret
-
-.awakening_inventory_close
-
-    ret
-
-.awakening_inventory_open
-
-    ret

@@ -285,4 +285,4 @@ jr_019_476A:
     call RenderActiveEntitySprite                 ; $4790: $CD $77 $3C
     jp   CopyEntityPositionToActivePosition       ; $4793: $C3 $8A $3D
 
-include "code/super_awakening/goriya_trade.asm"
+include "super-awakening/code/goriya_trade.asm"

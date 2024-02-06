@@ -1,5 +1,7 @@
+OVERRIDE_INVENTORY_MAX     equ $09
+
 ; [d] - inventory item to give
-.GiveInventoryItem
+SuperAwakening_GiveInventoryItem::
     
 .UnlockProgression
     ; Bug:
@@ -124,6 +126,9 @@
 
 
 .GiveInventoryItem_end
+    ; Restore bc, see note at start of file
     pop bc
-    ret
+
+    ld   a, BANK(GiveInventoryItem)
+    jp SuperAwakening_Trampoline.returnToBank
     

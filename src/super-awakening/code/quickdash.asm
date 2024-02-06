@@ -1,3 +1,11 @@
+
+; Ranges for the QuickDash_Timer
+; 
+; 0-DASH_HOLD_DELAY_MAX is delay to lift the inital direction key up
+DASH_HOLD_DELAY_MAX  EQU $10
+; DASH_HOLD_DELAY_MAX - DASH_DELAY_MAX is delay to wait for direction key down again
+DASH_IDLE_DELAY_MAX  EQU $20
+
 ;
 ; QuickDash
 ;

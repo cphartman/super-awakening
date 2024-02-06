@@ -182,21 +182,26 @@ azle-r2_FXFLAGS = --rom-version 2 --non-japanese --title "ZELDA" --game-id "AZLE
 #
 # SGB Injection
 #
-# 1) Compile the SNES ASM
+snes_source =  $(shell find src/super-awakening/snes/code     -type f -name '*.asm' -o -name '*.inc')
+#snes_assets =  $(shell find src/data/super_gameboy/injection_data     -type f -name '*.asm' -o -name '*.inc')
+
+# 1) Compile assets to SNES native formats
+# src/data/super_gameboy/injection_data/clouds.map: src/data/super_gameboy/injection_data/clouds.png
+#	./superfamiconv -i src/data/super_gameboy/injection_data/clouds.png -t src/data/super_gameboy/injection_data/clouds.4bpp -m src/data/super_gameboy/injection_data/clouds.map --bpp 4 -W 8 -H 8 -v -R -P 3
+
+
+# 2) Compile the SNES ASM
 #   src/data/super_gameboy/injection_data/*.asm => snes_injection_data.smc
-#
-snes_injection_data.smc: $(injection_sources)
-	cl65 -C src/data/super_gameboy/injection_data/smc.cfg -o snes_injection_data.smc src/data/super_gameboy/injection_data/injection_script.asm
+#		Convert symbols into a format for Mesen
+#		snes_injection_data.vice => azle.mlb
+super-awakening/data/sgb_payload.smc: $(snes_source)
+	cl65 -C src/super-awakening/snes/code/smc.cfg -o src/super-awakening/data/sgb_payload.smc src/super-awakening/snes/code/update_loop.asm -g -Ln sgb_payload.vice
+#	cat snes_injection_data.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" > azle.mlb
 
-#
-# 2) Convert SNES asm into SGB injection packet
-#   snes_injection_data.smc => src/data/super_gameboy/injection_data.asm
-# 
-src/data/super_gameboy/injection_data.asm: snes_injection_data.smc
-	python3 tools/convert_sfc_to_packets.py > src/data/super_gameboy/injection_data.asm
+src/super-awakening/bank3F.asm: super-awakening/data/sgb_payload.smc
 
-src/gfx/super_awakening/sgb_fail_screen.tilemap: src/gfx/super_awakening/sgb_fail_screen.png
-	rgbgfx -P -T -u -o src/gfx/super_awakening/sgb_fail_screen.2bpp src/gfx/super_awakening/sgb_fail_screen.png
+#src/gfx/super_awakening/sgb_fail_screen.tilemap: src/gfx/super_awakening/sgb_fail_screen.png
+#	rgbgfx -P -T -u -o src/gfx/super_awakening/sgb_fail_screen.2bpp src/gfx/super_awakening/sgb_fail_screen.png
 
 
 #

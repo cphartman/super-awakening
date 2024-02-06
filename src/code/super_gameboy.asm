@@ -59,11 +59,13 @@ SuperGameBoyInit::
     ret                                           ; $6A75: $C9
 
 .superGameBoyDetected
+
+if SUPER_AWAKENING_HIDE_CODE
     ; Now that the detection is over, return to single-player mode.
-    ; Super Awakening Hack to keep 2 player enabled
-    ;ld   hl, SGBRequestOnePlayerCmd               ; $6A76: $21 $02 $6A
-    ;call SendUploadCommand                        ; $6A79: $CD $51 $6B
-    ;call WaitFor3Frames                           ; $6A7C: $CD $86 $6B
+    ld   hl, SGBRequestOnePlayerCmd               ; $6A76: $21 $02 $6A
+    call SendUploadCommand                        ; $6A79: $CD $51 $6B
+    call WaitFor3Frames                           ; $6A7C: $CD $86 $6B
+ENDC
 
     ; Make the displayed screen black,
     ; while we are messing with VRAM for data transfers.
@@ -71,6 +73,9 @@ SuperGameBoyInit::
     call SendUploadCommand                        ; $6A82: $CD $51 $6B
     ld   bc, $06                                  ; $6A85: $01 $06 $00
     call WaitForBCFrames                          ; $6A88: $CD $92 $6B
+
+    ld hl, SuperAwakening_SendSgbPayload
+    call SuperAwakening_Trampoline.jumpTo3F
 
     ; Give priority to the ROM-defined Color Palette
     ; (instead of the player-defined palette)

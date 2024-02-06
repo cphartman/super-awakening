@@ -2424,7 +2424,7 @@ SpawnEnemyDrop::
 
     ld d, $FF ; Awakening hack to never drop power piece and make room in the bank
     ; early game
-    /*
+IF SUPER_AWAKENING_HIDE_CODE
     ld   d, PIECE_OF_POWER_COUNTER_MAX_LOW_MAX_HEALTH ; Max HP 0~6: 30
     ld   a, [wMaxHearts]                          ;
     cp   LOW_MAX_HEALTH                           ; If max HP <= 6, skip
@@ -2435,8 +2435,7 @@ SpawnEnemyDrop::
     jr   c, .pieceOfPowerDrop                     ; If max HP <= 11, skip
     ; late game
     ld   d, PIECE_OF_POWER_COUNTER_MAX_HIGH_MAX_HEALTH ; Max HP 11~14: 40
-    */
-    
+ENDC
 
 .pieceOfPowerDrop:
     ; increment kill counter
@@ -4629,7 +4628,8 @@ PickSword::
 
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
     ; [d] is the item to activate here
-    call SuperAwakening_Trampolines.GiveInventoryItem_trampoline
+    ld hl, SuperAwakening_GiveInventoryItem
+    call SuperAwakening_Trampoline.jumpTo3E
 
     ; There are some items we don't keep in the inventory
     ld a, d
@@ -4648,7 +4648,7 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     dec  e                                        ; Otherwise, have we checked all slots?
     jr   nz, .checkInventorySlot                  ; If no, continue
 
-    ld   hl, wSuperAwakening.Weapon_Inventory                         ; Otherwise, load the inventory start again...
+    ld   hl, wSuperAwakening.Weapon_Inventory                            ; Otherwise, load the inventory start again...
 
 .checkInventorySlotEmpty:
     ld   a, [hl]                                  ; Check if an item is equipped in this slot

@@ -58,12 +58,14 @@ InitSaveFiles::
     ld   de, SaveGame3 - SaveGame1                ; $46B6: $11 $5A $07
     call func_001_4794                            ; $46B9: $CD $94 $47
 
+if !SUPER_AWAKENING_DEBUG
     ; POI: If DebugTool1 is enabled,
     ; write a default save file with everything unlocked
     ld   a, [ROM_DebugTool1]                      ; $46BC: $FA $03 $00
     and  a                                        ; $46BF: $A7
     
     jp   z, .return                               ; $46C0: $CA $93 $47
+ENDC
 
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00
@@ -117,7 +119,7 @@ ENDC
     ld   [SaveGame1.main + wSeashellsCount - wOverworldRoomStatus], a ; 0 secret seashells          ; $470D: $EA $14 $A4
     ld   a, %00000111 ; @TODO Ocarina song constants? ; $4710: $3E $07
     ld   [SaveGame1.main + wOcarinaSongFlags - wOverworldRoomStatus], a ; all 3 Ocarina songs         ; $4712: $EA $4E $A4
-    ld   a, $05                                   ; $4715: $3E $05
+    ld   a, $00                                   ; $4715: $3E $05
     ld   [SaveGame1.main + wRupeeCountHigh - wOverworldRoomStatus], a ; 5xx rupees                  ; $4717: $EA $62 $A4
     ld   a, $09                                   ; $471A: $3E $09
     ld   [SaveGame1.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
@@ -429,7 +431,8 @@ jr_001_531D::
 
 .finish
 
-    call SuperAwakening_Load
+    ld hl, SuperAwakening_Load
+    call SuperAwakening_Trampoline.jumpTo3E
 
     ld   a, TILEMAP_INVENTORY                     ; $538E: $3E $02
     ld   [wBGMapToLoad], a                        ; $5390: $EA $FF $D6
@@ -1470,8 +1473,8 @@ jr_001_5DCC::
     ret                                           ; $5DE5: $C9
 
 SaveGameToFile::
-
-    call SuperAwakening_Save;
+    ld hl, SuperAwakening_Save
+    call SuperAwakening_Trampoline.jumpTo3E
 
 IF __RECALCULATE_MAX_HEARTS__
     ; Recalculate max health before saving
@@ -3246,105 +3249,3 @@ UpdateMinimapEntranceArrowAndReturn::
     ret                                           ; $6E18: $C9
 
 include "code/intro.asm"
-
-SuperAwakening_Load::
-    
-    ; inventory index counter
-    ld b, $00
-    ld c, (INVENTORY_BOMBS-1) ; Start from first item - 1
-
-    ; inventory slot index counter
-    ld d, $00
-    ld e, $00 ; Start from first item - 1
-
-.load_loop
-    ; Increment the index counter
-    inc c
-
-    ; Check if we're done with the inventory
-    ld a, c
-    cp (INVENTORY_MAX+1)
-    jp z, .load_loop_end
-
-    ; Load Inventory Item
-    ld hl, (wInventoryItems-2)
-    add hl, bc
-    ld a, [hl]
-
-    ; Check if shield
-    cp INVENTORY_SHIELD
-    jp z, .load_loop_add_to_progression
-
-    ; Check if boots
-    cp INVENTORY_PEGASUS_BOOTS
-    jp z, .load_loop_add_to_progression
-
-    ; Check if item is unlocked
-    cp 0
-    jp z, .load_loop_add_to_progression
-
-.load_loop_add_to_inventory_slot
-    ld hl, wSuperAwakening.Weapon_Inventory
-    add hl, de
-    inc e
-    ld [hl], a
-    jp .load_loop_add_to_progression
-
-.load_loop_add_to_progression
-    cp 0
-    jp z, .load_loop_add_to_progression_assign
-    ld a, 1
-.load_loop_add_to_progression_assign
-    ld hl, wSuperAwakening.Items_Unlocked
-    add hl, bc
-    ld [hl], a
-    jp .load_loop
-
-.load_loop_end
-
-    ld a, [wSuperAwakening.Weapon_Inventory]
-    ld [wSuperAwakening.Weapon4_Value], a
-    ld a, [wSuperAwakening.Weapon_Inventory+1]
-    ld [wSuperAwakening.Weapon3_Value], a
-
-    ret
-
-; Save progression items into inventory slots
-; Map $02-$0D of wSuperAwakening.Items_Unlocked
-; to $00-$0C of wInventoryItems
-SuperAwakening_Save::
-
-    ; index counter
-    ld b, $00
-    ld c, (INVENTORY_BOMBS-1) ; Start from first item - 1
-    
-.save_loop
-
-    ; Increment the counter
-    inc c
-
-    ; Check if we're done with the inventory
-    ld a, c
-    cp (INVENTORY_MAX+1)
-    jp z, .save_loop_end
-
-    ; Load wSuperAwakening.Items_Unlocked
-    ld hl, (wSuperAwakening.Items_Unlocked)
-    add hl, bc
-    ld a, [hl]
-
-    ; Check if item is unlocked
-    cp 0
-    ld d, c ; store inventory index into [d]
-    jp nz, .save_loop_assign
-    ld d, 0 ; no item, so put 0 in [d]
-
-    ; Load progression value
-.save_loop_assign
-    ld hl, (wInventoryItems-2) ; Index starts at $02
-    add hl, bc
-    ld [hl], d ; [c] is the item index
-    jp .save_loop
-
-.save_loop_end
-    ret

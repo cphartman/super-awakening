@@ -19,8 +19,6 @@ INVENTORY_MAGIC_POWDER     equ $0C
 INVENTORY_BOOMERANG        equ $0D
 INVENTORY_MAX               equ INVENTORY_BOOMERANG
 
-OVERRIDE_INVENTORY_MAX     equ $09
-
 ; Minimaps layout
 ; Only $0, $11 and $30 are used in the final game
 INVENTORY_MINIMAP_SINGLE_FLOOR  equ $00

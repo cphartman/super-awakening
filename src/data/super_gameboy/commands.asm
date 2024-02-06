@@ -206,18 +206,3 @@ SGBRequestTwoPlayersCmd::
     sgb_cmd SGB_MLT_REQ, 1
     db   1  ; players count
     ds   14 ; padding
-
-; Note that this replaces a 1 byte `rts`, so we're actually stomping over bytes :/
-; I put in a rwx breakpoint, and didn't get any hits so we'll just hope this is ok...
-AwakeningHookPatchCmd::
-    sgb_data_send_cmd $0808, $0, 5
-    db $5C, $00, $00, $7F   ; jpl $7f:0000
-    db $60                  ; rts
-
-AwakeningSendPayloadCmd::
-    sgb_cmd SGB_DATA_TRN, 1
-    db $00, $00, $7f ; Put payload at $7f:0000 in WRAM
-    ds 12 ; padding
-
-AwakeningSgbPayloadData::
-    incbin "../snes_injection_data.smc"
