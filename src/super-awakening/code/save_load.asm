@@ -99,4 +99,5 @@ SuperAwakening_Save::
     jp .save_loop
 
 .save_loop_end
-    ret
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank

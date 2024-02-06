@@ -1469,6 +1469,9 @@ jr_001_5DCC::
     ret                                           ; $5DE5: $C9
 
 SaveGameToFile::
+    ld hl, SuperAwakening_Save
+    call SuperAwakening_Trampoline.jumpTo3E
+
 IF __RECALCULATE_MAX_HEARTS__
     ; Recalculate max health before saving
     call RecalculateMaxHearts
