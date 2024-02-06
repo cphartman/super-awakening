@@ -48,8 +48,7 @@ SuperGameBoyInit::
     and  J_RIGHT | J_LEFT                         ; $6A65: $E6 $03
     cp   J_RIGHT | J_LEFT                         ; $6A67: $FE $03
     jr   nz, .superGameBoyDetected                ; $6A69: $20 $0B
-    jp SuperAwakening_SgbFailScreen.Show
-    
+
     ; No valid Super GameBoy detected.
     ; Reset the multiplayer configuration (just in case) and return.
     ld   hl, SGBRequestOnePlayerCmd               ; $6A6B: $21 $02 $6A
@@ -134,21 +133,6 @@ ENDC
     ld   bc, $06                                  ; $6AF1: $01 $06 $00
     call WaitForBCFrames                          ; $6AF4: $CD $92 $6B
 
-.Awakening_Patch:
-
-.AwakeningHookPatchCmd:
-    ; Upload injection payload
-    ld   hl, AwakeningSgbPayloadData
-    ld   de, AwakeningSendPayloadCmd
-    call SendVRAMCommand
-
-    ; Upload gameloop hook
-    ld   hl, AwakeningHookPatchCmd                
-    call SendUploadCommand                        
-    ld   bc, $06                                  
-    call WaitForBCFrames                          
-.Awakening_Patch_end:
-
     ; Upload the standard palette used by the game
     ld   hl, SGBSetPal01Cmd                       ; $6AF7: $21 $00 $69
     call SendUploadCommand                        ; $6AFA: $CD $51 $6B
@@ -175,11 +159,6 @@ ENDC
     ld   de, SGBTransfertBorderCmd                ; $6B24: $11 $50 $69
     call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
 
-    ; Upload frame tilemap and palettes
-    ;ld   hl, SGBFrameTilemap                      ; $6B21: $21 $00 $60
-    ;ld   de, SGBTransfertBorderCmd                ; $6B24: $11 $50 $69
-    ;call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
-
     ld   hl, vTiles0                              ; $6B2A: $21 $00 $80
     ld   bc, $2000                                ; $6B2D: $01 $00 $20
 .loop_6B30_3C
@@ -201,7 +180,7 @@ ENDC
     ld   bc, $06                                  ; $6B47: $01 $06 $00
     call WaitForBCFrames                          ; $6B4A: $CD $92 $6B
 
-    ; Disable all LCD Control flags
+    ; Disable the LCDC interrupt
     xor  a                                        ; $6B4D: $AF
     ld   [rLCDC], a                               ; $6B4E: $E0 $40
     ret                                           ; $6B50: $C9
@@ -327,5 +306,3 @@ SendVRAMCommand::
     xor  a                                        ; $6BDA: $AF
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9
-
-include "code/super_awakening/sbg_check_fail.asm"

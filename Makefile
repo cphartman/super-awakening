@@ -65,9 +65,9 @@ default: build test
 
 # Dependencies for the base version (English 1.0)
 asm_files =  $(shell find src     -type f -name '*.asm' -o -name '*.inc')
-gfx_files =  $(shell find src/gfx -type f -name '*.png' ! -name 'sgb_fail_screen.png' )
+gfx_files =  $(shell find src/gfx -type f -name '*.png'  )
+super_awakening_gfx_files =  $(shell find src/super-awakening/gfx -type f -name '*.png' )
 bin_files =  $(shell find src     -type f -name '*.tilemap.encoded' -o -name '*.attrmap.encoded')
-injection_sources =  $(shell find src/data/super_gameboy/injection_data     -type f -name '*.asm' -o -name '*.inc')
 
 # Compile an PNG file for OAM memory to a 2BPP file
 # (inverting the palette and de-interleaving the tiles).
@@ -85,7 +85,7 @@ oam_%.2bpp: oam_%.png
 # we don't compile the different ASM files separately.)
 # Locale-specific rules below (e.g. `src/main.azlj.o`) will add their own
 # pre-requisites to the ones defined by this rule.
-src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(bin_files) src/data/super_gameboy/injection_data.asm src/gfx/super_awakening/sgb_fail_screen.tilemap
+src/main.%.o: src/main.asm $(asm_files) $(gfx_files:.png=.2bpp) $(super_awakening_gfx_files:.png=.2bpp) $(bin_files)
 	$(ASM) $(ASFLAGS) $($*_ASFLAGS) -i src/ -o $@ $<
 
 # Link object files into a GBC executable rom
@@ -233,5 +233,3 @@ clean:
 	rm -f $(azlj_gfx:.png=.2bpp)
 	rm -f $(azlg_gfx:.png=.2bpp)
 	rm -f $(azlf_gfx:.png=.2bpp)
-	rm -f src/gfx/super_awakening/sgb_fail_screen.tilemap
-	rm -f src/gfx/super_awakening/sgb_fail_screen.pal

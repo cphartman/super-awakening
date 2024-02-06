@@ -39,3 +39,6 @@ wSuperAwakening::
 
 .Items_Unlocked
   ds (INVENTORY_MAX+1)
+
+.Items_Hidden:
+  ds INVENTORY_SLOT_COUNT - 2

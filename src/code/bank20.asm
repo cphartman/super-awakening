@@ -3382,7 +3382,8 @@ InventoryCursorUpDownOffset::  ; Indexed by up/down button press to offset the i
 
 moveInventoryCursor::
 
-    ld hl, SuperAwakening_Inventory.awakening_inventory_select
+    ;ld hl, SuperAwakening_Inventory.awakening_inventory_select
+    ld hl, SuperAwakening_InventoryScreen
     call SuperAwakening_Trampoline.jumpTo3E
 
     ld   a, [wInventorySelection]                 ; $5F06: $FA $A3 $DB
@@ -4205,7 +4206,9 @@ CloseInventory:
     ld   [wPaletteUnknownE], a                    ; $643E: $EA $D5 $DD
     ld   a, JINGLE_CLOSE_INVENTORY                ; $6441: $3E $12
     ldh  [hJingle], a                             ; $6443: $E0 $F2
-    call SuperAwakening_Inventory.awakening_inventory_close
+    
+    ;call SuperAwakening_Inventory.awakening_inventory_close
+    
 .return:
     ret                                           ; $6445: $C9
 
