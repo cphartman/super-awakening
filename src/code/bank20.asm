@@ -2366,6 +2366,7 @@ InventoryEntryPoint::
 ._0A dw InventoryStatusHandler      ; GAMEPLAY_INVENTORY_STATUS
 ._0B dw InventoryStatusOutHandler   ; GAMEPLAY_INVENTORY_STATUS_OUT
 ._0C dw InventoryFadeOutHandler     ; GAMEPLAY_INVENTORY_FADE_OUT
+._0D dw SuperAwakeningLoadHander       ; GAMEPLAY_INVENTORY_DELAY5
 
 InventoryInitialHandler::
     ldh  a, [hIsGBC]
@@ -3140,9 +3141,6 @@ DrawInventorySlots::
 ; Draw entire inventory for the pause screen
 InventoryLoad3Handler::
 
-    ld hl, SuperAwakening_Inventory.awakening_inventory_open
-    call SuperAwakening_Trampoline.jumpTo3E
-
     ld   a, [wC154]                               ; $5D25: $FA $54 $C1
     ld   c, a                                     ; $5D28: $4F
     ld   b, $00                                   ; $5D29: $06 $00
@@ -3297,8 +3295,26 @@ InventoryLoad5Handler::
 .jr_020_5E6D
     xor  a                                        ; $5E6D: $AF
     ld   [wTransitionSequenceCounter], a          ; $5E6E: $EA $6B $C1
-    call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
+    
+    ; Can we jump to our own method here?
+    ;call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
+    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
+    ld [hl], $0D
     ret                                           ; $5E74: $C9
+
+SuperAwakeningLoadHander::
+    call LCDOff                                   ; $5D52: $CD $CF $28
+
+    ld hl, SuperAwakening_InventoryScreen_Open
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6
+    ldh  [rLCDC], a                               ; $5D5B: $E0 $40
+    
+    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
+    ld [hl], GAMEPLAY_INVENTORY_FADE_IN
+    ret                                           ; $5E74: $C9
+
 
 InventoryInstrumentCyclingColors::
     ; Palette colors for the color-cycling the instruments use on the subscreen.
@@ -4208,7 +4224,7 @@ CloseInventory:
     ldh  [hJingle], a                             ; $6443: $E0 $F2
     
     ;call SuperAwakening_Inventory.awakening_inventory_close
-    
+
 .return:
     ret                                           ; $6445: $C9
 

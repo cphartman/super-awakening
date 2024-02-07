@@ -6,4 +6,4 @@ include "super-awakening/code/inventory_menu.asm"
 include "super-awakening/code/inventory_screen.asm"
 
 SuperAwakening_Gfx_ItemsOutline:
-incbin "gfx/items/items_outline.dmg.2bpp"
+incbin "super-awakening/gfx/items_outline.dmg.2bpp"

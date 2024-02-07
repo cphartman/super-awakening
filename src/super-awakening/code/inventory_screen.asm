@@ -1,3 +1,5 @@
+SUPER_AWAKENING_INVENTORY_SLOT_COUNT = 10
+
 SuperAwakening_InventoryScreen:
 
     ; Check for button press
@@ -76,6 +78,7 @@ SuperAwakening_InventoryScreen:
     xor  a                                        ; $0379: $AF
     ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
 .poll_for_vblank_end
+
     pop de
     pop hl
     ;call LCDOff
@@ -121,6 +124,104 @@ SuperAwakening_InventoryScreen:
     ;ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6
     ;ldh  [rLCDC], a                               ; $5D5B: $E0 $40
 
+
+.return
+    ; Restore bank
+    ld a, $20
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_Inventory_HideSlot::
+.get_item_value
+    ; Get the inventory item value from the inventory selection index => [a]
+    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld c, a
+    ld b, $00
+    add  hl, bc
+    ld a, [hl]
+
+    ; Get the tile index from the inventory item value => [a]
+.get_tile_index
+    ld hl, Inventory_Item_Index_Map
+    ld c, a
+    add  hl, bc
+    ld a, [hl]
+
+    ; Get address offset of the tile
+    ; hl = a*bc
+    ; while( a-- ) { hl += bc }
+.get_tile_address_offset
+    ld hl, $0000    ; results
+    ld bc, $0020    ; multiplicand
+.get_tile_address_offset_multiply_loop
+    cp 0
+    jp z, .get_tile_address_offset_end
+    add hl, bc
+    dec a
+    jp .get_tile_address_offset_multiply_loop
+.get_tile_address_offset_end
+
+.get_tile_addresses
+    ; bc = hl
+    ld b, h
+    ld c, l
+
+    ; de = $8800 + bc
+    ld hl, $8800
+    add hl, bc
+    ld d, h
+    ld e, l
+
+    ; hl = $GFX + bc
+    ld hl, SuperAwakening_Gfx_ItemsOutline
+    add hl, bc
+/*
+.wait_for_vlbank
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .wait_for_vlbank_end              ; $0377: $28 $FB
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.wait_for_vlbank_end
+*/
+.copy_tiles
+    ;   bc : number of bytes to copy
+    ;   de : destination address    
+    ;   hl : source address
+    ld   bc, $20
+    call CopyData    
+
+    ret
+
+SuperAwakening_InventoryScreen_Open:
+    ld hl, wSuperAwakening.Items_Hidden
+    ld c, $0
+    
+.set_items_hidden_loop
+    ; Check if item slot is hidden
+    ld a, [hl]
+    cp 0
+    jp z, .set_items_hidden_loop_next
+    
+    ; Update slot index to hidden
+    push hl
+    push af
+    push bc
+    ld a, c
+    call SuperAwakening_Inventory_HideSlot
+    pop bc
+    pop af
+    pop hl
+
+.set_items_hidden_loop_next
+    inc hl
+    inc c
+    ld a, c
+    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT+1
+    jp z, .set_items_hidden_loop_end
+    jp .set_items_hidden_loop
+
+.set_items_hidden_loop_end
 
 .return
     ; Restore bank

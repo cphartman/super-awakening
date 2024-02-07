@@ -10,7 +10,7 @@ wSuperAwakening::
   ds 1
 
 ; Values that the inventory will cycle through, also used to display on the pause screen
-.Weapon_Inventory
+.Weapon_Inventory:
   ds INVENTORY_SLOT_COUNT - 2
 
 .Weapon4_Inventory_Index:
@@ -37,7 +37,7 @@ wSuperAwakening::
 .PressedButtonsMask2:
   ds 1 ; FFCB
 
-.Items_Unlocked
+.Items_Unlocked:
   ds (INVENTORY_MAX+1)
 
 .Items_Hidden:
