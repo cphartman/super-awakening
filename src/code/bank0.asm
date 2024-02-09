@@ -1565,7 +1565,8 @@ WorldInteractiveHandler::
     ; Draw A/B from overworld?
     ; This draws a/b every other frame?
     ; We could override the slot values here to just A/B maybe
-    callsb DrawInventorySlots                     ; $100A: $3E $20 $EA $00 $21 $CD $9C $5C
+    callsb SuperAwakening_DrawInventorySlots                     ; $100A: $3E $20 $EA $00 $21 $CD $9C $5C
+    ;callsb DrawInventorySlots                     ; $100A: $3E $20 $EA $00 $21 $CD $9C $5C
 
 label_1012::
     callsw func_014_54F8                          ; $1012: $3E $14 $CD $0C $08 $CD $F8 $54

@@ -19,6 +19,11 @@ wSuperAwakening::
 .Weapon3_Inventory_Index:
   ds 1
 
+; Stores the address to use when drawing inventory slots
+; Allows A/B to draw from wSuperAwakening and the inventory screen to draw from wInventoryItems
+.DrawInventorySlots_pointer:
+  ds 2
+
 .QuickDash_Timer:
   ds 1
 

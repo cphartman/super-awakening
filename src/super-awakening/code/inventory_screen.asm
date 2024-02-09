@@ -10,7 +10,7 @@ SuperAwakening_InventoryScreen:
 
     ; Get the inventory item value from the inventory selection index => [a]
     ld   a, [wInventorySelection]
-    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld   hl, wInventoryItems.subscreen
     ld c, a
     ld b, $00
     add  hl, bc
@@ -133,7 +133,7 @@ SuperAwakening_InventoryScreen:
 SuperAwakening_Inventory_HideSlot::
 .get_item_value
     ; Get the inventory item value from the inventory selection index => [a]
-    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld   hl, wInventoryItems.subscreen
     ld c, a
     ld b, $00
     add  hl, bc
@@ -217,7 +217,7 @@ SuperAwakening_InventoryScreen_Open:
     inc hl
     inc c
     ld a, c
-    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT+1
+    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT+2
     jp z, .set_items_hidden_loop_end
     jp .set_items_hidden_loop
 

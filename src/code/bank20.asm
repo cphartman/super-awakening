@@ -3010,11 +3010,19 @@ InventoryTileMapPositions::
 ; bc = The bottom-most inventory slot to draw
 ; e = One less than the top-most inventory slot to draw
 ;     ($FF draws all the way to the top, including the A and B slots)
+
+; DrawInventorySlots with the wSuperAwakening inventory
+SuperAwakening_DrawInventorySlots::
+    push de
+    push bc
+    ld hl, wSuperAwakening.Weapon_Start
+    jp DrawInventorySlots.start
+
 DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
-    ld   hl, wSuperAwakening.Weapon_Start       ; Show weapon slots 3 and 4
-    ;ld   hl, wInventoryItems       ; debug
+    ld hl, wInventoryItems
+.start
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
     ldh  [hMultiPurpose1], a                      ; $5CA3: $E0 $D8
