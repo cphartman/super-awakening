@@ -47,3 +47,6 @@ wSuperAwakening::
 
 .Items_Hidden:
   ds INVENTORY_SLOT_COUNT - 2
+
+.DemoMode:
+  ds 1

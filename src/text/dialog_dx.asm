@@ -588,3 +588,42 @@ Dialog2AF:: ; Photographer, probably
     db "pictures. Hey,  "
     db "#####! What are "
     db "you doing here? @"
+
+; Super Awakening Demo
+Dialog2B0::
+    db "How to use your "
+    db "new controller: "
+    db "(A) - Sword     "
+    db "(B) - Shield    "
+    db "Use your items  "
+    db "with (X) and (Y)@"
+
+Dialog2B1:
+    db "Change your     "
+    db "equipped items  "
+    db "with (R) and (L)@"
+
+Dialog2B2:
+    db "Use the (START) "
+    db "menu to view    "
+    db "your inventory. "
+    db "Press (A) to    "
+    db "hide or show any"
+    db "inventory item@"
+
+Dialog2B3:
+    db "Now you can     "
+    db " Quick Jump!    "
+    db "Hold shield and "
+    db "double tap any  "
+    db "direction to    "
+    db "jump! (B+<right><right>)@"
+
+Dialog2B4:
+    db "Try out your    "
+    db " Quick Dash!    "
+    db "Double tap any  "
+    db "direction to    "
+    db "dash!  (<right><right>)    "
+    db "Tap again to    "
+    db "jump!  (<right><right><right>)@"

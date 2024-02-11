@@ -17,15 +17,15 @@ DebugSaveFileData::
     db INVENTORY_POWER_BRACELET          ; .              ; $4671
     db INVENTORY_PEGASUS_BOOTS    ; .              ; $4672
 
-    db 1  ; Have Flippers                         ; $4673
-    db 1  ; Have Medicine                         ; $4674
-    db 1  ; Trading item = Yoshi doll             ; $4675
+    db 0  ; Have Flippers                         ; $4673
+    db 0  ; Have Medicine                         ; $4674
+    db 0  ; Trading item = Yoshi doll             ; $4675
     db 0  ; 0 Secret Seashells                    ; $4676
     db 0  ; (@TODO "Medicine count: found?")      ; $4677
-    db 1  ; Have Tail Key                         ; $4678
-    db 1  ; Have Angler Key                       ; $4679
-    db 1  ; Have Face Key                         ; $467A
-    db 1  ; Have Bird Key                         ; $467B
+    db 0  ; Have Tail Key                         ; $4678
+    db 0  ; Have Angler Key                       ; $4679
+    db 0  ; Have Face Key                         ; $467A
+    db 0  ; Have Bird Key                         ; $467B
     db 0  ; 0 Golden Leaves / no Slime Key        ; $467C
 
     ; Dungeon flags ...
@@ -92,7 +92,7 @@ ENDC
     ; Set boss flags for all dungeons
     ld   hl, SaveGame1.main + wHasInstrument1 - wOverworldRoomStatus ; Dungeon boss flags = 00000010 ; $46E6: $21 $6A $A4
     ld   e, $09 ; POI: Sets 9 flags (but only 8 dungeons...?) ; $46E9: $1E $09
-    ld   a, $02 ; Sets 46A~447                    ; $46EB: $3E $02
+    ld   a, $00 ; Sets 46A~447                    ; $46EB: $3E $02
 .drawEmptyHeartsLoop
     ldi  [hl], a                                  ; $46ED: $22
     dec  e                                        ; $46EE: $1D
@@ -119,7 +119,7 @@ ENDC
     ld   [SaveGame1.main + wSeashellsCount - wOverworldRoomStatus], a ; 0 secret seashells          ; $470D: $EA $14 $A4
     ld   a, %00000111 ; @TODO Ocarina song constants? ; $4710: $3E $07
     ld   [SaveGame1.main + wOcarinaSongFlags - wOverworldRoomStatus], a ; all 3 Ocarina songs         ; $4712: $EA $4E $A4
-    ld   a, $00                                   ; $4715: $3E $05
+    ld   a, $01                                   ; $4715: $3E $05
     ld   [SaveGame1.main + wRupeeCountHigh - wOverworldRoomStatus], a ; 5xx rupees                  ; $4717: $EA $62 $A4
     ld   a, $09                                   ; $471A: $3E $09
     ld   [SaveGame1.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
@@ -133,6 +133,10 @@ ENDC
     ld   a, [wGameplayType]                       ; $472E: $FA $95 $DB
     cp   GAMEPLAY_FILE_NEW                        ; $4731: $FE $03
     jr   z, .notOnNewFileScreen                   ; $4733: $28 $19
+
+    ; Enable demo mode (state 1)
+    ld a, $01
+    ld [wSuperAwakening.DemoMode], a
 
     ; Set save file name; "ZELDA" in NA, "えすばはら" in JP
     ; POI: "えすばはら" = "Esubahara" - possibly Takamitsu Kuzuhara?
@@ -151,11 +155,12 @@ ENDR
     ld   [SaveGame1.main + wIsBowWowFollowingLink - wOverworldRoomStatus], a ; bowwow flag = off           ; $4755: $EA $5B $A4
     ld   [SaveGame1.main + wSpawnIsIndoor - wOverworldRoomStatus], a ; current map = overworld     ; $4758: $EA $64 $A4
     ld   [SaveGame1.main + wSpawnMapId - wOverworldRoomStatus], a ; current submap = none       ; $475B: $EA $65 $A4
-    ld   a, $92                                   ; $475E: $3E $92
+    ; Map location to start
+    ld   a, $D2                                 ; $475E: $3E $92
     ld   [SaveGame1.main + wSpawnMapRoom - wOverworldRoomStatus], a ; saved room = flying rooster in mabe village ; $4760: $EA $66 $A4
-    ld   a, $48                                   ; $4763: $3E $48
+    ld   a, $58                                   ; $4763: $3E $48
     ld   [SaveGame1.main + wSpawnPositionX - wOverworldRoomStatus], a ; saved y position            ; $4765: $EA $67 $A4
-    ld   a, $62                                   ; $4768: $3E $62
+    ld   a, $70                                   ; $4768: $3E $62
     ld   [SaveGame1.main + wSpawnPositionY - wOverworldRoomStatus], a ; saved x position            ; $476A: $EA $68 $A4
 
     ; Set all overworld map tiles as seen (80)
@@ -891,7 +896,12 @@ ENDC
 
 include "data/dialogs/map.asm"
 
+; Load room dialog
 func_001_5A59::
+    ld a, [wSuperAwakening.DemoMode]
+    cp 0
+    jp nz, .SuperAwakeningDemo
+
     ldh  a, [hMapRoom]                            ; $5A59: $F0 $F6
     ld   e, a                                     ; $5A5B: $5F
     ld   d, $00                                   ; $5A5C: $16 $00
@@ -902,6 +912,10 @@ func_001_5A59::
     add  hl, de                                   ; $5A66: $19
     ld   a, [hl]                                  ; $5A67: $7E
     jp   OpenDialogInTable0                       ; $5A68: $C3 $85 $23
+
+.SuperAwakeningDemo
+    call_open_dialog Dialog2B0
+    ret
 
 Data_001_5A6B::
     db 0, 1, $FF                                  ; $5A6B

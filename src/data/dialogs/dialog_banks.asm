@@ -706,3 +706,6 @@ DialogBankTable::
     db BANK(Dialog2AD)
     db BANK(Dialog2AE)
     db BANK(Dialog2AF) | DIALOG_UNSKIPPABLE
+    db BANK(Dialog2B0) | DIALOG_UNSKIPPABLE
+    db BANK(Dialog2B1) | DIALOG_UNSKIPPABLE
+    db BANK(Dialog2B2) | DIALOG_UNSKIPPABLE
