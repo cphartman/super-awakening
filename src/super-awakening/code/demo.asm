@@ -68,6 +68,9 @@ SuperAwakening_Demo::
     jp .return
 
 .show_dialog_3
+    ld a, $01
+    ld [wSuperAwakening.Jump_Enabled], a
+
     call_open_dialog Dialog2B2
     ld a, 7
     ld [wSuperAwakening.DemoMode], a

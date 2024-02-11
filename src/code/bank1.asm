@@ -92,7 +92,7 @@ ENDC
     ; Set boss flags for all dungeons
     ld   hl, SaveGame1.main + wHasInstrument1 - wOverworldRoomStatus ; Dungeon boss flags = 00000010 ; $46E6: $21 $6A $A4
     ld   e, $09 ; POI: Sets 9 flags (but only 8 dungeons...?) ; $46E9: $1E $09
-    ld   a, $00 ; Sets 46A~447                    ; $46EB: $3E $02
+    ld   a, $02 ; Sets 46A~447                    ; $46EB: $3E $02
 .drawEmptyHeartsLoop
     ldi  [hl], a                                  ; $46ED: $22
     dec  e                                        ; $46EE: $1D

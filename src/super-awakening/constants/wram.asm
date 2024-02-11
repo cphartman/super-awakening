@@ -48,5 +48,10 @@ wSuperAwakening::
 .Items_Hidden:
   ds INVENTORY_SLOT_COUNT - 2
 
+.Dash_Enabled:
+  ds 1
+.Jump_Enabled:
+  ds 1
+
 .DemoMode:
   ds 1
