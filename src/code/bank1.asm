@@ -136,7 +136,7 @@ ENDC
 
     ; Enable demo mode (state 1)
     ld a, $01
-    ld [wSuperAwakening.DemoMode], a
+    ld [wSuperAwakening.DemoMode_State], a
 
     ; Set save file name; "ZELDA" in NA, "えすばはら" in JP
     ; POI: "えすばはら" = "Esubahara" - possibly Takamitsu Kuzuhara?
@@ -898,7 +898,7 @@ include "data/dialogs/map.asm"
 
 ; Load room dialog
 func_001_5A59::
-    ld a, [wSuperAwakening.DemoMode]
+    ld a, [wSuperAwakening.DemoMode_State]
     cp 0
     jp nz, .SuperAwakeningDemo
 

@@ -2887,7 +2887,7 @@ OverworldE4::
 OverworldE5::
   db   ANIMATED_TILES_TIDE ; animation id
   db   $08 ; floor tile
-  db   $89, $00, $3A           ; object
+/*  db   $89, $00, $3A           ; object
   db   $09, $37                ; object
   db   $15, $24                ; object
   db   $19, $2E                ; object
@@ -2897,8 +2897,8 @@ OverworldE5::
   db   $29, $39                ; object
   db   $31, $24                ; object
   db   $36, $C8                ; object
-  db   $C2, $37, $20           ; object
-  db   $C3, $38, $04           ; object
+*/  db   $C2, $37, $20           ; object
+/*  db   $C3, $38, $04           ; object
   db   $C3, $39, $04           ; object
   db   $52, $C8                ; object
   db   $56, $36                ; object
@@ -2910,7 +2910,7 @@ OverworldE5::
   db   $70, $32                ; object
   db   $83, $71, $2C           ; object
   db   $74, $2D                ; object
-  db   $79, $37                ; object
+  db   $79, $37                ; object*/
   db   ROOM_END
 
 OverworldE6::
@@ -3680,3 +3680,19 @@ OverworldFF::
   db   $59, $3B                ; object
   db   ROOM_END
 
+
+SuperAwakeningDemo_C2::
+  db   ANIMATED_TILES_VILLAGE ; animation id
+  db   $04 ; floor tile
+  db   $86, $FF, $F5           ; object
+  db   $C3, $3F, $F5           ; object
+  db   $84, $33, $F5           ; object
+  db   $41, $F5                ; object
+  db   $69, $F5                ; object
+  db   $78, $F5                ; object
+  db   $83, $53, $E8           ; object
+  /*db   $43, $E8                ; object*/
+  db   $16, $44                ; object
+  db   $22, $44                ; object
+  db   $C2, $11, $20           ; object
+  db   ROOM_END

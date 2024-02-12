@@ -5973,12 +5973,23 @@ LoadRoom::
 .endTalTalHeightsAlt
 
     cp   $2B                                      ; $3211: $FE $2B
-    jr   nz, .altRoomsEnd                         ; $3213: $20 $0C
+    jr   nz, .superawakening_override_demo_room                         ; $3213: $20 $0C
     ld   a, [wOverworldRoomStatus + $2B]          ; $3215: $FA $2B $D8
     and  OW_ROOM_STATUS_CHANGED                   ; $3218: $E6 $10
     jr   z, .altRoomsEnd                          ; $321A: $28 $05
     ld   bc, Overworld2BAlt ; Angler's Tunnel open ; $321C: $01 $9A $50
     jr   .loadBankForOverworldRooms               ; $321F: $18 $0E
+
+.superawakening_override_demo_room
+    cp   $C2                                      ; $3211: $FE $2B
+    jr   nz, .altRoomsEnd                         ; $3213: $20 $0C
+    ; This needs a condition to check if we're in demo state
+    ; But need to move this into a jump method bc the bank is out of space
+    ;ld a, [wSuperAwakening.DemoMode_State]
+    ;and a
+    ;jp z, .altRoomsEnd
+    ld   bc, SuperAwakeningDemo_C2
+    jr   .loadBankForOverworldRooms
 
 .altRoomsEnd
 

@@ -1,4 +1,5 @@
 
+/*
 SuperAwakening_Inventory::
     ; Handle inventory select code
 .awakening_inventory_select:
@@ -287,3 +288,4 @@ ENDC
 
     ld a, BANK(InventoryEntryPoint)
     jp SuperAwakening_Trampoline.returnToBank
+*/

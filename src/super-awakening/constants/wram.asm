@@ -53,5 +53,8 @@ wSuperAwakening::
 .Jump_Enabled:
   ds 1
 
-.DemoMode:
+.DemoMode_State:
+  ds 1
+
+.DemoMode_SubState:
   ds 1

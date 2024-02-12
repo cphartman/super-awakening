@@ -617,13 +617,21 @@ Dialog2B3:
     db "Hold shield and "
     db "double tap any  "
     db "direction to    "
-    db "jump! (B+<right><right>)@"
+    db "jump!  B<right><right>@"
 
 Dialog2B4:
     db "Try out your    "
     db " Quick Dash!    "
     db "Double tap any  "
     db "direction to    "
-    db "dash!  (<right><right>)    "
+    db "dash!   <right><right>      "
     db "Tap again to    "
-    db "jump!  (<right><right><right>)@"
+    db "jump!   <right><right><right>@"
+
+Dialog2B5:
+    db "Now you can     "
+    db " Quick Lift!    "
+    db "Push a pot or   "
+    db "stone, then hold"
+    db "(X) or (Y) to   "
+    db "lift it up@"

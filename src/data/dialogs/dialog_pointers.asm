@@ -699,3 +699,6 @@ DialogPointerTable::
     dialog_pointer Dialog2B0
     dialog_pointer Dialog2B1
     dialog_pointer Dialog2B2
+    dialog_pointer Dialog2B3
+    dialog_pointer Dialog2B4
+    dialog_pointer Dialog2B5
