@@ -1,4 +1,3 @@
-SUPER_AWAKENING_INVENTORY_SLOT_COUNT = 10
 
 SuperAwakening_InventoryScreen:
 
@@ -9,20 +8,52 @@ SuperAwakening_InventoryScreen:
     jp nz, .return
 
     ; Get the inventory item value from the inventory selection index => [a]
+.get_inventory_item_value
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+
+    
+.check_for_mushroom
+    ld b, a  ; Backup [a] to [b]
+    cp INVENTORY_MAGIC_POWDER
+    jp nz, .get_tile_index
+    ld a, [wHasToadstool]
+    cp 1
+    ld a, b ; Restore [a] from [b]
+    jp nz, .get_tile_index
+    ; We have a mushroom, enable or disable?
     ld   a, [wInventorySelection]
-    ld   hl, wInventoryItems.subscreen
+    ld   hl, wSuperAwakening.Items_Hidden
     ld c, a
     ld b, $00
     add  hl, bc
     ld a, [hl]
-
+    xor 1 ; Toggle
+    ld [hl], a
+    cp 0
+    jp z, .show_mushroom
+.hide_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + ($20*10))
+    jp .copy_data
+.show_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
+    jp .copy_data
+  
     ; Get the tile index from the inventory item value => [a]
 .get_tile_index
     ld hl, Inventory_Item_Index_Map
     ld c, a
+    ld b, $00
     add  hl, bc
     ld a, [hl]
-    
 .get_tile_index_end
 
 ;InventoryEquipmentItemsTiles
@@ -35,7 +66,7 @@ SuperAwakening_InventoryScreen:
     ld b, $00
     add  hl, bc
     ld a, [hl]
-    xor 1
+    xor 1 ; Toggle
     ld [hl], a
     cp 0
     jp z, .get_show_address
@@ -49,7 +80,7 @@ SuperAwakening_InventoryScreen:
 
     ; Get address of tile data from tile index: (tile index offset*$20)
     ; [a] = tile index
-    
+    ; 0x20=32 so I think this can be replaced with <<5 or something simpler
     ld bc, $0020 ; multiplicand
     ld de, $8800
 .increment_loop
@@ -67,9 +98,8 @@ SuperAwakening_InventoryScreen:
     jp .increment_loop
 .increment_loop_end
 
+.copy_data
 
-    push hl
-    push de
 .poll_for_vblank
     ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
     and  a                                        ; $0376: $A7
@@ -79,51 +109,11 @@ SuperAwakening_InventoryScreen:
     ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
 .poll_for_vblank_end
 
-    pop de
-    pop hl
-    ;call LCDOff
-
-
 ;   bc : number of bytes to copy
 ;   de : destination address
 ;   hl : source address
     ld   bc, $20
-    ;ld   de, $8820
-    ;ld   hl, items_outline_tiles_bank_3E+$20
-    call CopyData                                 ; $7C43: $CD $14 $29
-
-    ;  a   source bank
-    ;  b   source address high byte
-    ;  c   destination address high byte (starting from $8000)
-    ;  h   bank to switch back after the transfer
-/*
-    ld a, BANK(items_outline_tiles_bank_3E)
-    ld b, $40
-    ld c, $02
-    ld h, BANK(SuperAwakening)
-    call CopyDataToVRAM
-
-    ld a, BANK(items_outline_tiles_bank_3E)
-    ld b, $41
-    ld c, $03
-    ld h, BANK(SuperAwakening)
-    call CopyDataToVRAM
-*/
-; Inputs:
-;   bc : number of bytes to copy
-;   de : destination address
-;   hl : source address
-
-    ;ld   bc, $20
-    ;ld   de, $8820
-    ;ld   hl, items_outline_tiles_bank_3E+$20
-    ;call CopyData                                 ; $7C43: $CD $14 $29
-
-
-    ; Turn on LCD
-    ;ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6
-    ;ldh  [rLCDC], a                               ; $5D5B: $E0 $40
-
+    call CopyData                                 
 
 .return
     ; Restore bank
@@ -244,3 +234,4 @@ Inventory_Item_Index_Map::
     db $0B ; INVENTORY_SHOVEL
     db $07 ; INVENTORY_MAGIC_POWDER
     db $12 ; INVENTORY_BOOMERANG
+    db $0A ; Powder

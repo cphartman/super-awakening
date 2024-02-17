@@ -1,7 +1,7 @@
 
 ; [a] and [wSuperAwakening.Weapon3_Value] contains the item value
 SuperAwakening_GoriyaTradeItem::
-
+/*
 	ld d, a 	; Keep the old item value in [d]
 
 	; Disable item in progression
@@ -59,12 +59,12 @@ SuperAwakening_GoriyaTradeItem::
 
 
 .inventory_update_equipped_items_end
-
+*/
 	ret
 
 
 SuperAwakening_GoriyaTradeReturnItem::
-
+/*
 ; Swap out boomerang from the inventory
 .find_boomerang_inventory_slot_loop_init
     ld   hl, wSuperAwakening.Weapon_Inventory
@@ -118,5 +118,5 @@ SuperAwakening_GoriyaTradeReturnItem::
 	ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_BOOMERANG)
 	ld a, 0
 	ld [hl], a
-
+*/
 	ret

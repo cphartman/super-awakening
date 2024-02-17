@@ -4626,19 +4626,15 @@ PickSword::
     ld   [wShieldLevel], a                        ; $646D: $EA $44 $DB
     ld   d, INVENTORY_SHIELD                      ; $6470: $16 $04
 
+; This function assumes [bc] is resroted
 GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into first available slot
     ; [d] is the item to activate here
-    ld hl, SuperAwakening_GiveInventoryItem
+    ld hl, SuperAwakening_ShouldGiveInventoryItem
     call SuperAwakening_Trampoline.jumpTo3E
+    ; [d] is set to 0 if the item should not be added
 
-    ; There are some items we don't keep in the inventory
-    ld a, d
-    and (INVENTORY_SWORD | INVENTORY_SHIELD | INVENTORY_PEGASUS_BOOTS )
-    cp 0
-    jp nz, .return
-
-    ld   hl, wSuperAwakening.Weapon_Inventory          ; $6472: $21 $00 $DB
-    ld   e, $0C                                   ; $6475: $1E $0C
+    ld   hl, wInventoryItems.subscreen          
+    ld   e, SUPER_AWAKENING_INVENTORY_SLOT_COUNT            
 
 .checkInventorySlot:                              ; Check if we already have this item:
     ld   a, [hl+]                                 ; Check what item is in this slot
@@ -4648,7 +4644,7 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     dec  e                                        ; Otherwise, have we checked all slots?
     jr   nz, .checkInventorySlot                  ; If no, continue
 
-    ld   hl, wSuperAwakening.Weapon_Inventory                            ; Otherwise, load the inventory start again...
+    ld   hl, wInventoryItems.subscreen                            ; Otherwise, load the inventory start again...
 
 .checkInventorySlotEmpty:
     ld   a, [hl]                                  ; Check if an item is equipped in this slot
@@ -4656,13 +4652,17 @@ GiveInventoryItem::     ; @TODO GivePlayerItem or w/e - inserts item in [d] into
     jr   nz, .inventorySlotFull                   ; If there is an item, jump ahead
 
     ld   [hl], d                                  ; Otherwise, put the item into this slot
+    
+    ld hl, SuperAwakening_RefreshInventoryItems
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ret                                           ; and return
 
 .inventorySlotFull:
     inc  hl                                       ; Do we have more inventory spaces to check?
     inc  e                                        ; (e was 0C - slots checked)
     ld   a, e                                     ;
-    cp   $0C                                      ; If we've checked enough to get back to 0C, we're out
+    cp   SUPER_AWAKENING_INVENTORY_SLOT_COUNT
     jr   nz, .checkInventorySlotEmpty             ; Otherwise, go back to check next slot
 
 .return:

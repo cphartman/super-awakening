@@ -135,8 +135,9 @@ ENDC
     jr   z, .notOnNewFileScreen                   ; $4733: $28 $19
 
     ; Enable demo mode (state 1)
-    ld a, $01
-    ld [wSuperAwakening.DemoMode_State], a
+    ; This should be enabled when the save file loads, not created
+    ;ld a, $01
+    ;ld [wSuperAwakening.DemoMode_State], a
 
     ; Set save file name; "ZELDA" in NA, "えすばはら" in JP
     ; POI: "えすばはら" = "Esubahara" - possibly Takamitsu Kuzuhara?

@@ -8,11 +8,11 @@ wSuperAwakening::
   ; Only used for display purpose on the hud
 .Weapon3_Value:: ; Sync'd to Weapon_Inventory[Weapon3_Inventory_Index]
   ds 1
-
+/*
 ; Values that the inventory will cycle through, also used to display on the pause screen
 .Weapon_Inventory:
   ds INVENTORY_SLOT_COUNT - 2
-
+*/
 .Weapon4_Inventory_Index:
   ds 1
 
@@ -52,9 +52,15 @@ wSuperAwakening::
   ds 1
 .Jump_Enabled:
   ds 1
+.Shield_Enabled:
+  ds 1
 
 .DemoMode_State:
   ds 1
 
 .DemoMode_SubState:
+  ds 1
+
+; For temporarily storing data
+.temp1:
   ds 1

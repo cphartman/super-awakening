@@ -3506,15 +3506,15 @@ jr_020_5F59:
     ld   d, $00                                   ; $5F94: $16 $00
     
     ; Use the super awakening inventory
-    ;ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
-    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    ;ld   hl, wSuperAwakening.Weapon_Inventory
     
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
     ; Never show the ocarina menu
     ;jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
-    jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
+    jr   jr_020_5FB2                          ; $5F9D: $20 $13
 
     ld   a, [wOcarinaSongFlags]                   ; $5F9F: $FA $49 $DB
     and  a                                        ; $5FA2: $A7

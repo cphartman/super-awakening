@@ -591,11 +591,15 @@ Dialog2AF:: ; Photographer, probably
 
 ; Super Awakening Demo
 Dialog2B0::
-    db "How to use your "
-    db "new controller: "
-    db "(A) - Sword     "
-    db "(B) - Shield    "
-    db "Use your items  "
+    db "Asleep again?   "
+    db "Welcome back to "
+    db "Koholint Island!"
+    db "I will teach you"
+    db "how to use your "
+    db "new abilities..."
+    db "  (A) - Shield  "
+    db "  (B) - Sword   "
+    db "Use other items "
     db "with (X) and (Y)@"
 
 Dialog2B1:
@@ -604,34 +608,34 @@ Dialog2B1:
     db "with (R) and (L)@"
 
 Dialog2B2:
-    db "Use the (START) "
-    db "menu to view    "
-    db "your inventory. "
-    db "Press (A) to    "
-    db "hide or show any"
-    db "inventory item@"
+    db "Press (START) to"
+    db "see all your of "
+    db "inventory items."
+    db "You can hide or "
+    db "show any item in"
+    db "your inventory@"
 
 Dialog2B3:
-    db "Now you can     "
-    db " Quick Jump!    "
-    db "Hold shield and "
-    db "double tap any  "
-    db "direction to    "
-    db "jump!  B<right><right>@"
+    db "  Now you can   "
+    db "  Quick Jump!   "
+    db "Hold your shield"
+    db "and double tap  "
+    db "any direction to"
+    db "jump!  (A)<right><right>@"
 
 Dialog2B4:
-    db "Try out your    "
-    db " Quick Dash!    "
+    db "  You can also  "
+    db "  Quick Dash!   "
     db "Double tap any  "
     db "direction to    "
-    db "dash!   <right><right>      "
-    db "Tap again to    "
-    db "jump!   <right><right><right>@"
+    db "dash! Tap again "
+    db "to dash jump!   "
+    db "   <right><right>     <right><right><right>@"
 
 Dialog2B5:
-    db "Now you can     "
-    db " Quick Lift!    "
+    db "  Try out your  "
+    db "  Quick Lift!   "
     db "Push a pot or   "
     db "stone, then hold"
     db "(X) or (Y) to   "
-    db "lift it up@"
+    db "lift it up!@"

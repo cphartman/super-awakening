@@ -5981,7 +5981,7 @@ LoadRoom::
     jr   .loadBankForOverworldRooms               ; $321F: $18 $0E
 
 .superawakening_override_demo_room
-    cp   $C2                                      ; $3211: $FE $2B
+    /*cp   $C2                                      ; $3211: $FE $2B
     jr   nz, .altRoomsEnd                         ; $3213: $20 $0C
     ; This needs a condition to check if we're in demo state
     ; But need to move this into a jump method bc the bank is out of space
@@ -5989,7 +5989,7 @@ LoadRoom::
     ;and a
     ;jp z, .altRoomsEnd
     ld   bc, SuperAwakeningDemo_C2
-    jr   .loadBankForOverworldRooms
+    jr   .loadBankForOverworldRooms*/
 
 .altRoomsEnd
 

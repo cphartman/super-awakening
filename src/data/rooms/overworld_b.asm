@@ -3687,12 +3687,12 @@ SuperAwakeningDemo_C2::
   db   $86, $FF, $F5           ; object
   db   $C3, $3F, $F5           ; object
   db   $84, $33, $F5           ; object
-  db   $41, $F5                ; object
+  db   $21, $F5                ; object
   db   $69, $F5                ; object
   db   $78, $F5                ; object
-  db   $83, $53, $E8           ; object
+  /*db   $83, $53, $E8           ; object*/
   /*db   $43, $E8                ; object*/
   db   $16, $44                ; object
-  db   $22, $44                ; object
-  db   $C2, $11, $20           ; object
+  db   $62, $44                ; flowers
+  db   $C1, $11, $20           ; rock line
   db   ROOM_END

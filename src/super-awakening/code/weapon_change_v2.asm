@@ -3,9 +3,9 @@
 ; Inventory v2
 ;
 SuperAwakening_ChangeWeapon_v2::
-    ; Skip all of this if we're not in the overworld
-    ld a, [wGameplayType]
-    cp GAMEPLAY_WORLD
+
+    ld   a, [wGameplaySubtype]
+    cp   GAMEPLAY_WORLD_INTERACTIVE ; If GameplaySubtype != 7 (interactive overworld gameplay) ; $0E42: $FE $07
     jp nz, return
 
 ; Parameters
@@ -127,11 +127,12 @@ change_weapon_\1:
         ld  [wSuperAwakening.Weapon\1_Inventory_Index], a
 
         ; Check if this is the same index as the other weapon index
+        
         ld hl, wSuperAwakening.Weapon\3_Inventory_Index
         ld b, [hl]
         cp b
         jp z, .next_weapon_\1_loop
-
+        
         ; Check if weapon is hidden in inventory
         ld hl, wSuperAwakening.Items_Hidden
         ld c, a ; [a] is the weapon index

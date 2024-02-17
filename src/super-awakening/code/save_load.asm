@@ -1,5 +1,5 @@
 SuperAwakening_Load::
-    
+    /*
     ; inventory index counter
     ld b, $00
     ld c, (INVENTORY_BOMBS-1) ; Start from first item - 1
@@ -57,7 +57,7 @@ SuperAwakening_Load::
     ld [wSuperAwakening.Weapon4_Value], a
     ld a, [wSuperAwakening.Weapon_Inventory+1]
     ld [wSuperAwakening.Weapon3_Value], a
-
+*/
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
 
