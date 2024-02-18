@@ -129,6 +129,34 @@ SuperAwakening_Inventory_HideSlot::
     add  hl, bc
     ld a, [hl]
 
+.check_for_mushroom
+    ld b, a  ; Backup [a] to [b]
+    cp INVENTORY_MAGIC_POWDER
+    jp nz, .get_tile_index
+    ld a, [wHasToadstool]
+    cp 1
+    ld a, b ; Restore [a] from [b]
+    jp nz, .get_tile_index
+    ; We have a mushroom, enable or disable?
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Items_Hidden
+    ld c, a
+    ld b, $00
+    add  hl, bc
+    ld a, [hl]
+    cp 0
+    jp z, .show_mushroom
+.hide_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + ($20*10))
+    jp .copy_tiles
+.show_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
+    jp .copy_tiles
+
     ; Get the tile index from the inventory item value => [a]
 .get_tile_index
     ld hl, Inventory_Item_Index_Map
@@ -212,6 +240,54 @@ SuperAwakening_InventoryScreen_Open:
     jp .set_items_hidden_loop
 
 .set_items_hidden_loop_end
+
+.return
+    ; Restore bank
+    ld a, $20
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_InventoryScreen_Close:
+
+.refresh_weapon_3
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_3
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon3_Value], a
+    jp .refresh_weapon_3_end
+.hide_weapon_3
+    ld a, 0
+    ld [wSuperAwakening.Weapon3_Value], a
+.refresh_weapon_3_end
+
+.refresh_weapon_4
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_4
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon4_Value], a
+    jp .refresh_weapon_4_end
+.hide_weapon_4
+    ld a, 0
+    ld [wSuperAwakening.Weapon4_Value], a
+.refresh_weapon_4_end
+
 
 .return
     ; Restore bank
