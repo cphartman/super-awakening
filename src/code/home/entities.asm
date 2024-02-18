@@ -985,7 +985,8 @@ DrawABButtonSlots::
     ld   c, $01                                   ; $3E5F: $0E $01
     ld   b, $00                                   ; $3E61: $06 $00
     ld   e, $FF                                   ; $3E63: $1E $FF
-    call DrawInventorySlots                       ; $3E65: $CD $9C $5C
+    ;call DrawInventorySlots                       ; $3E65: $CD $9C $5C
+    call SuperAwakening_DrawInventorySlots
     jp   ReloadSavedBank                          ; $3E68: $C3 $1D $08
 
 GiveInventoryItem_trampoline::                ; @TODO Give player item in reg d

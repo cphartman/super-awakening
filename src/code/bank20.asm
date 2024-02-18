@@ -2428,7 +2428,10 @@ InventoryMapFadeOutHandler::
     ld   [wDE07], a                               ; $595D: $EA $07 $DE
     ld   [wDE08], a                               ; $5960: $EA $08 $DE
     ld   [wDE09], a                               ; $5963: $EA $09 $DE
-    call IncrementGameplaySubtype_20              ; $5966: $CD $83 $66
+
+    ;call IncrementGameplaySubtype_20              ; $5966: $CD $83 $66
+    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
+    ld [hl], SUPER_AWAKENING_INVENTORY_LOAD
 
 .return
     ; Returns to 0346 (Render Palettes)
@@ -3013,15 +3016,20 @@ InventoryTileMapPositions::
 
 ; DrawInventorySlots with the wSuperAwakening inventory
 SuperAwakening_DrawInventorySlots::
-    push de
-    push bc
-    ld hl, wSuperAwakening.Weapon_Start
-    jp DrawInventorySlots.start
+    ld a, 1
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
 
 DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
     ld hl, wInventoryItems
+    
+    ; Check if we should override with the super awakening slots
+    ld a, [wSuperAwakening.OverrideInventoryDisplaySlots]
+    cp 1
+    jp nz, .start
+    ld hl, wSuperAwakening.Weapon_Start
+
 .start
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
@@ -3304,10 +3312,7 @@ InventoryLoad5Handler::
     xor  a                                        ; $5E6D: $AF
     ld   [wTransitionSequenceCounter], a          ; $5E6E: $EA $6B $C1
     
-    ; Can we jump to our own method here?
-    ;call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
-    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
-    ld [hl], SUPER_AWAKENING_INVENTORY_LOAD
+    call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
     ret                                           ; $5E74: $C9
 
 SuperAwakeningLoadHander::
@@ -3322,7 +3327,7 @@ SuperAwakeningLoadHander::
     ldh  [rLCDC], a
     
     ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
-    ld [hl], GAMEPLAY_INVENTORY_FADE_IN
+    ld [hl], GAMEPLAY_INVENTORY_DELAY1
     ret                                           ; $5E74: $C9
 
 InventoryInstrumentCyclingColors::

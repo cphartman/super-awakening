@@ -212,6 +212,17 @@ SuperAwakening_Inventory_HideSlot::
     ret
 
 SuperAwakening_InventoryScreen_Open:
+    ld a, 0
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
+
+    ; Since we're displaying the invetory slots from wInventoryItems
+    ; we need to update A/B to X/Y
+.initialize_XY_slots
+    ld a, [wSuperAwakening.Weapon4_Value]
+    ld [wInventoryItems.BButtonSlot], a
+    ld a, [wSuperAwakening.Weapon3_Value]
+    ld [wInventoryItems.AButtonSlot], a
+
     ld hl, wSuperAwakening.Items_Hidden
     ld c, $0
     

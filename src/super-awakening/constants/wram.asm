@@ -8,6 +8,13 @@ wSuperAwakening::
   ; Only used for display purpose on the hud
 .Weapon3_Value:: ; Sync'd to Weapon_Inventory[Weapon3_Inventory_Index]
   ds 1
+
+
+; 0 - Use wInventoryItems in DrawInventorySlots
+; 1 - Use wSuperAwakening.Weapon_Start in DrawInventorySlots
+.OverrideInventoryDisplaySlots::
+  ds 1
+
 /*
 ; Values that the inventory will cycle through, also used to display on the pause screen
 .Weapon_Inventory:
