@@ -28,6 +28,7 @@ wSuperAwakening::
 
 ; Stores the address to use when drawing inventory slots
 ; Allows A/B to draw from wSuperAwakening and the inventory screen to draw from wInventoryItems
+; not used, delete me
 .DrawInventorySlots_pointer:
   ds 2
 

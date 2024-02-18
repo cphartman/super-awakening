@@ -115,6 +115,62 @@ SuperAwakening_InventoryScreen:
     ld   bc, $20
     call CopyData                                 
 
+    ; Hide HUD item if this is a weapon index and the slot is now hidden
+.refresh_weapon_3
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_3
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon3_Value], a
+    jp .refresh_weapon_3_end
+.hide_weapon_3
+    ld a, 0
+    ld [wSuperAwakening.Weapon3_Value], a
+.refresh_weapon_3_end
+
+.refresh_weapon_4
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_4
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon4_Value], a
+    ld [wInventoryItems.BButtonSlot], a
+    jp .refresh_weapon_4_end
+.hide_weapon_4
+    ld a, 0
+    ld [wSuperAwakening.Weapon4_Value], a
+    ld [wInventoryItems.BButtonSlot], a
+.refresh_weapon_4_end
+
+.refresh_hud
+    ld a, 1
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
+
+    ld   c, $01                                   ; $3E5F: $0E $01
+    ld   b, $00                                   ; $3E61: $06 $00
+    ld   e, $FF                                   ; $3E63: $1E $FF
+    ;call DrawInventorySlots                       ; $3E65: $CD $9C $5C
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
+
+    ld a, 0
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
+
 .return
     ; Restore bank
     ld a, $20
@@ -160,6 +216,7 @@ SuperAwakening_Inventory_HideSlot::
     ; Get the tile index from the inventory item value => [a]
 .get_tile_index
     ld hl, Inventory_Item_Index_Map
+    ld b, $00
     ld c, a
     add  hl, bc
     ld a, [hl]
