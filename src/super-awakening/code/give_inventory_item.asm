@@ -25,14 +25,13 @@ SuperAwakening_ShouldGiveInventoryItem::
     ld a, d
     cp INVENTORY_SHIELD
     jp z, .return_no_item
-
-
-.GiveInventoryItem_end
-jp .return
+    
+    jp .return
 
 .return_no_item
     ; Set the item to empty so it will not be added to inventory
     ld d, 0
+    jp .return
 
 .unlock_feather
     ld a, 1
