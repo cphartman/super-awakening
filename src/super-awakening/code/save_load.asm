@@ -8,6 +8,7 @@ SuperAwakening_Load::
     .initialize_progression_flags_loop
         ; Loop counter logic
         inc c
+        ld a, c
         cp (SUPER_AWAKENING_INVENTORY_SLOT_COUNT+1)
         jp z, .initialize_progression_flags_loop_end
 
@@ -17,10 +18,11 @@ SuperAwakening_Load::
         ; Check for jump unlock
     .initialize_progression_flags_jump
         cp INVENTORY_ROCS_FEATHER
-        jp nz, .initialize_progression_flags_dash
+        jp nz, .initialize_progression_flags_jump_end
         ld a, 1
         ld [wSuperAwakening.Jump_Enabled], a
         jp .initialize_progression_flags_loop
+    .initialize_progression_flags_jump_end
 
         ; Check for dash unlock
     .initialize_progression_flags_dash
