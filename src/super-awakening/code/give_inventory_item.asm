@@ -17,6 +17,9 @@ SuperAwakening_ShouldGiveInventoryItem::
 
     cp INVENTORY_ROCS_FEATHER
     jp z, .unlock_feather
+
+    cp INVENTORY_PEGASUS_BOOTS
+    jp z, .unlock_boots
     
     ; Sword and Shield are tracked outside of the inventory
     cp INVENTORY_SWORD
@@ -36,6 +39,11 @@ SuperAwakening_ShouldGiveInventoryItem::
 .unlock_feather
     ld a, 1
     ld [wSuperAwakening.Jump_Enabled], a
+    jp .return
+
+.unlock_boots
+    ld a, 1
+    ld [wSuperAwakening.Dash_Enabled], a
     jp .return
 
 .return
