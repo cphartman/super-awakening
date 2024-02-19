@@ -303,7 +303,7 @@ SuperAwakening_InventoryScreen_Open:
     inc hl
     inc c
     ld a, c
-    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT+2
+    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT
     jp z, .set_items_hidden_loop_end
     jp .set_items_hidden_loop
 
