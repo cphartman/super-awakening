@@ -7,6 +7,8 @@ SUPER_AWAKENING_HIDE_CODE = FALSE
 ; Enable for development features
 SUPER_AWAKENING_DEBUG = TRUE
 
+SUPER_AWAKENING_DEBUG_FAST_DIALOG = TRUE
+
 ; If the inventory system allows all items
 ; TRUE = Select any item in the inventory
 ; FALSE = Only allow items unlocked from progression

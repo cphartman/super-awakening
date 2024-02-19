@@ -495,7 +495,10 @@ ENDC
 
 .notChoice
     cp   "@" ; $ff                                ; $25A4: $FE $FF
+; Fast Dialog
+IF !(SUPER_AWAKENING_DEBUG && SUPER_AWAKENING_DEBUG_FAST_DIALOG)
     jr   nz, .notEnd                              ; $25A6: $20 $15
+ENDC
     pop  hl                                       ; $25A8: $E1
     xor  a                                        ; $25A9: $AF
     ld   [wDrawCommand], a                        ; $25AA: $EA $01 $D6
