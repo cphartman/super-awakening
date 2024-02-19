@@ -101,22 +101,41 @@ SuperAwakening_RefreshInventoryItems::
     ld a, [wSuperAwakening.Weapon3_Inventory_Index]
     ld c, a
     ld b, $00
+    
+    ; Check if item is hidden
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .RefreshInventory_3_end
+
+    ; Refresh the item
     ld hl, wInventoryItems.subscreen
     add hl, bc
     ld a, [hl] ; Load inventory item at weapon3 index
     ld hl, wSuperAwakening.Weapon3_Value
     ld [hl], a ; Set item at weapon 3 value
+.RefreshInventory_3_end
+
 .RefreshInventory_4
     ; Inventory item may have change, so refresh their values and re-draw
     ld a, [wSuperAwakening.Weapon4_Inventory_Index]
     ld c, a
     ld b, $00
+
+    ; Check if item is hidden
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .RefreshInventory_4_end
+
     ld hl, wInventoryItems.subscreen
     add hl, bc
     ld a, [hl] ; Load inventory item at weapon4 index
     ld hl, wSuperAwakening.Weapon4_Value
     ld [hl], a ; Set item at weapon4 value
-
+.RefreshInventory_4_end
 
     ld   a, BANK(GiveInventoryItem)
     jp SuperAwakening_Trampoline.returnToBank
