@@ -4361,8 +4361,6 @@ IF SUPER_AWAKENING_HIDE_CODE
     ld   a, J_BUTTONS | J_DPAD                    ; $2882: $3E $30
     ld   [rP1], a                                 ; $2884: $E0 $00
 ENDC
-    ld hl, SuperAwakening_UpdateLoop
-    call SuperAwakening_Trampoline.jumpTo3E
 .return
     ret                                           ; $2886: $C9
 

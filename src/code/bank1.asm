@@ -18,7 +18,7 @@ DebugSaveFileData::
     db INVENTORY_PEGASUS_BOOTS    ; .              ; $4672
 
     db 1  ; Have Flippers                         ; $4673
-    db 1  ; Have Medicine                         ; $4674
+    db 0  ; Have Medicine                         ; $4674
     db 1  ; Trading item = Yoshi doll             ; $4675
     db 0  ; 0 Secret Seashells                    ; $4676
     db 0  ; (@TODO "Medicine count: found?")      ; $4677
@@ -125,9 +125,9 @@ ENDC
     ld   [SaveGame1.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
     ld   a, $01                                   ; $471F: $3E $01
     ld   [SaveGame1.main + wDB48 - wOverworldRoomStatus], a ; "Tarin at home flag"        ; $4721: $EA $4D $A4
-    ld   a, $50                                   ; $4724: $3E $50
+    ld   a, DEBUG_STARTING_HEARTS
     ld   [SaveGame1.main + wHealth - wOverworldRoomStatus], a ; 10 hearts of health         ; $4726: $EA $5F $A4
-    ld   a, $0A                                   ; $4729: $3E $0A
+    ld   a, DEBUG_MAX_HEARTS
     ld   [SaveGame1.main + wMaxHearts - wOverworldRoomStatus], a ; 10 heart containers         ; $472B: $EA $60 $A4
 
     ld   a, [wGameplayType]                       ; $472E: $FA $95 $DB

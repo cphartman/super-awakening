@@ -9,10 +9,17 @@ wSuperAwakening::
 .Weapon3_Value:: ; Sync'd to Weapon_Inventory[Weapon3_Inventory_Index]
   ds 1
 
+
+; 0 - Use wInventoryItems in DrawInventorySlots
+; 1 - Use wSuperAwakening.Weapon_Start in DrawInventorySlots
+.OverrideInventoryDisplaySlots::
+  ds 1
+
+/*
 ; Values that the inventory will cycle through, also used to display on the pause screen
 .Weapon_Inventory:
   ds INVENTORY_SLOT_COUNT - 2
-
+*/
 .Weapon4_Inventory_Index:
   ds 1
 
@@ -21,6 +28,7 @@ wSuperAwakening::
 
 ; Stores the address to use when drawing inventory slots
 ; Allows A/B to draw from wSuperAwakening and the inventory screen to draw from wInventoryItems
+; not used, delete me
 .DrawInventorySlots_pointer:
   ds 2
 
@@ -47,3 +55,14 @@ wSuperAwakening::
 
 .Items_Hidden:
   ds INVENTORY_SLOT_COUNT - 2
+
+.Dash_Enabled:
+  ds 1
+.Jump_Enabled:
+  ds 1
+.Shield_Enabled:
+  ds 1
+
+; For temporarily storing data
+.temp1:
+  ds 1

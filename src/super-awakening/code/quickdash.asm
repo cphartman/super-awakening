@@ -22,7 +22,7 @@ DASH_IDLE_DELAY_MAX  EQU $20
 ;   * Increment the delay counter
 ;   * Check for overflow
 
-.quickdash
+SuperAwakening_QuickDash::
 
     ; Skip all of this if we're not in the overworld
     ld a, [wGameplayType]
@@ -30,11 +30,21 @@ DASH_IDLE_DELAY_MAX  EQU $20
     jp nz, .quickdash_end
 
     ; Are boots unlocked?
-    ld hl, (wSuperAwakening.Items_Unlocked+INVENTORY_PEGASUS_BOOTS)
+.test_boots_unlocked
+    ld hl, wSuperAwakening.Dash_Enabled
+    ld a, [hl]
+    cp $01
+    jp nz, .test_jump_unlocked
+    jp .test_success
+
+    ; Is feather unlocked?
+.test_jump_unlocked
+    ld hl, wSuperAwakening.Jump_Enabled
     ld a, [hl]
     cp $01
     jp nz, .quickdash_end
 
+.test_success
     ; Are we in quick dash timer?
  .quickdash_check_timer
     ld hl, wSuperAwakening.QuickDash_Timer
@@ -148,7 +158,7 @@ DASH_IDLE_DELAY_MAX  EQU $20
     ; Reset the timer
     ld hl, wSuperAwakening.QuickDash_Timer
     ld [hl], 0
-    jp .quickdash_execute
+    jp .execute
 
 .quickdash_reset
     ; Reset the timer
@@ -156,11 +166,44 @@ DASH_IDLE_DELAY_MAX  EQU $20
     ld [hl], 0
     jp .quickdash_end
 
-.quickdash_execute
+
+.execute
 
     ; Clear the quickdash timer
     ld hl, wSuperAwakening.QuickDash_Timer
     ld [hl], 0
+
+    ; Check for quick jump button input
+    ldh  a, [hPressedButtonsMask]                    
+    and  J_B
+    cp J_B
+    jp nz, .quickdash_execute
+
+    ; Make sure the shield is equipped for quick jump
+    ld a, [wInventoryItems.BButtonSlot]
+    cp INVENTORY_SHIELD
+    jp nz, .execute_end
+
+.quickjump_execute
+    ; Are boots unlocked?
+    ld hl, wSuperAwakening.Jump_Enabled
+    ld a, [hl]
+    cp $01
+    jp nz, .quickdash_end
+
+    ; Set weapon Slot A
+    ld a, INVENTORY_ROCS_FEATHER
+    ld hl, wInventoryItems.AButtonSlot
+    ld [hl], a
+    jp .button_press
+
+.quickdash_execute
+
+    ; Are boots unlocked?
+    ld hl, wSuperAwakening.Dash_Enabled
+    ld a, [hl]
+    cp $01
+    jp nz, .quickdash_end
 
     ; Set weapon Slot A
     ld a, INVENTORY_PEGASUS_BOOTS
@@ -177,6 +220,7 @@ DASH_IDLE_DELAY_MAX  EQU $20
     ld hl, wPegasusBootsChargeMeter
     ld [hl], a
 
+.button_press
     ; Simulate A press
     ld a, [hPressedButtonsMask]
     or J_A
@@ -189,5 +233,5 @@ DASH_IDLE_DELAY_MAX  EQU $20
     ld hl, hJoypadState
     ld [hl], a
 
-.quickdash_execute_end
+.execute_end
 .quickdash_end

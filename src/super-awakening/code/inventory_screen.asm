@@ -1,4 +1,3 @@
-SUPER_AWAKENING_INVENTORY_SLOT_COUNT = 10
 
 SuperAwakening_InventoryScreen:
 
@@ -9,20 +8,52 @@ SuperAwakening_InventoryScreen:
     jp nz, .return
 
     ; Get the inventory item value from the inventory selection index => [a]
+.get_inventory_item_value
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+
+    
+.check_for_mushroom
+    ld b, a  ; Backup [a] to [b]
+    cp INVENTORY_MAGIC_POWDER
+    jp nz, .get_tile_index
+    ld a, [wHasToadstool]
+    cp 1
+    ld a, b ; Restore [a] from [b]
+    jp nz, .get_tile_index
+    ; We have a mushroom, enable or disable?
     ld   a, [wInventorySelection]
-    ld   hl, wInventoryItems.subscreen
+    ld   hl, wSuperAwakening.Items_Hidden
     ld c, a
     ld b, $00
     add  hl, bc
     ld a, [hl]
-
+    xor 1 ; Toggle
+    ld [hl], a
+    cp 0
+    jp z, .show_mushroom
+.hide_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + ($20*10))
+    jp .copy_data
+.show_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
+    jp .copy_data
+  
     ; Get the tile index from the inventory item value => [a]
 .get_tile_index
     ld hl, Inventory_Item_Index_Map
     ld c, a
+    ld b, $00
     add  hl, bc
     ld a, [hl]
-    
 .get_tile_index_end
 
 ;InventoryEquipmentItemsTiles
@@ -35,7 +66,7 @@ SuperAwakening_InventoryScreen:
     ld b, $00
     add  hl, bc
     ld a, [hl]
-    xor 1
+    xor 1 ; Toggle
     ld [hl], a
     cp 0
     jp z, .get_show_address
@@ -49,7 +80,7 @@ SuperAwakening_InventoryScreen:
 
     ; Get address of tile data from tile index: (tile index offset*$20)
     ; [a] = tile index
-    
+    ; 0x20=32 so I think this can be replaced with <<5 or something simpler
     ld bc, $0020 ; multiplicand
     ld de, $8800
 .increment_loop
@@ -67,9 +98,8 @@ SuperAwakening_InventoryScreen:
     jp .increment_loop
 .increment_loop_end
 
+.copy_data
 
-    push hl
-    push de
 .poll_for_vblank
     ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
     and  a                                        ; $0376: $A7
@@ -79,51 +109,67 @@ SuperAwakening_InventoryScreen:
     ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
 .poll_for_vblank_end
 
-    pop de
-    pop hl
-    ;call LCDOff
-
-
 ;   bc : number of bytes to copy
 ;   de : destination address
 ;   hl : source address
     ld   bc, $20
-    ;ld   de, $8820
-    ;ld   hl, items_outline_tiles_bank_3E+$20
-    call CopyData                                 ; $7C43: $CD $14 $29
+    call CopyData                                 
 
-    ;  a   source bank
-    ;  b   source address high byte
-    ;  c   destination address high byte (starting from $8000)
-    ;  h   bank to switch back after the transfer
-/*
-    ld a, BANK(items_outline_tiles_bank_3E)
-    ld b, $40
-    ld c, $02
-    ld h, BANK(SuperAwakening)
-    call CopyDataToVRAM
+    ; Hide HUD item if this is a weapon index and the slot is now hidden
+.refresh_weapon_3
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_3
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon3_Value], a
+    jp .refresh_weapon_3_end
+.hide_weapon_3
+    ld a, 0
+    ld [wSuperAwakening.Weapon3_Value], a
+.refresh_weapon_3_end
 
-    ld a, BANK(items_outline_tiles_bank_3E)
-    ld b, $41
-    ld c, $03
-    ld h, BANK(SuperAwakening)
-    call CopyDataToVRAM
-*/
-; Inputs:
-;   bc : number of bytes to copy
-;   de : destination address
-;   hl : source address
+.refresh_weapon_4
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_4
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon4_Value], a
+    ld [wInventoryItems.BButtonSlot], a
+    jp .refresh_weapon_4_end
+.hide_weapon_4
+    ld a, 0
+    ld [wSuperAwakening.Weapon4_Value], a
+    ld [wInventoryItems.BButtonSlot], a
+.refresh_weapon_4_end
 
-    ;ld   bc, $20
-    ;ld   de, $8820
-    ;ld   hl, items_outline_tiles_bank_3E+$20
-    ;call CopyData                                 ; $7C43: $CD $14 $29
+.refresh_hud
+    ld a, 1
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
 
+    ld   c, $01                                   ; $3E5F: $0E $01
+    ld   b, $00                                   ; $3E61: $06 $00
+    ld   e, $FF                                   ; $3E63: $1E $FF
+    ;call DrawInventorySlots                       ; $3E65: $CD $9C $5C
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
 
-    ; Turn on LCD
-    ;ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6
-    ;ldh  [rLCDC], a                               ; $5D5B: $E0 $40
-
+    ld a, 0
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
 
 .return
     ; Restore bank
@@ -139,9 +185,38 @@ SuperAwakening_Inventory_HideSlot::
     add  hl, bc
     ld a, [hl]
 
+.check_for_mushroom
+    ld b, a  ; Backup [a] to [b]
+    cp INVENTORY_MAGIC_POWDER
+    jp nz, .get_tile_index
+    ld a, [wHasToadstool]
+    cp 1
+    ld a, b ; Restore [a] from [b]
+    jp nz, .get_tile_index
+    ; We have a mushroom, enable or disable?
+    ld   a, [wInventorySelection]
+    ld   hl, wSuperAwakening.Items_Hidden
+    ld c, a
+    ld b, $00
+    add  hl, bc
+    ld a, [hl]
+    cp 0
+    jp z, .show_mushroom
+.hide_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + ($20*10))
+    jp .copy_tiles
+.show_mushroom
+    ld a, $0E
+    ld de, $88E0 ; Address of powder tiles
+    ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
+    jp .copy_tiles
+
     ; Get the tile index from the inventory item value => [a]
 .get_tile_index
     ld hl, Inventory_Item_Index_Map
+    ld b, $00
     ld c, a
     add  hl, bc
     ld a, [hl]
@@ -194,6 +269,17 @@ SuperAwakening_Inventory_HideSlot::
     ret
 
 SuperAwakening_InventoryScreen_Open:
+    ld a, 0
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
+
+    ; Since we're displaying the invetory slots from wInventoryItems
+    ; we need to update A/B to X/Y
+.initialize_XY_slots
+    ld a, [wSuperAwakening.Weapon4_Value]
+    ld [wInventoryItems.BButtonSlot], a
+    ld a, [wSuperAwakening.Weapon3_Value]
+    ld [wInventoryItems.AButtonSlot], a
+
     ld hl, wSuperAwakening.Items_Hidden
     ld c, $0
     
@@ -217,11 +303,59 @@ SuperAwakening_InventoryScreen_Open:
     inc hl
     inc c
     ld a, c
-    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT+2
+    cp SUPER_AWAKENING_INVENTORY_SLOT_COUNT
     jp z, .set_items_hidden_loop_end
     jp .set_items_hidden_loop
 
 .set_items_hidden_loop_end
+
+.return
+    ; Restore bank
+    ld a, $20
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_InventoryScreen_Close:
+
+.refresh_weapon_3
+    ld a, [wSuperAwakening.Weapon3_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_3
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon3_Value], a
+    jp .refresh_weapon_3_end
+.hide_weapon_3
+    ld a, 0
+    ld [wSuperAwakening.Weapon3_Value], a
+.refresh_weapon_3_end
+
+.refresh_weapon_4
+    ld a, [wSuperAwakening.Weapon4_Inventory_Index]
+    ld c, a
+    ld b, $00
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jp z, .hide_weapon_4
+    ; Show weapon 3
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld a, [hl]
+    ld [wSuperAwakening.Weapon4_Value], a
+    jp .refresh_weapon_4_end
+.hide_weapon_4
+    ld a, 0
+    ld [wSuperAwakening.Weapon4_Value], a
+.refresh_weapon_4_end
+
 
 .return
     ; Restore bank
@@ -244,3 +378,4 @@ Inventory_Item_Index_Map::
     db $0B ; INVENTORY_SHOVEL
     db $07 ; INVENTORY_MAGIC_POWDER
     db $12 ; INVENTORY_BOOMERANG
+    db $0A ; Powder

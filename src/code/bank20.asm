@@ -2366,7 +2366,7 @@ InventoryEntryPoint::
 ._0A dw InventoryStatusHandler      ; GAMEPLAY_INVENTORY_STATUS
 ._0B dw InventoryStatusOutHandler   ; GAMEPLAY_INVENTORY_STATUS_OUT
 ._0C dw InventoryFadeOutHandler     ; GAMEPLAY_INVENTORY_FADE_OUT
-._0D dw SuperAwakeningLoadHander       ; GAMEPLAY_INVENTORY_DELAY5
+._0D dw SuperAwakeningLoadHander    ; SUPER_AWAKENING_INVENTORY_LOAD
 
 InventoryInitialHandler::
     ldh  a, [hIsGBC]
@@ -2428,7 +2428,10 @@ InventoryMapFadeOutHandler::
     ld   [wDE07], a                               ; $595D: $EA $07 $DE
     ld   [wDE08], a                               ; $5960: $EA $08 $DE
     ld   [wDE09], a                               ; $5963: $EA $09 $DE
-    call IncrementGameplaySubtype_20              ; $5966: $CD $83 $66
+
+    ;call IncrementGameplaySubtype_20              ; $5966: $CD $83 $66
+    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
+    ld [hl], SUPER_AWAKENING_INVENTORY_LOAD
 
 .return
     ; Returns to 0346 (Render Palettes)
@@ -3013,15 +3016,20 @@ InventoryTileMapPositions::
 
 ; DrawInventorySlots with the wSuperAwakening inventory
 SuperAwakening_DrawInventorySlots::
-    push de
-    push bc
-    ld hl, wSuperAwakening.Weapon_Start
-    jp DrawInventorySlots.start
+    ld a, 1
+    ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
 
 DrawInventorySlots::
     push de                                       ; $5C9C: $D5
     push bc                                       ; $5C9D: $C5
     ld hl, wInventoryItems
+    
+    ; Check if we should override with the super awakening slots
+    ld a, [wSuperAwakening.OverrideInventoryDisplaySlots]
+    cp 1
+    jp nz, .start
+    ld hl, wSuperAwakening.Weapon_Start
+
 .start
     add  hl, bc                                   ; $5CA1: $09
     ld   a, [hl]                                  ; $5CA2: $7E
@@ -3304,25 +3312,23 @@ InventoryLoad5Handler::
     xor  a                                        ; $5E6D: $AF
     ld   [wTransitionSequenceCounter], a          ; $5E6E: $EA $6B $C1
     
-    ; Can we jump to our own method here?
-    ;call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
-    ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
-    ld [hl], $0D
+    call IncrementGameplaySubtype_20              ; $5E71: $CD $83 $66
     ret                                           ; $5E74: $C9
 
 SuperAwakeningLoadHander::
-    call LCDOff                                   ; $5D52: $CD $CF $28
+    ; Turn off the screen so we can update the inventory tiles
+    call LCDOff
 
     ld hl, SuperAwakening_InventoryScreen_Open
     call SuperAwakening_Trampoline.jumpTo3E
 
-    ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6
-    ldh  [rLCDC], a                               ; $5D5B: $E0 $40
+    ; Turn the screen back on
+    ld   a, [wLCDControl]
+    ldh  [rLCDC], a
     
     ld   hl, wGameplaySubtype                     ; $6683: $21 $96 $DB
-    ld [hl], GAMEPLAY_INVENTORY_FADE_IN
+    ld [hl], GAMEPLAY_INVENTORY_DELAY1
     ret                                           ; $5E74: $C9
-
 
 InventoryInstrumentCyclingColors::
     ; Palette colors for the color-cycling the instruments use on the subscreen.
@@ -3506,15 +3512,15 @@ jr_020_5F59:
     ld   d, $00                                   ; $5F94: $16 $00
     
     ; Use the super awakening inventory
-    ;ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
-    ld   hl, wSuperAwakening.Weapon_Inventory
+    ld   hl, wInventoryItems.subscreen            ; $5F96: $21 $02 $DB
+    ;ld   hl, wSuperAwakening.Weapon_Inventory
     
     add  hl, de                                   ; $5F99: $19
     ld   a, [hl]                                  ; $5F9A: $7E
     cp   INVENTORY_OCARINA                        ; $5F9B: $FE $09
     ; Never show the ocarina menu
     ;jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
-    jr   nz, jr_020_5FB2                          ; $5F9D: $20 $13
+    jr   jr_020_5FB2                          ; $5F9D: $20 $13
 
     ld   a, [wOcarinaSongFlags]                   ; $5F9F: $FA $49 $DB
     and  a                                        ; $5FA2: $A7
@@ -4231,8 +4237,8 @@ CloseInventory:
     ld   a, JINGLE_CLOSE_INVENTORY                ; $6441: $3E $12
     ldh  [hJingle], a                             ; $6443: $E0 $F2
     
-    ;call SuperAwakening_Inventory.awakening_inventory_close
-
+    ld hl, SuperAwakening_InventoryScreen_Close
+    call SuperAwakening_Trampoline.jumpTo3E
 .return:
     ret                                           ; $6445: $C9
 

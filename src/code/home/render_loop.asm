@@ -249,6 +249,9 @@ ENDC
     call PlayAudioStep                            ; $02E9: $CD $A4 $08
     call ReadJoypadState                          ; $02EC: $CD $1E $28
 
+    ld hl, SuperAwakening_UpdateLoop
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ; If NeedsUpdatingBGTiles || NeedsUpdatingEnnemiesTiles || NeedsUpdatingNPCTiles…
     ldh  a, [hNeedsUpdatingBGTiles]               ; $02EF: $F0 $90
     ld   hl, hNeedsUpdatingEntityTilesA           ; $02F1: $21 $91 $FF
