@@ -29,6 +29,12 @@ SuperAwakening_QuickDash::
     cp GAMEPLAY_WORLD
     jp nz, .quickdash_end
 
+    ; Skip if we're on the game over menu
+    ld a, [hGameOverStage]
+    cp 0
+    jp nz, .quickdash_end
+
+
     ; Are boots unlocked?
 .test_boots_unlocked
     ld hl, wSuperAwakening.Dash_Enabled
