@@ -490,6 +490,10 @@ Data_001_49FE::
     dw   SaveGame3                                ; $4A02
 
 FileSelectionLoadSavedFile::
+    ; Clear the inventory when loading a save game from the file menu
+    ld hl, SuperAwakening_ResetInventory
+    call SuperAwakening_Trampoline.jumpTo3E
+
     jp   LoadSavedFile                            ; $4A04: $C3 $A4 $52
 
 

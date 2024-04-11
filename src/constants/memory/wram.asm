@@ -335,6 +335,7 @@ wIgnoreLinkCollisionsCountdown::
   ds 1 ; C13E
 
 ; Unlabeled
+; Track the current menu option on the game over screen
 wC13F::
   ds 1 ; C13F
 

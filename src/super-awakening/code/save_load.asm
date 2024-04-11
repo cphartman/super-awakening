@@ -57,3 +57,22 @@ SuperAwakening_Save::
 .save_loop_end
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_ResetInventory::
+    ld hl, wSuperAwakening.Items_Hidden
+    ld a, $00
+    ld [hl+], a ; 1
+    ld [hl+], a ; 2
+    ld [hl+], a ; 3
+    ld [hl+], a ; 4
+    ld [hl+], a ; 5
+    ld [hl+], a ; 6
+    ld [hl+], a ; 7
+    ld [hl+], a ; 8
+    ld [hl+], a ; 9
+    ld [hl], a  ; 10
+
+.return
+    ld a, BANK(FileSelectionLoadSavedFile)
+    jp SuperAwakening_Trampoline.returnToBank
+
