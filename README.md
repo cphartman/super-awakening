@@ -97,8 +97,4 @@ Run `make build`
 
 ## Acknowledgements
 
-<<<<<<< HEAD
 Thanks to all the [LADX Dissasembly](https://github.com/zladx/LADX-Disassembly/) and [SGB Bios Dissasembly](https://github.com/ISSOtm/sgb-bios) developers.  This romhack is only possible because of their work.
-=======
-Thanks to all the [LADX Dissasembly](https://github.com/zladx/LADX-Disassembly/) and [SGB Bios Dissasembly](https://github.com/ISSOtm/sgb-bios) developers.  This romhack is only possible because of their work.
->>>>>>> refactor
