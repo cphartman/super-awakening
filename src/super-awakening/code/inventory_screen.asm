@@ -70,11 +70,20 @@ SuperAwakening_InventoryScreen:
     ld [hl], a
     cp 0
     jp z, .get_show_address
+
 .get_hide_address
+    ; Play hide sfx
+    ld   hl, hNoiseSfx
+    ld   [hl], NOISE_SFX_PHOTO
     ld hl, SuperAwakening_Gfx_ItemsOutline
     jp .get_source_address_end
+
 .get_show_address
+    ; Play show sfx
+    ld   hl, hWaveSfx
+    ld   [hl], WAVE_SFX_HEART_PICKED_UP
     ld hl, (SuperAwakening_Gfx_ItemsOutline+$0200)
+
 .get_source_address_end
     pop af
 
