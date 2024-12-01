@@ -37,11 +37,17 @@ SuperAwakening_InventoryScreen:
     cp 0
     jp z, .show_mushroom
 .hide_mushroom
+    ; Play hide sfx
+    ld   hl, hNoiseSfx
+    ld   [hl], NOISE_SFX_PHOTO
     ld a, $0E
     ld de, $88E0 ; Address of powder tiles
     ld hl, (SuperAwakening_Gfx_ItemsOutline + ($20*10))
     jp .copy_data
 .show_mushroom
+    ; Play show sfx
+    ld   hl, hWaveSfx
+    ld   [hl], WAVE_SFX_HEART_PICKED_UP
     ld a, $0E
     ld de, $88E0 ; Address of powder tiles
     ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
