@@ -7,8 +7,11 @@ SuperAwakening_InventoryScreen:
     ldh  a, [hJoypadState]
     and  J_A
     cp J_A
-    jp nz, .check_swap
-    jp SuperAwakening_InventoryScreen_More.get_inventory_item_value
+    jp z, SuperAwakening_InventoryScreen_More.get_inventory_item_value
+    ldh  a, [hJoypadState]
+    and  J_B
+    cp J_B
+    jp z, SuperAwakening_InventoryScreen_More.get_inventory_item_value
 
 .check_swap
     ld  a, [wSuperAwakening.JoypadState2]
@@ -20,20 +23,6 @@ SuperAwakening_InventoryScreen:
     cp J_LEFT
     ;jp z, .swap_left
     jp SuperAwakening_InventoryScreen_More.return
-
-/*
-Bug:
-    Reproduce:
-        * Hide item 0 from inventory
-        * Swap item 0 right
-    Expected Results:
-        * Item 1 hud is empty
-    Actual:
-        * Item 1 is ghost
-        * Item 2 is available on un-pause
-    Note:
-        Need to swap the enable/disabled status of the item
-*/
 
 SuperAwakening_InventoryScreen_SwapRight:
     ld   hl, hJingle
