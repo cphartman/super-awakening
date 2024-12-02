@@ -21,8 +21,19 @@ SuperAwakening_InventoryScreen:
     ;jp z, .swap_left
     jp SuperAwakening_InventoryScreen_More.return
 
-
-
+/*
+Bug:
+    Reproduce:
+        * Hide item 0 from inventory
+        * Swap item 0 right
+    Expected Results:
+        * Item 1 hud is empty
+    Actual:
+        * Item 1 is ghost
+        * Item 2 is available on un-pause
+    Note:
+        Need to swap the enable/disabled status of the item
+*/
 
 SuperAwakening_InventoryScreen_SwapRight:
     ld   hl, hJingle
@@ -35,7 +46,13 @@ SuperAwakening_InventoryScreen_SwapRight:
     ld hl, wInventoryItems.subscreen
     add  hl, bc
     ld a, [hl]
-    push af ; Backup current item value to the stack
+    ld d, a
+    ; Get next slot visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
+    ld a, [hl]
+    ld e, a
+    push de ; Backup current item and visibility value to the stack
 
 .get_next_slot_index:
     ld a, [wInventorySelection]
@@ -52,20 +69,33 @@ SuperAwakening_InventoryScreen_SwapRight:
     ld hl, wInventoryItems.subscreen
     add  hl, bc
     ld a, [hl]
-.store_next_slot_value_to_current_index:
+    ld d, a
+    ; Get next slot visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
+    ld a, [hl]
     ld e, a
+.store_next_slot_value_to_current_index:
     ld a, [wInventorySelection]
     ld c, a
     ld b, $00
     ld hl, wInventoryItems.subscreen
     add  hl, bc
+    ld [hl], d
+    ; Store visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
     ld [hl], e
 .store_current_item_to_next_index:
     pop bc ; next index
-    pop de ; [d]=current item
+    pop de ; [d]=current item value, [e]=current visibility
     ld hl, wInventoryItems.subscreen
     add hl, bc
     ld [hl], d
+    ; Store visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld [hl], e
     
 .poll_for_vblank
     ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
