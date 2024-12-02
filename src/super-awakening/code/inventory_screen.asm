@@ -1,12 +1,140 @@
 
+OVERRIDE_INVENTORY_LENGTH     equ 10
+
 SuperAwakening_InventoryScreen:
 
     ; Check for button press
     ldh  a, [hJoypadState]
     and  J_A
     cp J_A
-    jp nz, .return
+    jp nz, .check_swap
+    jp SuperAwakening_InventoryScreen_More.get_inventory_item_value
 
+.check_swap
+    ld  a, [wSuperAwakening.JoypadState2]
+    and  J_RIGHT
+    cp J_RIGHT
+    jp z, SuperAwakening_InventoryScreen_SwapRight
+    ld  a, [wSuperAwakening.JoypadState2]
+    and  J_LEFT
+    cp J_LEFT
+    ;jp z, .swap_left
+    jp SuperAwakening_InventoryScreen_More.return
+
+
+
+
+SuperAwakening_InventoryScreen_SwapRight:
+    ld   hl, hJingle
+    ld   [hl], JINGLE_MOVE_SELECTION
+
+.push_current_item_onto_stack:
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+    push af ; Backup current item value to the stack
+
+.get_next_slot_index:
+    ld a, [wInventorySelection]
+    inc a
+    cp OVERRIDE_INVENTORY_LENGTH
+    jp nz, .push_next_slot_index_to_stack
+.get_next_slot_index__overflow:
+    ld a, 0
+.push_next_slot_index_to_stack:
+    ld b, $00
+    ld c, a
+    push bc ; Backup next slot index to the stack
+.get_next_slot_value:
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+.store_next_slot_value_to_current_index:
+    ld e, a
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld [hl], e
+.store_current_item_to_next_index:
+    pop bc ; next index
+    pop de ; [d]=current item
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld [hl], d
+    
+.poll_for_vblank
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank              ; $0377: $28 $FB
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end
+
+    ld d, c ; Store next index
+
+.refresh_next_inventory
+    inc c
+    ld a, c
+    cp INVENTORY_SLOT_COUNT
+    jp nz, .refresh_next_inventory_jump
+.refresh_next_inventory_overflow_check
+    ld a, $01
+.refresh_next_inventory_jump
+    ld e, a
+    inc a
+    ld c, a
+    ld   b, $00
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
+
+; Burning 2 vblanks seems sketchy
+; I think this causes the music to slow down when spamming move item
+; At least we're not in gameplay :/
+
+.poll_for_vblank_2:
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_2              ; $0377: $28 $FB
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_2:
+
+.refresh_current_inventory:
+    ld a, d ; Restore next index
+    dec a
+    cp $FF
+    jp nz, .refresh_current_inventory_jump
+.refresh_current_inventory_overflow:
+    ld a, (INVENTORY_SLOT_COUNT-3)
+.refresh_current_inventory_jump:
+    inc a
+    ld e, a
+    inc a
+    ld c, a
+    ld b, $00
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
+
+.increment_selected_slot:
+    ld a, [wInventorySelection]
+    inc a
+    cp (INVENTORY_SLOT_COUNT-2)
+    jp nz, .increment_selected_slot_write
+.increment_selected_slot_overflow:
+    ld a, $00
+.increment_selected_slot_write:
+    ld hl, wInventorySelection
+    ld [hl], a
+
+    jp SuperAwakening_InventoryScreen_More.copy_data
+
+
+
+
+SuperAwakening_InventoryScreen_More:
     ; Get the inventory item value from the inventory selection index => [a]
 .get_inventory_item_value
     ld a, [wInventorySelection]
@@ -46,8 +174,8 @@ SuperAwakening_InventoryScreen:
     jp .copy_data
 .show_mushroom
     ; Play show sfx
-    ld   hl, hWaveSfx
-    ld   [hl], WAVE_SFX_HEART_PICKED_UP
+    ld   hl, hJingle
+    ld   [hl], JINGLE_VALIDATE
     ld a, $0E
     ld de, $88E0 ; Address of powder tiles
     ld hl, (SuperAwakening_Gfx_ItemsOutline + $0200 + ($20*10))
@@ -86,8 +214,8 @@ SuperAwakening_InventoryScreen:
 
 .get_show_address
     ; Play show sfx
-    ld   hl, hWaveSfx
-    ld   [hl], WAVE_SFX_HEART_PICKED_UP
+    ld   hl, hJingle
+    ld   [hl], JINGLE_VALIDATE
     ld hl, (SuperAwakening_Gfx_ItemsOutline+$0200)
 
 .get_source_address_end
