@@ -21,8 +21,16 @@ SuperAwakening_InventoryScreen:
     ld  a, [wSuperAwakening.JoypadState2]
     and  J_LEFT
     cp J_LEFT
-    ;jp z, .swap_left
+    jp z, SuperAwakening_InventoryScreen_SwapLeft
     jp SuperAwakening_InventoryScreen_More.return
+
+; Swap:
+;  Get current item value and visibility, push onto stack
+;  Get the next item index, and push onto stack
+;  Store next item value and visibility into current item index
+;  Pop next item index, current item value and visibility
+;  Store current item value and visibility into next item index
+;
 
 SuperAwakening_InventoryScreen_SwapRight:
     ld   hl, hJingle
@@ -150,7 +158,120 @@ SuperAwakening_InventoryScreen_SwapRight:
 
     jp SuperAwakening_InventoryScreen_More.copy_data
 
+SuperAwakening_InventoryScreen_SwapLeft:
+    ld   hl, hJingle
+    ld   [hl], JINGLE_MOVE_SELECTION
 
+.push_current_item_onto_stack:
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+    ld d, a
+    ; Get next slot visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
+    ld a, [hl]
+    ld e, a
+    push de ; Backup current item and visibility value to the stack
+
+.get_next_slot_index:
+    ld a, [wInventorySelection]
+    dec a
+    cp $FF
+    jp nz, .push_next_slot_index_to_stack
+.get_next_slot_index__overflow:
+    ld a, (OVERRIDE_INVENTORY_LENGTH-1)
+.push_next_slot_index_to_stack:
+    ld b, $00
+    ld c, a
+    push bc ; Backup next slot index to the stack
+.get_next_slot_value:
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld a, [hl]
+    ld d, a
+    ; Get next slot visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
+    ld a, [hl]
+    ld e, a
+.store_next_slot_value_to_current_index:
+    ld a, [wInventorySelection]
+    ld c, a
+    ld b, $00
+    ld hl, wInventoryItems.subscreen
+    add  hl, bc
+    ld [hl], d
+    ; Store visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add  hl, bc
+    ld [hl], e
+.store_current_item_to_next_index:
+    pop bc ; next index
+    pop de ; [d]=current item value, [e]=current visibility
+    ld hl, wInventoryItems.subscreen
+    add hl, bc
+    ld [hl], d
+    ; Store visibility
+    ld hl, wSuperAwakening.Items_Hidden
+    add hl, bc
+    ld [hl], e
+    
+.poll_for_vblank
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank              ; $0377: $28 $FB
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end
+
+    ld d, c ; Store next index
+
+.refresh_next_inventory
+    inc d
+    ld e, d
+    inc d
+    ld c, d
+    ld   b, $00
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
+
+; Burning 2 vblanks seems sketchy
+; I think this causes the music to slow down when spamming move item
+; At least we're not in gameplay :/
+
+.poll_for_vblank_2:
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_2              ; $0377: $28 $FB
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_2:
+
+.refresh_current_inventory:
+    ld a, [wInventorySelection]
+    inc a
+.refresh_current_inventory_jump:
+    ld e, a
+    inc a
+    ld c, a
+    ld b, $00
+    call SuperAwakening_Trampoline.jumpToDrawInventorySlots
+
+.increment_selected_slot:
+    ld a, [wInventorySelection]
+    dec a
+    cp $FF
+    jp nz, .increment_selected_slot_write
+.increment_selected_slot_overflow:
+    ld a, (INVENTORY_SLOT_COUNT-3)
+.increment_selected_slot_write:
+    ld hl, wInventorySelection
+    ld [hl], a
+
+    jp SuperAwakening_InventoryScreen_More.copy_data
 
 
 SuperAwakening_InventoryScreen_More:
