@@ -215,8 +215,8 @@ build: azle.gbc
 build-all: $(games)
 
 # Test the default revision.
-test: build
-	@tools/compare.sh ladx.md5 azle.gbc
+#test: build
+#	@tools/compare.sh ladx.md5 azle.gbc
 
 # Test all revisions.
 test-all: build-all
