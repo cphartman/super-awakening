@@ -3680,3 +3680,19 @@ OverworldFF::
   db   $59, $3B                ; object
   db   ROOM_END
 
+OverworldXX::
+  db   ANIMATED_TILES_VILLAGE ; animation id
+  db   $04 ; floor tile
+  db   $C4, $FF, $F5           ; object
+  db   $F8, $F5                ; object
+  db   $09, $F5                ; object
+  db   $29, $F5                ; object
+  db   $38, $F5                ; object
+  db   $49, $F5                ; object
+  ;db   $43, $F5                ; object
+  db   $8A, $70, $2F           ; object
+  db   $12, $44                ; object
+  db   $18, $44                ; object
+  db   $25, $44                ; object
+  db   $52, $44                ; object
+  db   ROOM_END

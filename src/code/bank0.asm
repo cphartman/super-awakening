@@ -6002,6 +6002,11 @@ LoadRoom::
     ld   a, [hl]                                  ; $3227: $7E
     ld   b, a                                     ; $3228: $47
 
+    
+.SuperAwakening_TutorialCustomRoom
+    ;ld hl, SuperAwakening_Tutorial
+    ;call SuperAwakening_Trampoline.jumpTo3E
+
     ;
     ; Load proper bank for Overworld rooms
     ;
