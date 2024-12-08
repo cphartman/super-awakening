@@ -1,5 +1,5 @@
-;TUTORIAL_START_LOCATION equ $D2
-TUTORIAL_START_LOCATION equ $35
+TUTORIAL_START_LOCATION equ $D2
+;TUTORIAL_START_LOCATION equ $35
 
 ;
 ; TODO: move these pieces of code to named files
@@ -22,13 +22,13 @@ DebugSaveFileData::
 
     db 1  ; Have Flippers                         ; $4673
     db 0  ; Have Medicine                         ; $4674
-    db 1  ; Trading item = Yoshi doll             ; $4675
+    db 0  ; Trading item = Yoshi doll             ; $4675
     db 0  ; 0 Secret Seashells                    ; $4676
     db 0  ; (@TODO "Medicine count: found?")      ; $4677
-    db 1  ; Have Tail Key                         ; $4678
-    db 1  ; Have Angler Key                       ; $4679
-    db 1  ; Have Face Key                         ; $467A
-    db 1  ; Have Bird Key                         ; $467B
+    db 0  ; Have Tail Key                         ; $4678
+    db 0  ; Have Angler Key                       ; $4679
+    db 0  ; Have Face Key                         ; $467A
+    db 0  ; Have Bird Key                         ; $467B
     db 0  ; 0 Golden Leaves / no Slime Key        ; $467C
 
     ; Dungeon flags ...
@@ -69,6 +69,10 @@ if !SUPER_AWAKENING_DEBUG
     
     jp   z, .return                               ; $46C0: $CA $93 $47
 ENDC
+
+    ; This enables tutorial mode. It needs to get set when the tutorial save file is loaded
+    ld a, 1
+    ld [wSuperAwakening.tutorial_state], a
 
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00

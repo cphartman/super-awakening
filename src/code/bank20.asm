@@ -383,7 +383,7 @@ ColorDungeonEntitySpritesheetsTable_Slot4::
     db   HIGH($0000), $00
     db   HIGH(ColorDungeonNpcTiles + $0700), BANK(ColorDungeonNpcTiles)
     db   HIGH($0000), $00
-
+/*
 LoadColorDungeonTiles::
     ld   hl, ColorDungeonEntitySpritesheetsTable_Slot1 ; $475A: $21 $AA $46
     ldh  a, [hMapRoom]                            ; $475D: $F0 $F6
@@ -469,6 +469,7 @@ LoadColorDungeonTiles::
 
 .ret_47C2
     ret                                           ; $47C2: $C9
+*/
 
 data_020_47C3::
     db   $00, $40, $80, $C0, $00, $40, $80, $C0

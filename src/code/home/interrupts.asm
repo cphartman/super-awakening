@@ -623,6 +623,7 @@ LoadOverworldBGTiles::
     ret                                           ; $069D: $C9
 
 LoadEntityTiles::
+/*
     ; If on GBC and inside the Color Dungeon…
     ldh  a, [hIsGBC]                              ; $069E: $F0 $FE
     and  a                                        ; $06A0: $A7
@@ -645,6 +646,7 @@ LoadEntityTiles::
     call CopyDataToVRAM                           ; $06C6: $CD $13 $0A
     jr   .clearEnemiesTilesLoadCommand            ; $06C9: $18 $6D
 .colorDungeonEnd
+*/
 
     ;
     ; Copy requested entity tiles to VRAM

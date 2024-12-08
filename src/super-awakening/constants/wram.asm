@@ -66,3 +66,6 @@ wSuperAwakening::
 ; For temporarily storing data
 .temp1:
   ds 1
+
+.tutorial_state:
+  ds 1

@@ -4845,6 +4845,7 @@ LoadIndoorTiles::
     call SwitchBank                               ; $2C2A: $CD $0C $08
     ld   hl, DungeonFloorTilesPointers            ; $2C2D: $21 $89 $45
 
+/*
     ; If inside the Color Dungeon…
     ldh  a, [hMapId]                              ; $2C30: $F0 $F7
     ld   e, a                                     ; $2C32: $5F
@@ -4866,6 +4867,8 @@ LoadIndoorTiles::
     jr   .endIf                                   ; $2C51: $18 $0A
 
 .notColorDungeon
+*/
+
     ; Read a data pointer from DungeonFloorTilesPointers
     push de                                       ; $2C53: $D5
     add  hl, de                                   ; $2C54: $19
@@ -4899,12 +4902,13 @@ LoadIndoorTiles::
     pop  de                                       ; $2C7C: $D1
     push de                                       ; $2C7D: $D5
     ld   hl, DungeonWallsTilesPointers            ; $2C7E: $21 $A9 $45
+/*
     ldh  a, [hMapId]                              ; $2C81: $F0 $F7
     cp   MAP_COLOR_DUNGEON                        ; $2C83: $FE $FF
     jr   nz, .colorDungeonEnd                     ; $2C85: $20 $03
     ld   hl, ColorDungeonWallsTilesPointers       ; $2C87: $21 $C9 $45
 .colorDungeonEnd
-
+*/
     add  hl, de                                   ; $2C8A: $19
     ld   h, [hl]                                  ; $2C8B: $66
     ld   l, $00                                   ; $2C8C: $2E $00
@@ -4938,7 +4942,7 @@ LoadIndoorTiles::
 
     ld   a, BANK(DungeonItemsTiles)               ; $2CBE: $3E $12
     call SwitchAdjustedBank                       ; $2CC0: $CD $13 $08
-
+/*
     ldh  a, [hMapId]                              ; $2CC3: $F0 $F7
     cp   MAP_COLOR_DUNGEON                        ; $2CC5: $FE $FF
     jr   nz, .colorDungeonEnd2                    ; $2CC7: $20 $08
@@ -4946,6 +4950,7 @@ LoadIndoorTiles::
     ld   a, BANK(ColorDungeonTiles)               ; $2CCC: $3E $35
     ld   [rSelectROMBank], a                      ; $2CCE: $EA $00 $21
 .colorDungeonEnd2
+*/
 
     ld   de, vTiles1 + $700                       ; $2CD1: $11 $00 $8F
     ld   bc, TILE_SIZE * $10                      ; $2CD4: $01 $00 $01
@@ -5217,13 +5222,14 @@ NpcTilesBankTable::
 ; - the lower section of OAM tiles (NPCs),
 ; - the upper section of BG tiles.
 LoadRoomSpecificTiles::
+/*
     ldh  a, [hMapId]                              ; $2E73: $F0 $F7
     cp   MAP_COLOR_DUNGEON                        ; $2E75: $FE $FF
     jr   nz, .colorDungeonEnd                     ; $2E77: $20 $0B
     callsb LoadColorDungeonTiles                  ; $2E79: $3E $20 $EA $00 $21 $CD $5A $47
     jp   .oamTilesEnd                             ; $2E81: $C3 $12 $2F
 .colorDungeonEnd
-
+*/
     ;
     ; Load 4 rows of tiles (64 tiles) to NPCs tiles VRAM
     ;
@@ -5603,10 +5609,12 @@ doCopyObjectToBG:
     ; … set the default base address
     ld   hl, IndoorObjectsTilemapCGB              ; $3034: $21 $B0 $43
 
+/*
     ; If on Color Dungeon, use the objects tilemap of the Color Dungeon
     ldh  a, [hMapId]                              ; $3037: $F0 $F7
     cp   MAP_COLOR_DUNGEON                        ; $3039: $FE $FF
     jr   z, .useColorDungeonTable                 ; $303B: $28 $0A
+*/
 
     ; Hack: if on camera shop, also use the objects tilemap of the Color Dungeon
     cp   MAP_HOUSE                                ; $303D: $FE $10
@@ -5614,11 +5622,11 @@ doCopyObjectToBG:
     ldh  a, [hMapRoom]                            ; $3041: $F0 $F6
     cp   ROOM_INDOOR_B_CAMERA_SHOP                ; $3043: $FE $B5
     jr   nz, .baseAddressskipEntityLoad           ; $3045: $20 $08
-
+/*
 .useColorDungeonTable
     ld   hl, ColorDungeonObjectsTilemap           ; $3047: $21 $60 $47
     jr   .baseAddressskipEntityLoad               ; $304A: $18 $03
-
+*/
 .isOverworld
     ld   hl, OverworldObjectsTilemapCGB           ; $304C: $21 $1D $6B
 .baseAddressskipEntityLoad
@@ -5883,7 +5891,7 @@ LoadRoom::
     ld   a, BANK(IndoorsARoomPointers)            ; $317C: $3E $0A
     ld   [rSelectROMBank], a                      ; $317E: $EA $00 $21
     ldh  [hRoomBank], a                           ; $3181: $E0 $E8
-
+/*
     ; If the room is in the Color Dungeon…
     ldh  a, [hMapId]                              ; $3183: $F0 $F7
     cp   MAP_COLOR_DUNGEON                        ; $3185: $FE $FF
@@ -5892,7 +5900,7 @@ LoadRoom::
     ld   hl, ColorDungeonRoomPointers             ; $3189: $21 $77 $7B
     jp   .fetchRoomAddress                        ; $318C: $C3 $24 $32
 .colorDungeonEnd
-
+*/
     ; If have the Magnifying Lens, load an alternate Goriya room (where the Goriya NPC is actually present)
     cp   MAP_CAVE_WATER                           ; $318F: $FE $1F
     jr   nz, .goriyaRoomEnd                       ; $3191: $20 $13
@@ -6003,9 +6011,6 @@ LoadRoom::
     ld   b, a                                     ; $3228: $47
 
     
-.SuperAwakening_TutorialCustomRoom
-    ;ld hl, SuperAwakening_Tutorial
-    ;call SuperAwakening_Trampoline.jumpTo3E
 
     ;
     ; Load proper bank for Overworld rooms
@@ -6062,6 +6067,17 @@ LoadRoom::
     ;
     ; Parse room objects
     ;
+
+.SuperAwakening_TutorialCustomRoom
+    ; HACK: The loaded bank depends on the current map level
+    ld h, HIGH(ROOM_HACK_MAGIC_ADDRESS)
+    ld l, LOW(ROOM_HACK_MAGIC_ADDRESS)
+    ld a, [hl]
+    cp ROOM_HACK_MAGIC_VALUE
+    jp nz, .SuperAwakening_TutorialCustomRoom_end
+    ld hl, SuperAwakening_Tutorial
+    call SuperAwakening_Trampoline.jumpTo3E
+.SuperAwakening_TutorialCustomRoom_end
 
 .parseRoomObjectsLoop
     ; Increment the current address
