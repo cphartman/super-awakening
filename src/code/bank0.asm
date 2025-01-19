@@ -3140,7 +3140,7 @@ UpdateLinkWalkingAnimation::
     jr   nz, .pushingObject                       ; $1A98: $20 $25
 
 .label_1A9A
-    ld   a, [wHasMirrorShield]                    ; $1A9A: $FA $5A $C1
+    ld   a, [wShieldLevel]                    ; $1A9A: $FA $5A $C1
     and  a                                        ; $1A9D: $A7
     jr   nz, .hasShield                           ; $1A9E: $20 $05
     ld   hl, LinkAnimationsList_WalkingNoShield   ; $1AA0: $21 $10 $49

@@ -42,6 +42,10 @@ ENDC
     ld hl, wInventoryItems.BButtonSlot
     ld [hl], a
 
+    ; Fixes issue where the shield level1 is always shown after a sword swing even with shield level2
+    ld   a, [wShieldLevel]
+    ld   [wHasMirrorShield], a
+
 .use_weapon_sword_end
 
 .use_weapon_3
