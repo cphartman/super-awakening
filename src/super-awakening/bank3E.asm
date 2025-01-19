@@ -7,3 +7,5 @@ include "super-awakening/code/tutorial.asm"
 
 SuperAwakening_Gfx_ItemsOutline:
 incbin "super-awakening/gfx/items_outline.dmg.2bpp"
+SuperAwakening_Gfx_Tutorial:
+incbin "super-awakening/gfx/tutorial_tiles.dmg.2bpp"

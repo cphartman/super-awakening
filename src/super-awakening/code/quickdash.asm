@@ -24,6 +24,13 @@ DASH_IDLE_DELAY_MAX  EQU $20
 
 SuperAwakening_QuickDash::
 
+.tutorial_check_disable_quick_dash
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_QUICK_DASH
+    cp TUTORIAL_DISABLE_QUICK_DASH
+    jp z, .quickdash_end
+.tutorial_check_disable_quick_dash_end
+
     ; Skip all of this if we're not in the overworld
     ld a, [wGameplayType]
     cp GAMEPLAY_WORLD

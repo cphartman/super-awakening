@@ -2795,8 +2795,11 @@ OverworldE0::
 OverworldE1::
   db   ANIMATED_TILES_TIDE ; animation id
   db   $03 ; floor tile
-  db   $8A, $00, $3A           ; object
-  db   $83, $15, $5C           ; object
+  ; top wall
+  ;db   $8A, $00, $3A           ; object
+  ; bushes
+  ;db   $83, $15, $5C           ; object
+  ; tree
   db   $18, $FB                ; object
   db   $2F, $FB                ; object
   db   $4F, $FB                ; object
@@ -3680,73 +3683,4 @@ OverworldFF::
   db   $59, $3B                ; object
   db   ROOM_END
 
-
-  ;db   $YX, $5C                ; bush
-  ;db   $YX, $20                 ; rock
-
-OverworldD2_Override::
-  db   ANIMATED_TILES_VILLAGE ; animation id
-  db   $04 ; floor tile
-  
-  db   $C4, $FF, $F5           ; row of tree on left
-
-  
-
-  ;db   $F8, $F5                ; tree in top right corner
-  db   $09, $F5                ; half tree, left of right corner
-  db   $29, $F5                ; next full tree on right edge
-  db   $38, $F5                ; Next full tree
-  db   $49, $F5                ; object
-  db   $43, $F5                ; interior tree
-  db   $58, $F5                ; interior tree
-  db   $8A, $70, $2F           ; bottom ledge
-  db   $12, $44                ; flowers
-  db   $18, $44                ; flowers
-  db   $25, $44                ; flowers
-  db   $52, $44                ; flowers
-
-  db   $07, $F5           ; tree 
-  db   $18, $F5           ; tree 
-
-    db   $14, $D4                ; object
-  
-  db   ROOM_END
-
-OverworldC2_Override::
-  db   ANIMATED_TILES_VILLAGE ; animation id
-  db   $04 ; floor tile
-  db   $86, $FF, $F5           ; top horizontal trees
-  db   $C3, $3F, $F5           ; left vertical trees
-  db   $83, $35, $F5           ; mid horizontal trees
-  db   $41, $F5                ; object
-  db   $69, $F5                ; object
-  ;db   $78, $F5                ; object
-
-  ;db   $83, $53, $E8           ; object
-  ;db   $43, $E8                ; hole
-  ;db   $44, $E8                ; hole
-  db   $16, $44                ; object
-  db   $22, $44                ; object
-
-  ;db   $33, $20                 ; rock
-  ;db   $34, $20                 ; rock
-  ;db   $12, $20                 ; rock
-  ;db   $22, $20                 ; rock
-  ;db   $31, $E8                ; hole
-  ;db   $32, $E8                ; hole
-  ;db   $57, $E8                ; hole
-  ;db   $68, $E8                ; hole
-
-  db   $14, $E8                ; hole
-  db   $24, $E8                ; hole
-  db   $15, $E8                ; hole
-  db   $25, $E8                ; hole
-  db   $23, $E8                ; hole
-  db   $16, $E8                ; hole
-
-  db   $67, $F5           ; tree 
-  db   $33, $F5           ; tree 
-
-  db   $57, $E8                ; hole
-
-  db   ROOM_END
+include "super-awakening/data/tutorial/tutorial_rooms.asm"

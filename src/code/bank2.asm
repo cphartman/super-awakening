@@ -7151,15 +7151,15 @@ jr_002_728E:
     ;jr   z, .checkPegasusBoots                    ; $72E1: $28 $17
 
     ; Equip bracelet when touching a heavy item
-.auto_lift
+.SuperAwakening_quick_lift
     ld a, [wPowerBraceletLevel]
     cp 0
-    jp z, .auto_lift_end
+    jp z, .SuperAwakening_quick_lift_end
 
     ld a, INVENTORY_POWER_BRACELET
     ld [wInventoryItems.AButtonSlot], a
     jr .checkPegasusBoots
-.auto_lift_end
+.SuperAwakening_quick_lift_end
 
     ; If you have instrument #2, don't show the
     ; "This looks pretty heavy" dialog when touching
@@ -7227,12 +7227,17 @@ jr_002_728E:
     ldh  a, [hMapId]                              ; $733B: $F0 $F7
     and  a                                        ; $733D: $A7
     ldh  a, [hObjectUnderEntity]                  ; $733E: $F0 $AF
-    jr   z, label_002_73AD                        ; $7340: $28 $6B
+
+    ; Check if in overworld, because there shouldn't be break blocks in overworld
+    ; jr   z, label_002_73AD                        ; $7340: $28 $6B
 
     cp   OBJECT_DASHABLE_ROCK_3                   ; $7342: $FE $88
     jr   z, .jr_734F                              ; $7344: $28 $09
 
     cp   OBJECT_DASHABLE_ROCK_1                   ; $7346: $FE $4E
+    jr   z, .jr_734F                              ; $7348: $28 $05
+    
+    cp   OBJECT_CHEST_OPEN                   ; $7346: $FE $4E
     jr   z, .jr_734F                              ; $7348: $28 $05
 
     cp   OBJECT_DASHABLE_ROCK_2                   ; $734A: $FE $4F

@@ -1,5 +1,42 @@
 SuperAwakening_Load::
     
+.initialize_tutorial_flags
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .initialize_tutorial_flags_end
+
+    ld a, TUTORIAL_STARTING_FLAGS
+    ld [wSuperAwakening.Tutorial_Status], a
+
+    ld hl, wSuperAwakening.Items_Hidden
+    ; Show first 4 items
+    ld [hl], 0
+    inc hl
+    ld [hl], 0
+    inc hl
+    ld [hl], 0
+    inc hl
+    ld [hl], 0
+    ; Hide remaining items
+    inc hl
+    ld [hl], 1
+    inc hl
+    ld [hl], 1
+    inc hl
+    ld [hl], 1
+    inc hl
+    ld [hl], 1
+    inc hl
+    ld [hl], 1
+    inc hl
+    ld [hl], 1
+
+    ; Select the 5th item
+    ld a, $04
+    ld [wInventorySelection], a
+
+.initialize_tutorial_flags_end
+
     ; Loop inventory to check for progression flags
 .initialize_progression_flags
     ld c, 0

@@ -63,9 +63,8 @@ wSuperAwakening::
 .Shield_Enabled:
   ds 1
 
-; For temporarily storing data
-.temp1:
+.dialog_backup:
   ds 1
 
-.tutorial_state:
+.Tutorial_Status:
   ds 1

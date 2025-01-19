@@ -1263,3 +1263,4 @@ OverworldFFEntities::
   entity $4, $2, ENTITY_LEEVER
   entities_end
 
+include "super-awakening/data/tutorial/tutorial_entities.asm"

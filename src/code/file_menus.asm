@@ -48,7 +48,7 @@ FileSelectionPrepare2::
     jp   IncrementGameplaySubtypeAndReturn        ; $4803: $C3 $D6 $44
 
 FileSelectionPrepare3::
-    call DrawSaveSlot3MaxHearts                   ; $4806: $CD $D6 $4D
+    ;call DrawSaveSlot3MaxHearts                   ; $4806: $CD $D6 $4D
     jp   IncrementGameplaySubtypeAndReturn        ; $4809: $C3 $D6 $44
 
 CopyDeathCountsToBG::

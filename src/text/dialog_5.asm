@@ -1,0 +1,1 @@
+include "super-awakening/data/tutorial/tutorial_dialog.asm"

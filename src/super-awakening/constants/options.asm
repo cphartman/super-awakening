@@ -3,6 +3,7 @@
 ;    ...
 ;  ENDC
 SUPER_AWAKENING_HIDE_CODE = FALSE
+SUPER_AWAKENING_GBC_CODE = FALSE
 
 ; Enable for development features
 SUPER_AWAKENING_DEBUG = TRUE

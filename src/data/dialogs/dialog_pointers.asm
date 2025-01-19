@@ -164,6 +164,12 @@ DialogPointerTable::
     dialog_pointer Dialog0A1
     dialog_pointer Dialog0A2
     dialog_pointer Dialog0A3
+    dialog_pointer Tutorial_Dialog_1
+    dialog_pointer Tutorial_Dialog_2
+    dialog_pointer Tutorial_Dialog_3
+    dialog_pointer Tutorial_Dialog_4
+    dialog_pointer Tutorial_Dialog_5
+    dialog_pointer Tutorial_Dialog_6
 
 ; dialog_2.asm starts here
     dialog_pointer Dialog0A4

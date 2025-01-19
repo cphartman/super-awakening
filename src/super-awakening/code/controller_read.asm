@@ -93,3 +93,51 @@
     ld   a, J_BUTTONS | J_DPAD                    ; $2882: $3E $30
     ld   [rP1], a                                 ; $2884: $E0 $00
 .readController2_end
+
+.tutorial_disable_buttons
+
+    ; Todo: Early out if we're not on the tutorial map
+
+    ; Always allow START+SELECT to exit
+    ld a, [hJoypadState]
+    and (J_SELECT | J_SELECT)
+    cp (J_SELECT | J_SELECT)
+    jp z, .tutorial_disable_buttons_end
+
+.tutorial_check_disable_start
+
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_START
+    cp TUTORIAL_DISABLE_START
+    jp nz, .tutorial_check_disable_start_end
+
+    ; Disable start button
+    ld a, [hJoypadState]
+    and (~J_START)
+    ld [hJoypadState], a
+
+    ld a, [hPressedButtonsMask]
+    and (~J_START)
+    ld [hPressedButtonsMask], a
+
+.tutorial_check_disable_start_end
+
+.tutorial_check_disable_select
+
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_SELECT
+    cp TUTORIAL_DISABLE_SELECT
+    jp nz, .tutorial_check_disable_select_end
+
+    ; Disable select button
+    ld a, [hJoypadState]
+    and (~J_SELECT)
+    ld [hJoypadState], a
+
+    ld a, [hPressedButtonsMask]
+    and (~J_SELECT)
+    ld [hPressedButtonsMask], a
+
+.tutorial_check_disable_select_end
+
+.tutorial_disable_buttons_end

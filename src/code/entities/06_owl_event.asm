@@ -186,6 +186,14 @@ OwlState0Handler::
     and  a                                        ; $68F2: $A7
     jp   z, ClearEntityStatus_06                  ; $68F3: $CA $DB $65
 
+.SuperAwakening_StartOwlMusic
+    ldh  a, [hMapRoom]
+    cp $B0
+    jp z, .SuperAwakening_StartOwlMusic_end
+    cp $F1
+    jp nz, jr_006_691A
+.SuperAwakening_StartOwlMusic_end
+
 jr_006_68F6:
     ldh  a, [hDefaultMusicTrack]                  ; $68F6: $F0 $B0
     ld   hl, wEntitiesPrivateState1Table          ; $68F8: $21 $B0 $C2
@@ -225,7 +233,7 @@ OwlState1Handler::
     call func_006_65B4                            ; $692F: $CD $B4 $65
     ld   a, e                                     ; $6932: $7B
     xor  $01                                      ; $6933: $EE $01
-    ldh  [hLinkDirection], a                      ; $6935: $E0 $9E
+    ;ldh  [hLinkDirection], a                      ; $6935: $E0 $9E
     ld   a, $02                                   ; $6937: $3E $02
     ldh  [hLinkInteractiveMotionBlocked], a       ; $6939: $E0 $A1
     ld   a, $05                                   ; $693B: $3E $05
@@ -330,6 +338,15 @@ OwlState4Handler::
     and  a                                        ; $69E4: $A7
     jr   nz, jr_006_6A05                          ; $69E5: $20 $1E
 
+    
+.SuperAwakening_StartOwlMusic
+    ldh  a, [hMapRoom]
+    cp $B0
+    jp z, .SuperAwakening_StartOwlMusic_end
+    cp $F1
+    jp nz, .return
+.SuperAwakening_StartOwlMusic_end
+
     ld   hl, wEntitiesPrivateState1Table          ; $69E7: $21 $B0 $C2
     add  hl, bc                                   ; $69EA: $09
     ld   a, [hl]                                  ; $69EB: $7E
@@ -407,17 +424,30 @@ Data_006_6A3F::
     db   $00, $F8, $7C, $01, $00, $00, $7E, $01
     db   $00, $08, $7E, $21, $00, $10, $7C, $21
 
+SuperAwakening_OwlEventSpriteVariant::
+.variant0
+    db $C0, OAM_GBC_PAL_1 | OAMF_PAL0
+    db $C0, OAM_GBC_PAL_1 | OAMF_PAL0 | OAMF_XFLIP
+.variant1
+    db $C2, OAM_GBC_PAL_1 | OAMF_PAL0
+    db $C2, OAM_GBC_PAL_1 | OAMF_PAL0 | OAMF_XFLIP
+.variant3
+    db   $00, $F8, $C4, $01, $00, $00, $C6, $01
+    db   $00, $08, $C6, $21, $00, $10, $C4, $21
+
 func_006_6A4F::
     ldh  a, [hActiveEntitySpriteVariant]
     cp   $02                                      ; $6A51: $FE $02
     jr   nc, jr_006_6A5B                          ; $6A53: $30 $06
 
 func_006_6A55::
-    ld   de, OwlEventSpriteVariants               ; $6A55: $11 $37 $6A
+    ;ld   de, OwlEventSpriteVariants               
+    ld   de, SuperAwakening_OwlEventSpriteVariant
     jp   RenderActiveEntitySpritesPair            ; $6A58: $C3 $C0 $3B
 
 jr_006_6A5B:
-    ld   hl, Data_006_6A3F                        ; $6A5B: $21 $3F $6A
+    ;ld   hl, Data_006_6A3F                        ; $6A5B: $21 $3F $6A
+    ld   hl, SuperAwakening_OwlEventSpriteVariant.variant3
     ld   c, $04                                   ; $6A5E: $0E $04
     call RenderActiveEntitySpritesRect            ; $6A60: $CD $E6 $3C
     ld   a, $04                                   ; $6A63: $3E $04

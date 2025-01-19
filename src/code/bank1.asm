@@ -1,5 +1,3 @@
-TUTORIAL_START_LOCATION equ $D2
-;TUTORIAL_START_LOCATION equ $35
 
 ;
 ; TODO: move these pieces of code to named files
@@ -11,14 +9,14 @@ DebugSaveFileData::
     db INVENTORY_EMPTY           ; A button       ; $4668
     db INVENTORY_BOW           ; Inventory slots ; $4669
     db INVENTORY_BOMBS      ; .              ; $466A
-    db INVENTORY_HOOKSHOT             ; .              ; $466B
-    db INVENTORY_MAGIC_ROD        ; .              ; $466C
-    db INVENTORY_OCARINA       ; .              ; $466D
     db INVENTORY_ROCS_FEATHER   ; .              ; $466E
     db INVENTORY_SHOVEL         ; .              ; $466F
-    db INVENTORY_MAGIC_POWDER    ; .              ; $4670
-    db INVENTORY_POWER_BRACELET          ; .              ; $4671
-    db INVENTORY_PEGASUS_BOOTS    ; .              ; $4672
+    db INVENTORY_HOOKSHOT
+    db INVENTORY_MAGIC_ROD
+    db INVENTORY_OCARINA
+    db INVENTORY_MAGIC_POWDER
+    db INVENTORY_POWER_BRACELET
+    db INVENTORY_PEGASUS_BOOTS
 
     db 1  ; Have Flippers                         ; $4673
     db 0  ; Have Medicine                         ; $4674
@@ -70,13 +68,9 @@ if !SUPER_AWAKENING_DEBUG
     jp   z, .return                               ; $46C0: $CA $93 $47
 ENDC
 
-    ; This enables tutorial mode. It needs to get set when the tutorial save file is loaded
-    ld a, 1
-    ld [wSuperAwakening.tutorial_state], a
-
     ld   e, $00                                   ; $46C3: $1E $00
     ld   d, $00                                   ; $46C5: $16 $00
-    ld   bc, SaveGame1.main + wInventoryItems.BButtonSlot - wOverworldRoomStatus ; $46C7: $01 $05 $A4
+    ld   bc, SaveGame3.main + wInventoryItems.BButtonSlot - wOverworldRoomStatus ; $46C7: $01 $05 $A4
 .loop
     ld   hl, DebugSaveFileData                    ; $46CA: $21 $67 $46
     add  hl, de                                   ; $46CD: $19
@@ -90,14 +84,14 @@ ENDC
 
     ; Set some other parts of the first save file ...
     ld   a, $01                                   ; $46D7: $3E $01
-    ld   [SaveGame1.main + wSwordLevel - wOverworldRoomStatus], a ; Sword level 1               ; $46D9: $EA $53 $A4
+    ld   [SaveGame3.main + wSwordLevel - wOverworldRoomStatus], a ; Sword level 1               ; $46D9: $EA $53 $A4
     ld   a, $01                                   ; $46DC: $3E $01
-    ld   [SaveGame1.main + wShieldLevel - wOverworldRoomStatus], a ; Shield level 1              ; $46DE: $EA $49 $A4
+    ld   [SaveGame3.main + wShieldLevel - wOverworldRoomStatus], a ; Shield level 1              ; $46DE: $EA $49 $A4
     ld   a, $02                                   ; $46E1: $3E $02
-    ld   [SaveGame1.main + wPowerBraceletLevel - wOverworldRoomStatus], a ; Power bracelet level 2      ; $46E3: $EA $48 $A4
+    ld   [SaveGame3.main + wPowerBraceletLevel - wOverworldRoomStatus], a ; Power bracelet level 2      ; $46E3: $EA $48 $A4
 
     ; Set boss flags for all dungeons
-    ld   hl, SaveGame1.main + wHasInstrument1 - wOverworldRoomStatus ; Dungeon boss flags = 00000010 ; $46E6: $21 $6A $A4
+    ld   hl, SaveGame3.main + wHasInstrument1 - wOverworldRoomStatus ; Dungeon boss flags = 00000010 ; $46E6: $21 $6A $A4
     ld   e, $09 ; POI: Sets 9 flags (but only 8 dungeons...?) ; $46E9: $1E $09
     ld   a, $02 ; Sets 46A~447                    ; $46EB: $3E $02
 .drawEmptyHeartsLoop
@@ -106,36 +100,36 @@ ENDC
     jr   nz, .drawEmptyHeartsLoop                 ; $46EF: $20 $FC
 
     ld   a, DEBUG_SAVE_BOMB_COUNT                 ; $46F1: $3E $60
-    ld   [SaveGame1.main + wBombCount - wOverworldRoomStatus], a ; 60 bombs                    ; $46F3: $EA $52 $A4
+    ld   [SaveGame3.main + wBombCount - wOverworldRoomStatus], a ; 60 bombs                    ; $46F3: $EA $52 $A4
 IF DEBUG_SAVE_SWITCH_ARROWS
-    ld   [SaveGame1.main + wMaxBombs - wOverworldRoomStatus], a ; 60 max bombs
-    ld   [SaveGame1.main + wMaxArrows - wOverworldRoomStatus], a ; 60 max arrows
+    ld   [SaveGame3.main + wMaxBombs - wOverworldRoomStatus], a ; 60 max bombs
+    ld   [SaveGame3.main + wMaxArrows - wOverworldRoomStatus], a ; 60 max arrows
 ELSE
-    ld   [SaveGame1.main + wMaxArrows - wOverworldRoomStatus], a ; 60 max arrows               ; $46F6: $EA $7D $A4
-    ld   [SaveGame1.main + wMaxBombs - wOverworldRoomStatus], a ; 60 max bombs                ; $46F9: $EA $7C $A4
+    ld   [SaveGame3.main + wMaxArrows - wOverworldRoomStatus], a ; 60 max arrows               ; $46F6: $EA $7D $A4
+    ld   [SaveGame3.main + wMaxBombs - wOverworldRoomStatus], a ; 60 max bombs                ; $46F9: $EA $7C $A4
 ENDC
-    ld   [SaveGame1.main + wArrowCount - wOverworldRoomStatus], a ; 60 arrows                   ; $46FC: $EA $4A $A4
+    ld   [SaveGame3.main + wArrowCount - wOverworldRoomStatus], a ; 60 arrows                   ; $46FC: $EA $4A $A4
     ld   a, DEBUG_SAVE_MAGIC_COUNT                ; $46FF: $3E $40
-    ld   [SaveGame1.main + wMaxMagicPowder - wOverworldRoomStatus], a ; 40 max magic powder         ; $4701: $EA $7B $A4
-    ld   [SaveGame1.main + wMagicPowderCount - wOverworldRoomStatus], a ; 40 magic powder             ; $4704: $EA $51 $A4
+    ld   [SaveGame3.main + wMaxMagicPowder - wOverworldRoomStatus], a ; 40 max magic powder         ; $4701: $EA $7B $A4
+    ld   [SaveGame3.main + wMagicPowderCount - wOverworldRoomStatus], a ; 40 magic powder             ; $4704: $EA $51 $A4
 IF !LANG_JP
     ld   a, $89                                   ; $4707: $3E $89
-    ld   [SaveGame1.main + wDB47 - wOverworldRoomStatus], a ; "time/animation?" (unknown) ; $4709: $EA $4C $A4
+    ld   [SaveGame3.main + wDB47 - wOverworldRoomStatus], a ; "time/animation?" (unknown) ; $4709: $EA $4C $A4
 ENDC
     xor  a                                        ; $470C: $AF
-    ld   [SaveGame1.main + wSeashellsCount - wOverworldRoomStatus], a ; 0 secret seashells          ; $470D: $EA $14 $A4
+    ld   [SaveGame3.main + wSeashellsCount - wOverworldRoomStatus], a ; 0 secret seashells          ; $470D: $EA $14 $A4
     ld   a, %00000111 ; @TODO Ocarina song constants? ; $4710: $3E $07
-    ld   [SaveGame1.main + wOcarinaSongFlags - wOverworldRoomStatus], a ; all 3 Ocarina songs         ; $4712: $EA $4E $A4
-    ld   a, $00                                   ; $4715: $3E $05
-    ld   [SaveGame1.main + wRupeeCountHigh - wOverworldRoomStatus], a ; 5xx rupees                  ; $4717: $EA $62 $A4
+    ld   [SaveGame3.main + wOcarinaSongFlags - wOverworldRoomStatus], a ; all 3 Ocarina songs         ; $4712: $EA $4E $A4
+    ld   a, $01                                   ; $4715: $3E $05
+    ld   [SaveGame3.main + wRupeeCountHigh - wOverworldRoomStatus], a ; 5xx rupees                  ; $4717: $EA $62 $A4
     ld   a, $09                                   ; $471A: $3E $09
-    ld   [SaveGame1.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
+    ld   [SaveGame3.main + wRupeeCountLow - wOverworldRoomStatus], a ; x09 rupees                  ; $471C: $EA $63 $A4
     ld   a, $01                                   ; $471F: $3E $01
-    ld   [SaveGame1.main + wDB48 - wOverworldRoomStatus], a ; "Tarin at home flag"        ; $4721: $EA $4D $A4
+    ld   [SaveGame3.main + wDB48 - wOverworldRoomStatus], a ; "Tarin at home flag"        ; $4721: $EA $4D $A4
     ld   a, DEBUG_STARTING_HEARTS
-    ld   [SaveGame1.main + wHealth - wOverworldRoomStatus], a ; 10 hearts of health         ; $4726: $EA $5F $A4
+    ld   [SaveGame3.main + wHealth - wOverworldRoomStatus], a ; 10 hearts of health         ; $4726: $EA $5F $A4
     ld   a, DEBUG_MAX_HEARTS
-    ld   [SaveGame1.main + wMaxHearts - wOverworldRoomStatus], a ; 10 heart containers         ; $472B: $EA $60 $A4
+    ld   [SaveGame3.main + wMaxHearts - wOverworldRoomStatus], a ; 10 heart containers         ; $472B: $EA $60 $A4
 
     ld   a, [wGameplayType]                       ; $472E: $FA $95 $DB
     cp   GAMEPLAY_FILE_NEW                        ; $4731: $FE $03
@@ -147,26 +141,26 @@ ENDC
 INDEX = 0
 REPT 5
     ld   a, CHARSUB("{DEBUG_SAVE_FILE_NAME}", INDEX + 1) + 1
-    ld   [SaveGame1.main + wName - wOverworldRoomStatus + INDEX], a
+    ld   [SaveGame3.main + wName - wOverworldRoomStatus + INDEX], a
 INDEX = INDEX + 1
 ENDR
 
 .notOnNewFileScreen
     xor  a                                        ; $474E: $AF
-    ld   [SaveGame1.main + wDeathCount - wOverworldRoomStatus], a ; death counter = 0           ; $474F: $EA $5C $A4
-    ld   [SaveGame1.main + wDeathCount + 1 - wOverworldRoomStatus], a ; death counter = 0           ; $4752: $EA $5D $A4
-    ld   [SaveGame1.main + wIsBowWowFollowingLink - wOverworldRoomStatus], a ; bowwow flag = off           ; $4755: $EA $5B $A4
-    ld   [SaveGame1.main + wSpawnIsIndoor - wOverworldRoomStatus], a ; current map = overworld     ; $4758: $EA $64 $A4
-    ld   [SaveGame1.main + wSpawnMapId - wOverworldRoomStatus], a ; current submap = none       ; $475B: $EA $65 $A4
+    ld   [SaveGame3.main + wDeathCount - wOverworldRoomStatus], a ; death counter = 0           ; $474F: $EA $5C $A4
+    ld   [SaveGame3.main + wDeathCount + 1 - wOverworldRoomStatus], a ; death counter = 0           ; $4752: $EA $5D $A4
+    ld   [SaveGame3.main + wIsBowWowFollowingLink - wOverworldRoomStatus], a ; bowwow flag = off           ; $4755: $EA $5B $A4
+    ld   [SaveGame3.main + wSpawnIsIndoor - wOverworldRoomStatus], a ; current map = overworld     ; $4758: $EA $64 $A4
+    ld   [SaveGame3.main + wSpawnMapId - wOverworldRoomStatus], a ; current submap = none       ; $475B: $EA $65 $A4
     ld   a, TUTORIAL_START_LOCATION
-    ld   [SaveGame1.main + wSpawnMapRoom - wOverworldRoomStatus], a ; saved room = flying rooster in mabe village ; $4760: $EA $66 $A4
-    ld   a, $48                                   ; $4763: $3E $48
-    ld   [SaveGame1.main + wSpawnPositionX - wOverworldRoomStatus], a ; saved y position            ; $4765: $EA $67 $A4
-    ld   a, $62                                   ; $4768: $3E $62
-    ld   [SaveGame1.main + wSpawnPositionY - wOverworldRoomStatus], a ; saved x position            ; $476A: $EA $68 $A4
+    ld   [SaveGame3.main + wSpawnMapRoom - wOverworldRoomStatus], a ; saved room = flying rooster in mabe village ; $4760: $EA $66 $A4
+    ld   a, $50                                   
+    ld   [SaveGame3.main + wSpawnPositionX - wOverworldRoomStatus], a ; saved x position            ; $4765: $EA $67 $A4
+    ld   a, $00                                   ; $4768: $3E $62
+    ld   [SaveGame3.main + wSpawnPositionY - wOverworldRoomStatus], a ; saved y position            ; $476A: $EA $68 $A4
 
     ; Set all overworld map tiles as seen (80)
-    ld   hl, SaveGame1.main                       ; $476D: $21 $05 $A1
+    ld   hl, SaveGame3.main                       ; $476D: $21 $05 $A1
     ld   a, $80                                   ; $4770: $3E $80
     ld   e, $00                                   ; $4772: $1E $00
 .loop3
@@ -900,6 +894,15 @@ include "data/dialogs/map.asm"
 
 func_001_5A59::
     ldh  a, [hMapRoom]                            ; $5A59: $F0 $F6
+
+.SuperAwakening_TutorialCustomDialog
+    ld hl, SuperAwakening_Tutorial_Dialog
+    call SuperAwakening_Trampoline.jumpTo3E
+    ld a, [wSuperAwakening.dialog_backup]
+
+    jp   OpenDialogInTable0
+.SuperAwakening_TutorialCustomDialog_end
+
     ld   e, a                                     ; $5A5B: $5F
     ld   d, $00                                   ; $5A5C: $16 $00
     ld   hl, MapSpecialLocationNamesTable         ; $5A5E: $21 $59 $59

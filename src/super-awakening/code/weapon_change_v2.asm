@@ -5,8 +5,14 @@
 SuperAwakening_ChangeWeapon_v2::
 
     ld   a, [wGameplaySubtype]
-    cp   GAMEPLAY_WORLD_INTERACTIVE ; If GameplaySubtype != 7 (interactive overworld gameplay) ; $0E42: $FE $07
+    cp   GAMEPLAY_WORLD_INTERACTIVE ; If GameplaySubtype != 7 (interactive overworld gameplay)
     jp nz, return
+
+.tutorial_check_disable_change_weapon
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_RL
+    cp TUTORIAL_DISABLE_RL
+    jp z, return
 
 ; Parameters
 ; change_weapon( Weapon_Number, Button, Other_Weapon_Number )
@@ -153,6 +159,9 @@ change_weapon_\1:
 
         ; Set the weapon and exit
         ld [wSuperAwakening.Weapon\1_Value], a
+
+        ld   hl, hJingle
+        ld   [hl], JINGLE_DIALOG_BREAK
         jp return
 
     .next_weapon_\1_end
