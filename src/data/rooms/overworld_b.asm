@@ -2795,11 +2795,8 @@ OverworldE0::
 OverworldE1::
   db   ANIMATED_TILES_TIDE ; animation id
   db   $03 ; floor tile
-  ; top wall
-  ;db   $8A, $00, $3A           ; object
-  ; bushes
-  ;db   $83, $15, $5C           ; object
-  ; tree
+  db   $8A, $00, $3A           ; object
+  db   $83, $15, $5C           ; object
   db   $18, $FB                ; object
   db   $2F, $FB                ; object
   db   $4F, $FB                ; object

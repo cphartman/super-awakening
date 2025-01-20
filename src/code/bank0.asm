@@ -4865,6 +4865,7 @@ IF SUPER_AWAKENING_GBC_CODE
     ld   hl, ColorDungeonTiles                    ; $2C4D: $21 $00 $60
     push de                                       ; $2C50: $D5
     jr   .endIf                                   ; $2C51: $18 $0A
+
 .notColorDungeon
 ENDC
     ; Read a data pointer from DungeonFloorTilesPointers
@@ -6014,8 +6015,6 @@ ENDC
     ld   a, [hl]                                  ; $3227: $7E
     ld   b, a                                     ; $3228: $47
 
-    
-
     ;
     ; Load proper bank for Overworld rooms
     ;
@@ -6088,6 +6087,7 @@ ENDC
     ;
     ; Parse room objects
     ;
+
 .parseRoomObjectsLoop
     ; Increment the current address
     inc  bc                                       ; $325C: $03

@@ -19,7 +19,7 @@ DebugSaveFileData::
     db INVENTORY_PEGASUS_BOOTS
 
     db 1  ; Have Flippers                         ; $4673
-    db 0  ; Have Medicine                         ; $4674
+    db 1  ; Have Medicine                         ; $4674
     db 0  ; Trading item = Yoshi doll             ; $4675
     db 0  ; 0 Secret Seashells                    ; $4676
     db 0  ; (@TODO "Medicine count: found?")      ; $4677

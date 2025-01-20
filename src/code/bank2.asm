@@ -7236,7 +7236,8 @@ jr_002_728E:
 
     cp   OBJECT_DASHABLE_ROCK_1                   ; $7346: $FE $4E
     jr   z, .jr_734F                              ; $7348: $28 $05
-    
+
+    ; An Open Chest is placed in the tutorial as a stand in for break blocks
     cp   OBJECT_CHEST_OPEN                   ; $7346: $FE $4E
     jr   z, .jr_734F                              ; $7348: $28 $05
 
