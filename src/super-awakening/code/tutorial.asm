@@ -187,8 +187,16 @@ SuperAwakening_Tutorial_Entities::
     cp TUTORIAL_START_LOCATION
     jp nz, .check_location_1_end
 
+    ld a, [wSuperAwakening.Tutorial_Status]
+    cp TUTORIAL_STARTING_FLAGS
+    jp z, .use_cutscene_entities
+
     ld b, HIGH(Tutorial_Entities_1)
     ld c, LOW(Tutorial_Entities_1)
+    jp .return
+.use_cutscene_entities
+    ld b, HIGH(Tutorial_Entities_1_cutscene)
+    ld c, LOW(Tutorial_Entities_1_cutscene)
     jp .return
 .check_location_1_end
 

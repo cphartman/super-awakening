@@ -1,6 +1,9 @@
-Tutorial_Entities_1::
+Tutorial_Entities_1_cutscene::
   entity $1, $0, ENTITY_OWL_EVENT
   entity $5, $5, ENTITY_URCHIN
+  entities_end
+
+Tutorial_Entities_1::
   entities_end
 
 Tutorial_Entities_2::

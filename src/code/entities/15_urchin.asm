@@ -1,17 +1,17 @@
 ; define sprite variants by selecting tile n° and setting OAM attributes (palette + flags) in a list
 Urchin2SpriteVariants::
 .variant0
-    db $9C, $03
-    db $9E, $03
+    db $5C, $03
+    db $5E, $03
 .variant1
-    db $9E, $23
-    db $9C, $23
+    db $5E, $23
+    db $5C, $23
 .variant2
-    db $9E, $63
-    db $9C, $63
+    db $5E, $63
+    db $5C, $63
 .variant3
-    db $9C, $43
-    db $9E, $43
+    db $5C, $43
+    db $5E, $43
 
 ; define sprite variants by selecting tile n° and setting OAM attributes (palette + flags) in a list
 Urchin1SpriteVariants::
@@ -28,6 +28,20 @@ Urchin1SpriteVariants::
     db $2C, $43
     db $2E, $43
 
+SuperAwakening_UrchinSpriteVariants::
+.variant0
+    db $9C, $03
+    db $9E, $03
+.variant1
+    db $9E, $23
+    db $9C, $23
+.variant2
+    db $9E, $63
+    db $9C, $63
+.variant3
+    db $9C, $43
+    db $9E, $43
+
 Data_015_73A3::
     db   $FD, $03, $00, $00
 
@@ -35,7 +49,25 @@ Data_015_73A7::
     db   $00, $00, $03, $FD
 
 UrchinEntityHandler::
-    ld   de, Urchin2SpriteVariants                ; $73AB: $11 $83 $73
+
+; Use custom sprite if we're on the tutorial screen
+.SuperAwakening_urchin_sprite
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_RL
+    jp z, .SuperAwakening_urchin_sprite_original
+
+.SuperAwakening_urchin_sprite_override
+    ld   de, SuperAwakening_UrchinSpriteVariants
+    jp .SuperAwakening_urchin_sprite_end
+
+.SuperAwakening_urchin_sprite_original
+    ld   de, Urchin2SpriteVariants
+
+.SuperAwakening_urchin_sprite_end
+
+    ldh  a, [hMapRoom]
+
+    ;ld   de, Urchin2SpriteVariants                ; $73AB: $11 $83 $73
     ld   a, [wGameplayType]                       ; $73AE: $FA $95 $DB
     cp   GAMEPLAY_CREDITS                         ; $73B1: $FE $01
     jr   nz, .render                              ; $73B3: $20 $03
