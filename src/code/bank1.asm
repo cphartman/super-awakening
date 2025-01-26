@@ -893,16 +893,21 @@ ENDC
 include "data/dialogs/map.asm"
 
 func_001_5A59::
-    ldh  a, [hMapRoom]                            ; $5A59: $F0 $F6
 
-.SuperAwakening_TutorialCustomDialog
+.SuperAwakening_Owl_Dialog_Override
+    ; Skip if we've completed the tutorial
+    ld a, [wSuperAwakening.Tutorial_Status]
+    cp 0
+    jp z, .SuperAwakening_Owl_Dialog_Override_end
+
     ld hl, SuperAwakening_Tutorial_Dialog
     call SuperAwakening_Trampoline.jumpTo3E
     ld a, [wSuperAwakening.dialog_backup]
+    jp   OpenDialogInTable2
 
-    jp   OpenDialogInTable0
-.SuperAwakening_TutorialCustomDialog_end
+.SuperAwakening_Owl_Dialog_Override_end
 
+    ldh  a, [hMapRoom]                            ; $5A59: $F0 $F6
     ld   e, a                                     ; $5A5B: $5F
     ld   d, $00                                   ; $5A5C: $16 $00
     ld   hl, MapSpecialLocationNamesTable         ; $5A5E: $21 $59 $59

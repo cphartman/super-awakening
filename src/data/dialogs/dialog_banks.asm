@@ -174,12 +174,6 @@ DialogBankTable::
     db BANK(Dialog0A1) | DIALOG_UNSKIPPABLE
     db BANK(Dialog0A2) | DIALOG_UNSKIPPABLE
     db BANK(Dialog0A3) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_1) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_2) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_3) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_4) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_5) | DIALOG_UNSKIPPABLE
-    db BANK(Tutorial_Dialog_6) | DIALOG_UNSKIPPABLE
 
 ; dialog_2.asm starts here
     db BANK(Dialog0A4) | DIALOG_UNSKIPPABLE
@@ -712,3 +706,10 @@ DialogBankTable::
     db BANK(Dialog2AD)
     db BANK(Dialog2AE)
     db BANK(Dialog2AF) | DIALOG_UNSKIPPABLE
+
+    db BANK(Tutorial_Dialog_1) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_2) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_3) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_4) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_5) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_6) | DIALOG_UNSKIPPABLE

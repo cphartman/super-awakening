@@ -4508,6 +4508,7 @@ PlayBoomerangSfx_trampoline::
     ld   [rSelectROMBank], a                      ; $2A03: $EA $00 $21
     ret                                           ; $2A06: $C9
 
+; Owl Dialog trampoline
 label_2A07::
     callsb func_001_5A59                          ; $2A07: $3E $01 $EA $00 $21 $CD $59 $5A
     jp   ReloadSavedBank                          ; $2A0F: $C3 $1D $08
@@ -5041,6 +5042,11 @@ LoadBaseOverworldTiles::
 
     call func_2D50                                ; $2D4A: $CD $50 $2D
 
+.SuperAwakening_TutorialCustomOverworldTiles
+    ld hl, SuperAwakening_Tutorial_Tiles
+    call SuperAwakening_Trampoline.jumpTo3E
+.SuperAwakening_SuperAwakening_TutorialCustomOverworldTiles_end
+
     jp   LoadIndoorTiles.patchInventoryTiles      ; $2D4D: $C3 $FE $2C
 
 ; Copy animated tiles, inventory items and character tiles to tile memory
@@ -5063,11 +5069,6 @@ func_2D50::
     ld   de, vTiles0 + $200                       ; $2D6F: $11 $00 $82
     ld   bc, TILE_SIZE * $10                      ; $2D72: $01 $00 $01
     call CopyData                                 ; $2D75: $CD $14 $29
-
-.SuperAwakening_TutorialCustomOverworldTiles
-    ld hl, SuperAwakening_Tutorial_Tiles
-    call SuperAwakening_Trampoline.jumpTo3E
-.SuperAwakening_SuperAwakening_TutorialCustomOverworldTiles_end
 
     ret                                           ; $2D78: $C9
 
@@ -6065,10 +6066,12 @@ ENDC
 .parseOverworldSecondByte
 
 .SuperAwakening_TutorialCustomRoom
+    ; Check if we're in the tutorial save slot
     ld hl, wSaveSlot
     ld a, [hl]
     cp TUTORIAL_SAVE_SLOT
     jp nz, .SuperAwakening_TutorialCustomRoom_end
+    
     ; HACK: The loaded bank depends on the current map level
     ; Maybe we could inspect wCurrentBank? Not sure if it matches though?
     ld h, HIGH(ROOM_HACK_MAGIC_ADDRESS)
@@ -6076,6 +6079,7 @@ ENDC
     ld a, [hl]
     cp ROOM_HACK_MAGIC_VALUE
     jp nz, .SuperAwakening_TutorialCustomRoom_end
+
     ld hl, SuperAwakening_Tutorial_Room
     call SuperAwakening_Trampoline.jumpTo3E
 .SuperAwakening_TutorialCustomRoom_end
@@ -7387,7 +7391,7 @@ LoadRoomEntities::
     ld   b, a                                     ; $386C: $47
 
 .SuperAwakening_TutorialCustomEntities
-    ld hl, SuperAwakening_Tutorial_Entitles
+    ld hl, SuperAwakening_Tutorial_Entities
     call SuperAwakening_Trampoline.jumpTo3E
 .SuperAwakening_TutorialCustomEntities_end
 

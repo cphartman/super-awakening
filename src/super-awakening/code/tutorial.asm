@@ -8,6 +8,14 @@ TUTORIAL_LOCATION_4 = $D0
 TUTORIAL_LOCATION_5 = $C0
 TUTORIAL_LOCATION_6 = $B0
 
+; Dialog pointers for tutorial owl text
+TUTORIAL_DIALOG_INDEX_1 = $B0
+TUTORIAL_DIALOG_INDEX_2 = $B1
+TUTORIAL_DIALOG_INDEX_3 = $B2
+TUTORIAL_DIALOG_INDEX_4 = $B3
+TUTORIAL_DIALOG_INDEX_5 = $B4
+TUTORIAL_DIALOG_INDEX_6 = $B5
+
 ; Bit flags used to toggle gameplay features in the tutorial
 TUTORIAL_DISABLE_RL         = $01
 TUTORIAL_DISABLE_QUICK_LIFT = $02
@@ -17,6 +25,8 @@ TUTORIAL_DISABLE_SELECT     = $10
 
 TUTORIAL_STARTING_FLAGS = ( TUTORIAL_DISABLE_RL | TUTORIAL_DISABLE_QUICK_LIFT | TUTORIAL_DISABLE_QUICK_DASH | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_SELECT )
 
+; Sets [bc] to the room list to load
+; Also, configres any tutorial status flags on room load
 SuperAwakening_Tutorial_Room::
 
     ; Skip if we've completed the tutorial
@@ -68,6 +78,33 @@ SuperAwakening_Tutorial_Room::
     and (~TUTORIAL_DISABLE_QUICK_DASH)
     ld [wSuperAwakening.Tutorial_Status], a
 
+    ; Copy over the block tileset
+
+    ; Inputs:
+    ;   bc : number of bytes to copy
+    ;   de : destination address
+    ;   hl : source address
+.poll_for_vblank_5
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_5              ; $0377: $28 $FB
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_5
+
+    ; Replace top open chest with top dash rock
+    ld de, $9620
+    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*0))
+    ld   bc, $20
+    call CopyData
+
+    ; Replace bottom chest with top bottom rock
+    ld de, $9700
+    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*1))
+    ld   bc, $20
+    call CopyData
+
     ld b, HIGH(Tutorial_Override_4+1)
     ld c, LOW(Tutorial_Override_4+1)
     jp .return
@@ -89,10 +126,45 @@ SuperAwakening_Tutorial_Room::
     cp TUTORIAL_LOCATION_6
     jp nz, .return
 
-    ; Enable Select
-    ld a, [wSuperAwakening.Tutorial_Status]
-    and (~TUTORIAL_DISABLE_SELECT)
-    ld [wSuperAwakening.Tutorial_Status], a
+    push bc
+
+    ; Copy over the owl tileset again
+
+    ; Inputs:
+    ;   bc : number of bytes to copy
+    ;   de : destination address
+    ;   hl : source address
+.poll_for_vblank_6
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_6              ; $0377: $28 $FB
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_6
+
+    ; Replace temple keys with Owl tiles
+    ld de, $8C00
+    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*2))
+    ld bc, $40
+    call CopyData
+
+.poll_for_vblank_6_2
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_6_2
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_6_2
+
+    ; Replace temple keys with Owl tiles
+    ld de, $8C40
+    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*4))
+    ld   bc, $40
+    call CopyData
+
+    pop bc
 
     jp .return
 
@@ -101,7 +173,9 @@ SuperAwakening_Tutorial_Room::
     ld  a, $1A
     jp SuperAwakening_Trampoline.returnToBank
 
-SuperAwakening_Tutorial_Entitles::
+
+; Set [bc] to the entity list to load
+SuperAwakening_Tutorial_Entities::
     ; Skip if we've completed the tutorial
     ld a, wSuperAwakening.Tutorial_Status
     cp 0
@@ -163,25 +237,22 @@ SuperAwakening_Tutorial_Entitles::
     ld   a, BANK(OverworldEntitiesPointersTable)
     jp SuperAwakening_Trampoline.returnToBank
 
+; Sets wSuperAwakening.dialog_backup to the entry in the DialogPointerTable to display during own dialogs
 SuperAwakening_Tutorial_Dialog::
     
-    ; Use current value
-    ldh  a, [hMapRoom]
-    ld [wSuperAwakening.dialog_backup], a
-
     ; Skip if we've completed the tutorial
-    ld a, wSuperAwakening.Tutorial_Status
+    ld a, [wSuperAwakening.Tutorial_Status]
     cp 0
     jp z, .return
 
+    ; Checking map room value
     ldh  a, [hMapRoom]
     
 .check_location_1
     cp TUTORIAL_START_LOCATION
     jp nz, .check_location_1_end
-    ld a, $A4
-    ld [wSuperAwakening.dialog_backup], a
 
+    ;; Start Cutscene code
     ; Remove urchin [link placeholder]
     ld a, 0
     ld [wEntitiesStatusTable+1], a
@@ -193,14 +264,17 @@ SuperAwakening_Tutorial_Dialog::
     ; Make link look up
     ld a, $04
     ld [hLinkAnimationState], a
+    ;; End Cutscene code
     
+    ld a, TUTORIAL_DIALOG_INDEX_1
+    ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_1_end
 
 .check_location_2
     cp TUTORIAL_LOCATION_2
     jp nz, .check_location_2_end
-    ld a, $A5
+    ld a, TUTORIAL_DIALOG_INDEX_2
     ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_2_end
@@ -208,7 +282,7 @@ SuperAwakening_Tutorial_Dialog::
 .check_location_3
     cp TUTORIAL_LOCATION_3
     jp nz, .check_location_3_end
-    ld a, $A6
+    ld a, TUTORIAL_DIALOG_INDEX_3
     ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_3_end
@@ -216,7 +290,7 @@ SuperAwakening_Tutorial_Dialog::
 .check_location_4
     cp TUTORIAL_LOCATION_4
     jp nz, .check_location_4_end
-    ld a, $A7
+    ld a, TUTORIAL_DIALOG_INDEX_4
     ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_4_end
@@ -224,7 +298,7 @@ SuperAwakening_Tutorial_Dialog::
 .check_location_5
     cp TUTORIAL_LOCATION_5
     jp nz, .check_location_5_end
-    ld a, $A8
+    ld a, TUTORIAL_DIALOG_INDEX_5
     ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_5_end
@@ -232,7 +306,13 @@ SuperAwakening_Tutorial_Dialog::
 .check_location_6
     cp TUTORIAL_LOCATION_6
     jp nz, .check_location_6_end
-    ld a, $A9
+
+    ; Enable Select
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and (~TUTORIAL_DISABLE_SELECT)
+    ld [wSuperAwakening.Tutorial_Status], a
+
+    ld a, TUTORIAL_DIALOG_INDEX_6
     ld [wSuperAwakening.dialog_backup], a
     jp .return
 .check_location_6_end
@@ -250,8 +330,10 @@ SuperAwakening_Tutorial_Tiles::
     jp z, .return
 
     ldh  a, [hMapRoom]
+
+.check_location_1
     cp TUTORIAL_START_LOCATION
-    jp nz, .return
+    jp nz, .check_location_1_end
 
     ; Copy data
     ; Inputs:
@@ -292,6 +374,20 @@ SuperAwakening_Tutorial_Tiles::
 
     ld a, DIRECTION_UP
     ld [hLinkDirection], a
+.check_location_1_end
+
+.check_location_2
+
+    cp TUTORIAL_LOCATION_2
+    jp nz, .check_location_2_end
+
+    ; Replace temple keys with Owl tiles
+    ld de, $8C00
+    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*2))
+    ld   bc, $80
+    call CopyData
+
+.check_location_2_end
 
 .return
     ret
