@@ -163,6 +163,23 @@ jr_006_68B7:
 ._04 dw OwlState4Handler
 
 OwlState0Handler::
+
+.SuperAwakening_OwlDisable
+    ; Skip if we're not on the tutorial game
+    ld hl, wSaveSlot
+    ld a, [hl]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_OwlDisable_end
+
+    ; Skip if we're in the tutorial
+    ld a, [wSuperAwakening.Tutorial_Status]
+    cp 0
+    jp nz, .SuperAwakening_OwlDisable_end
+
+    ; If tutorial is complete, disable the owl
+    jp   ClearEntityStatus_06
+.SuperAwakening_OwlDisable_end
+
     ldh  a, [hMapRoom]
     cp   ROOM_OW_BEACH_WITH_SWORD
     jr   nz, .jr_68EF                             ; $68D9: $20 $14
