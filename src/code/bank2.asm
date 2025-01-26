@@ -7224,12 +7224,36 @@ jr_002_728E:
     ld   [wIsLinkPushing], a                      ; $7338: $EA $44 $C1
 
 .jr_733B
+
+.SuperAwakening_dash_break_hack
+    ; Check if we're in the tutorial save slot
+    ld hl, wSaveSlot
+    ld a, [hl]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_dash_break_hack_end
+
+    ; Check if we're in the right tutorial room
+    ldh  a, [hMapRoom]
+    cp TUTORIAL_LOCATION_4
+    jp nz, .SuperAwakening_dash_break_hack_end
+
+    ldh  a, [hMapId]                              ; $733B: $F0 $F7
+    and  a                                        ; $733D: $A7
+    ldh  a, [hObjectUnderEntity]                  ; $733E: $F0 $AF
+
+    ; An Open Chest is placed in the tutorial as a stand in for break blocks
+    cp   OBJECT_CHEST_OPEN
+    jr   z, .jr_734F        ; Break this
+    jp   nz, label_002_73AD ; Continue, do not break this
+
+.SuperAwakening_dash_break_hack_end
+
     ldh  a, [hMapId]                              ; $733B: $F0 $F7
     and  a                                        ; $733D: $A7
     ldh  a, [hObjectUnderEntity]                  ; $733E: $F0 $AF
 
     ; Check if in overworld, because there shouldn't be break blocks in overworld
-    ; jr   z, label_002_73AD                        ; $7340: $28 $6B
+    jr   z, label_002_73AD                        ; $7340: $28 $6B
 
     cp   OBJECT_DASHABLE_ROCK_3                   ; $7342: $FE $88
     jr   z, .jr_734F                              ; $7344: $28 $09
@@ -7244,6 +7268,7 @@ jr_002_728E:
     cp   OBJECT_DASHABLE_ROCK_2                   ; $734A: $FE $4F
     jp   nz, label_002_73AD                       ; $734C: $C2 $AD $73
 
+; Did hit breakable block
 .jr_734F
     ld   a, [wIsRunningWithPegasusBoots]          ; $734F: $FA $4A $C1
     and  a                                        ; $7352: $A7
