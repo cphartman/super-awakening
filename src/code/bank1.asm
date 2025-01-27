@@ -1454,6 +1454,7 @@ BuildSaveSlotHeartsDrawCommand::
 .return::
     ret                                           ; $5DBF: $C9
 
+; Setup save file menu?
 func_5DC0::
     xor  a                                        ; $5DC0: $AF
     ld   de, wSaveFilesCount                      ; $5DC1: $11 $A7 $DB

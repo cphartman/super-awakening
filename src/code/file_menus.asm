@@ -77,6 +77,8 @@ CopyDeathCountsToBG::
     call CopyDigitsToFileScreenBG                 ; $4833: $CD $45 $4F
 
 .file3
+; Do not draw death count for tutorial
+/*
     ld   a, [wSaveFilesCount]                     ; $4836: $FA $A7 $DB
     and  $04                                      ; $4839: $E6 $04
     jr   z, .return                               ; $483B: $28 $0E
@@ -87,7 +89,7 @@ CopyDeathCountsToBG::
     ld   l, a                                     ; $4844: $6F
     ld   de, vBGMap0 + $1A7                       ; $4845: $11 $A7 $99
     call CopyDigitsToFileScreenBG                 ; $4848: $CD $45 $4F
-
+*/
 .return
     jp   IncrementGameplaySubtypeAndReturn        ; $484B: $C3 $D6 $44
     ; Unused
@@ -96,6 +98,8 @@ CopyDeathCountsToBG::
 FileSelectionPrepare5::
     jp   FileDeletionState4Handler                ; $484F: $C3 $6D $4D
 
+; [bc] = Destination
+; [de] = String
 DrawSaveSlotName::
     push de                                       ; $4852: $D5
     ld   a, [wDrawCommandsSize]                   ; $4853: $FA $00 $D6
@@ -1040,9 +1044,45 @@ DrawSaveSlot2Name::
     jp   DrawSaveSlotName                         ; $4D9A: $C3 $52 $48 ; $4D9A: $C3 $52 $48
 
 DrawSaveSlot3Name::
-    ld   bc, $9985                                ; $4D9D: $01 $85 $99 ; $4D9D: $01 $85 $99
-    ld   de, wSaveSlot3Name                       ; $4DA0: $11 $8A $DB ; $4DA0: $11 $8A $DB
-    jp   DrawSaveSlotName                         ; $4DA3: $C3 $52 $48 ; $4DA3: $C3 $52 $48
+    ld hl, wSuperAwakening.Tutotial_FileText
+    ld a, "H"+1
+    ld [hli], a
+    ld a, "o"+1
+    ld [hli], a
+    ld a, "w"+1
+    ld [hli], a
+    ld a, " "+1
+    ld [hli], a
+    ld a, "t"+1
+    ld [hli], a
+    ld a, "o"+1
+    ld [hli], a
+    ld a, " "+1
+    ld [hli], a
+    ld a, "p"+1
+    ld [hli], a
+    ld a, "l"+1
+    ld [hli], a
+    ld a, "a"+1
+    ld [hli], a
+    ld a, "y"+1
+    ld [hli], a
+
+
+    ld   bc, $9986
+    ld   de, (wSuperAwakening.Tutotial_FileText)
+    call   DrawSaveSlotName                         
+
+    ; Hack to draw the next 5 characters
+    ld   bc, $998B
+    ld   de, (wSuperAwakening.Tutotial_FileText+5)
+    call   DrawSaveSlotName
+
+    ; Hack to draw the last character (overwrites the last 5)
+    ; This is pretty dumb
+    ld   bc, $998C
+    ld   de, (wSuperAwakening.Tutotial_FileText+6)
+    jp   DrawSaveSlotName
 
 DrawSaveSlot1MaxHearts::
     ld   a, [wSaveFilesCount]                     ; $4DA6: $FA $A7 $DB ; $4DA6: $FA $A7 $DB

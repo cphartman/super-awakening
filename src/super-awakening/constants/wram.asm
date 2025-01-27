@@ -68,3 +68,6 @@ wSuperAwakening::
 
 .Tutorial_Status:
   ds 1
+
+.Tutotial_FileText:
+  ds 11
