@@ -76,3 +76,6 @@ Tutorial_Dialog_6::
 
     db "begin your SUPER"
     db "adventure!@"
+
+Tutorial_Dialog_Signpost_1::
+    db "  <up> Free Play@"

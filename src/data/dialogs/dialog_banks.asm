@@ -713,3 +713,4 @@ DialogBankTable::
     db BANK(Tutorial_Dialog_4) | DIALOG_UNSKIPPABLE
     db BANK(Tutorial_Dialog_5) | DIALOG_UNSKIPPABLE
     db BANK(Tutorial_Dialog_6) | DIALOG_UNSKIPPABLE
+    db BANK(Tutorial_Dialog_Signpost_1) | DIALOG_UNSKIPPABLE

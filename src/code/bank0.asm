@@ -3586,7 +3586,10 @@ ENDC
     ld   a, e                                     ; $2012: $7B
     cp   OBJECT_WEATHER_VANE_BASE                 ; $2013: $FE $5E
     ld_dialog_low a, Dialog18E ; "Here sleeps..." ; $2015: $3E $8E
-    jr   z, .openDialogInTable1                   ; $2017: $28 $6F
+    
+    ; This jr was out of range after adding singpost code, so do a hacky little hop to get to .openDialogInTable1
+    ;jr   z, .openDialogInTable1                   ; $2017: $28 $6F
+    jr   z, .openDialogInTable1_hop
     ld   a, e                                     ; $2019: $7B
     cp   OBJECT_OWL_STATUE                        ; $201A: $FE $6F
     jr   z, .signpost                             ; $201C: $28 $2B
@@ -3619,11 +3622,31 @@ ENDC
     ld   a, e                                     ; $2046: $7B
     jr   .openDialogInTable0                      ; $2047: $18 $45
 
+.openDialogInTable1_hop
+    jp .openDialogInTable1
+
 .signpost
     ;
     ; Activating an OBJECT_SIGNPOST
     ; de = [hMapRoom]
     ;
+
+.SuperAwakening_signpost_dialog
+    
+    ; Skip if we've completed the tutorial
+    ld a, [wSuperAwakening.Tutorial_Status]
+    cp 0
+    jp z, .SuperAwakening_signpost_dialog_end
+    
+    ; Check if we're in the right room
+    ldh  a, [hMapRoom]
+    cp TUTORIAL_LOCATION_5
+    jp nz, .SuperAwakening_signpost_dialog_end
+
+    ; Override the dialog
+    ld a, TUTORIAL_DIALOG_SIGNPOST_1
+    jp .openDialogInTable2
+.SuperAwakening_signpost_dialog_end
 
     ; a = SignpostDialogTable[hMapRoom]
     ; e = wOcarinaSongFlags

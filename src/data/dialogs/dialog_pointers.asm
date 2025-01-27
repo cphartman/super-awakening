@@ -703,3 +703,4 @@ DialogPointerTable::
     dialog_pointer Tutorial_Dialog_4
     dialog_pointer Tutorial_Dialog_5
     dialog_pointer Tutorial_Dialog_6
+    dialog_pointer Tutorial_Dialog_Signpost_1
