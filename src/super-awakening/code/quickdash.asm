@@ -36,9 +36,9 @@ SuperAwakening_QuickDash::
     cp GAMEPLAY_WORLD
     jp nz, .quickdash_end
 
-    ; Skip if we're on the game over menu
-    ld a, [hGameOverStage]
-    cp 0
+    ; Skip if we're not gameplay state
+    ld a, [wLinkMotionState]
+    cp LINK_MOTION_DEFAULT
     jp nz, .quickdash_end
 
 
