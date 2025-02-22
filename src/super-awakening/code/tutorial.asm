@@ -18,13 +18,14 @@ TUTORIAL_DIALOG_INDEX_6 = $B5
 TUTORIAL_DIALOG_SIGNPOST_1 = $B6
 
 ; Bit flags used to toggle gameplay features in the tutorial
-TUTORIAL_DISABLE_RL         = $01
-TUTORIAL_DISABLE_QUICK_LIFT = $02
-TUTORIAL_DISABLE_QUICK_DASH = $04
-TUTORIAL_DISABLE_START      = $08
-TUTORIAL_DISABLE_SELECT     = $10
+TUTORIAL_DISABLE_RL             = $01
+TUTORIAL_DISABLE_QUICK_LIFT     = $02
+TUTORIAL_DISABLE_QUICK_DASH     = $04
+TUTORIAL_DISABLE_START          = $08
+TUTORIAL_DISABLE_SELECT         = $10
+TUTORIAL_HAS_OWL_OVERRIDE_TILES = $20
 
-TUTORIAL_STARTING_FLAGS = ( TUTORIAL_DISABLE_RL | TUTORIAL_DISABLE_QUICK_LIFT | TUTORIAL_DISABLE_QUICK_DASH | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_SELECT )
+TUTORIAL_STARTING_FLAGS = ( TUTORIAL_DISABLE_RL | TUTORIAL_DISABLE_QUICK_LIFT | TUTORIAL_DISABLE_QUICK_DASH | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_SELECT | TUTORIAL_HAS_OWL_OVERRIDE_TILES)
 
 ; Sets [bc] to the room list to load
 ; Also, configres any tutorial status flags on room load
@@ -35,6 +36,52 @@ SuperAwakening_Tutorial_Room::
     cp 0
     jp z, .return
 
+    ; Check if we need to run cleanup
+    cp TUTORIAL_HAS_OWL_OVERRIDE_TILES
+    jp nz, .tutorial_room_override
+
+.tutorial_reset
+    ; Need to restore [bc] after this
+    push bc
+
+    ; Return tiles to temple keys
+    ld a, 0
+    ld [wSuperAwakening.Tutorial_Status], a
+
+.poll_for_vblank_reset
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_reset              ; $0377: $28 $FB
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_reset
+
+    ; Restore fist 2 keys
+    ld   hl, SuperAwakening_InventoryOverworldItemsTiles
+    ld   de, vTiles1 + $400                       ; $2D41: $11 $00 $8C
+    ld   bc, TILE_SIZE * 4
+    call CopyData
+
+.poll_for_vblank_reset_b
+    ldh  a, [hNeedsRenderingFrame]                ; $0374: $F0 $D1
+    and  a                                        ; $0376: $A7
+    jr   z, .poll_for_vblank_reset_b              ; $0377: $28 $FB
+    ; Clear hNeedsRenderingFrame
+    xor  a                                        ; $0379: $AF
+    ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
+.poll_for_vblank_end_reset_b
+
+    ; Restore second 2 keys
+    ld   hl, ( SuperAwakening_InventoryOverworldItemsTiles + TILE_SIZE*4 )
+    ld   de, vTiles1 + $440                       ; $2D41: $11 $00 $8C
+    ld   bc, TILE_SIZE * 4
+    call CopyData
+    
+    pop bc
+    jp .return
+
+.tutorial_room_override
     ldh  a, [hMapRoom]
 
 .check_location_1      
@@ -384,19 +431,6 @@ SuperAwakening_Tutorial_Tiles::
     ld a, DIRECTION_UP
     ld [hLinkDirection], a
 .check_location_1_end
-
-.check_location_2
-
-    cp TUTORIAL_LOCATION_2
-    jp nz, .check_location_2_end
-
-    ; Replace temple keys with Owl tiles
-    ld de, $8C00
-    ld hl, (SuperAwakening_Gfx_Tutorial + ($20*2))
-    ld   bc, $80
-    call CopyData
-
-.check_location_2_end
 
 .return
     ret
