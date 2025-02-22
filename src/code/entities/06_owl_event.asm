@@ -458,13 +458,34 @@ func_006_6A4F::
     jr   nc, jr_006_6A5B                          ; $6A53: $30 $06
 
 func_006_6A55::
-    ;ld   de, OwlEventSpriteVariants               
-    ld   de, SuperAwakening_OwlEventSpriteVariant
+    
+.SuperAwakening_OwlVariant1:
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp z, .SuperAwakening_OwlVariant1_override
+    ld de, OwlEventSpriteVariants     
+    jp .SuperAwakening_OwlVariant1_end
+.SuperAwakening_OwlVariant1_override:
+    ld de, SuperAwakening_OwlEventSpriteVariant
+.SuperAwakening_OwlVariant1_end:
+    
     jp   RenderActiveEntitySpritesPair            ; $6A58: $C3 $C0 $3B
 
 jr_006_6A5B:
+
+.SuperAwakening_OwlVariant3:
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp z, .SuperAwakening_OwlVariant3_override
+    ld hl, Data_006_6A3F     
+    jp .SuperAwakening_OwlVariant3_end
+.SuperAwakening_OwlVariant3_override:
+    ld hl, SuperAwakening_OwlEventSpriteVariant.variant3
+.SuperAwakening_OwlVariant3_end:
+    ;ldh  a, [hActiveEntitySpriteVariant] ; Restore this value
+
     ;ld   hl, Data_006_6A3F                        ; $6A5B: $21 $3F $6A
-    ld   hl, SuperAwakening_OwlEventSpriteVariant.variant3
+    ;ld   hl, SuperAwakening_OwlEventSpriteVariant.variant3
     ld   c, $04                                   ; $6A5E: $0E $04
     call RenderActiveEntitySpritesRect            ; $6A60: $CD $E6 $3C
     ld   a, $04                                   ; $6A63: $3E $04

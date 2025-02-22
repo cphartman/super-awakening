@@ -8,6 +8,8 @@ SuperAwakening_Load::
     ld a, TUTORIAL_STARTING_FLAGS
     ld [wSuperAwakening.Tutorial_Status], a
 
+; Probably need to turn off flags too otherwise they could carry into a subsequent load?
+
     ld hl, wSuperAwakening.Items_Hidden
     ; Show first 4 items
     ld [hl], 0
