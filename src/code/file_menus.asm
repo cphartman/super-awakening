@@ -1069,18 +1069,18 @@ DrawSaveSlot3Name::
     ld [hli], a
 
 
-    ld   bc, $9986
+    ld   bc, $9984
     ld   de, (wSuperAwakening.Tutotial_FileText)
     call   DrawSaveSlotName                         
 
     ; Hack to draw the next 5 characters
-    ld   bc, $998B
+    ld   bc, $9989
     ld   de, (wSuperAwakening.Tutotial_FileText+5)
     call   DrawSaveSlotName
 
     ; Hack to draw the last character (overwrites the last 5)
     ; This is pretty dumb
-    ld   bc, $998C
+    ld   bc, $998A
     ld   de, (wSuperAwakening.Tutotial_FileText+6)
     jp   DrawSaveSlotName
 
@@ -1486,15 +1486,21 @@ Data_001_4F3B::
     db   $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7   ; $4F3B ; $4F3B
     db   $B8, $B9                                 ; $4F43 ; $4F43
 
+; This is for copying the death
+; [de] is what we are copying
 CopyDigitsToFileScreenBG::
     push hl                                       ; $4F45: $E5 ; $4F45: $E5
     ld   a, [wDrawCommandsSize]                   ; $4F46: $FA $00 $D6 ; $4F46: $FA $00 $D6
     ld   c, a                                     ; $4F49: $4F ; $4F49: $4F
+    ; Draw command size +6
     add  $06                                      ; $4F4A: $C6 $06 ; $4F4A: $C6 $06
     ld   [wDrawCommandsSize], a                   ; $4F4C: $EA $00 $D6 ; $4F4C: $EA $00 $D6
+    
+    ; Point hl to the start of the new command 
     ld   b, $00                                   ; $4F4F: $06 $00 ; $4F4F: $06 $00
     ld   hl, wDrawCommand                         ; $4F51: $21 $01 $D6 ; $4F51: $21 $01 $D6
     add  hl, bc                                   ; $4F54: $09 ; $4F54: $09
+    
     ld   a, d                                     ; $4F55: $7A ; $4F55: $7A
     ld   [hl+], a                                 ; $4F56: $22 ; $4F56: $22
     ld   a, e                                     ; $4F57: $7B ; $4F57: $7B

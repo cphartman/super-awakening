@@ -183,8 +183,16 @@ Tutorial_Override_4::
   ;db   $34, $48                ; object
   ;db   $35, $43                ; object
   ;db   $36, $49                ; object
-  db   $C2, $14, $0B           ; object
-  db   $25, $0B                ; object
+  
+  ; Pathway
+  ;db   $12, $0B
+  ;db   $86, $22, $0B
+  ;db   $C2, $57, $0B
+  ;db   $66, $0B
+
+  db   $16, $44                ; Flower
+  db   $24, $44                ; Flower
+
   db   $63, $36                ; object
   db   $64, $3C                ; object
   db   $74, $2E                ; object
@@ -263,7 +271,7 @@ Tutorial_Override_5::
   ;db   $56, $0B                ; object
   ;db   $83, $64, $0B           ; object
   
-  db   $27, $44                ; object
+  db   $27, $44                ; Flower
   db   $55, $44                ; object
 
   ; Left stairs

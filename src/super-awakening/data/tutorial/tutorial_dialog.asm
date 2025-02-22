@@ -61,7 +61,7 @@ Tutorial_Dialog_6::
     db "powers!         "
 
     db "Be warned young "
-    db "lad, this island"
+    db "lad, this place "
     db "is a secret to  "
     db "everybody.      "
 
@@ -78,4 +78,6 @@ Tutorial_Dialog_6::
     db "adventure!@"
 
 Tutorial_Dialog_Signpost_1::
-    db "  <up> Free Play@"
+    ;db "  <up> Free Play@"
+    db "  <up>  Koholint   "
+    db "      Island   @"
