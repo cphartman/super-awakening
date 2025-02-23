@@ -5,7 +5,7 @@ Tutorial_Dialog_1::
     db "I will teach you"
     db "to awaken your  "
     db "SUPER powers on "
-    db "on this island! "
+    db "this island!    "
     
     db "Press the A or B"
     db "Buttons to use  "
