@@ -245,8 +245,14 @@ SuperAwakening_Tutorial_Entities::
     jp nz, .quit_if_entering_dungeon_end
 
 .do_exit
+    
+    ; Kill link
     ld a, 0
     ld [wHealth], a
+
+    ; Prevent dungeon message
+    ldh  [hDungeonTitleMessageCountdown], a
+    
     ld a, 1
     ld [wSuperAwakening.Tutorial_ForceQuit], a
 .quit_if_entering_dungeon_end
