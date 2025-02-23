@@ -68,3 +68,5 @@ MarinBeachTilemap::
 incbin "data/backgrounds/marin_beach.tilemap.encoded"
 SchulePaintingTilemap::
 incbin "data/backgrounds/schule_painting.tilemap.encoded"
+SuperAwakening_MenuFileSaveTilemap::
+incbin "data/backgrounds/menu_file_save_tutorial.tilemap.encoded"

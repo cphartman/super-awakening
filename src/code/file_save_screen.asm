@@ -102,9 +102,18 @@ FileSaveDelay1::
     jp   IncrementGameplaySubtypeAndReturn        ; $407C: $C3 $D6 $44
 
 FileSaveDelay2::
+    
+.SuperAwakening_SaveMenu
+    ; Skip if we've not in the tutorial save
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_SaveMenu_original
+    ld   a, TILEMAP_SUPERAWAKENING_MENU_FILE_SAVE                
+    jp .SuperAwakening_SaveMenu_end
+.SuperAwakening_SaveMenu_original
     ld   a, TILEMAP_MENU_FILE_SAVE                ; $407F: $3E $0D
+.SuperAwakening_SaveMenu_end
     ld   [wBGMapToLoad], a                        ; $4081: $EA $FF $D6
-
     ld   a, $FF                                   ; $4084: $3E $FF
     ld   [wWindowY], a                            ; $4086: $EA $9A $DB
     xor  a                                        ; $4089: $AF

@@ -38,4 +38,5 @@ TilemapsPointersTable::
 ._23 dw SchulePaintingTilemap            ; $7781
 ._24 dw EaglesTowerCollapseTilemap       ; $4DD4
 ._25 dw IntroSeaCGBTilemap               ; $6C37
+._26 dw SuperAwakening_MenuFileSaveTilemap
 

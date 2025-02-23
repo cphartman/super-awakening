@@ -136,6 +136,7 @@ TILEMAP_CREDITS_BEACH                equ $22
 TILEMAP_SCHULE_PAINTING              equ $23
 TILEMAP_EAGLES_TOWER_COLLAPSE        equ $24
 TILEMAP_INTRO_SEA_CGB                equ $25
+TILEMAP_SUPERAWAKENING_MENU_FILE_SAVE equ $26
 
 ; Value for overworld room objects
 OBJECT_SHORT_GRASS          equ $04
