@@ -204,6 +204,11 @@ OwlState0Handler::
     jp   z, ClearEntityStatus_06                  ; $68F3: $CA $DB $65
 
 .SuperAwakening_StartOwlMusic
+    ; Skip if we've not in the tutorial save
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_StartOwlMusic_end
+
     ldh  a, [hMapRoom]
     cp $B0
     jp z, .SuperAwakening_StartOwlMusic_end
@@ -212,6 +217,7 @@ OwlState0Handler::
 .SuperAwakening_StartOwlMusic_end
 
 jr_006_68F6:
+.StartOwlMusic
     ldh  a, [hDefaultMusicTrack]                  ; $68F6: $F0 $B0
     ld   hl, wEntitiesPrivateState1Table          ; $68F8: $21 $B0 $C2
     add  hl, bc                                   ; $68FB: $09
@@ -220,6 +226,7 @@ jr_006_68F6:
     ld   [wMusicTrackToPlay], a                   ; $68FF: $EA $68 $D3
     ldh  [hDefaultMusicTrack], a                  ; $6902: $E0 $B0
     ldh  [hDefaultMusicTrackAlt], a               ; $6904: $E0 $BD
+.StartOwlMusic_end
 
     ldh  a, [hMapRoom]                            ; $6906: $F0 $F6
     cp   UNKNOWN_ROOM_16                          ; $6908: $FE $16
@@ -355,14 +362,19 @@ OwlState4Handler::
     and  a                                        ; $69E4: $A7
     jr   nz, jr_006_6A05                          ; $69E5: $20 $1E
 
-    
-.SuperAwakening_StartOwlMusic
+
+.SuperAwakening_RestoreMusic
+    ; Skip if we've not in the tutorial save
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_RestoreMusic_end
+
     ldh  a, [hMapRoom]
     cp $B0
-    jp z, .SuperAwakening_StartOwlMusic_end
+    jp z, .SuperAwakening_RestoreMusic_end
     cp $F1
     jp nz, .return
-.SuperAwakening_StartOwlMusic_end
+.SuperAwakening_RestoreMusic_end
 
     ld   hl, wEntitiesPrivateState1Table          ; $69E7: $21 $B0 $C2
     add  hl, bc                                   ; $69EA: $09
