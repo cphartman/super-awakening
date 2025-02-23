@@ -1489,6 +1489,16 @@ jr_001_5DCC::
     ret                                           ; $5DE5: $C9
 
 SaveGameToFile::
+
+.SuperAwakening_Tutorial_PreventSave
+    ; Skip if we've not in the tutorial save
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_Tutorial_PreventSave_end
+    ret
+
+.SuperAwakening_Tutorial_PreventSave_end
+
     ld hl, SuperAwakening_Save
     call SuperAwakening_Trampoline.jumpTo3E
 

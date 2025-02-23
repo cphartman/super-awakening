@@ -34,9 +34,7 @@ LinkPassOutHandler::
     jp nz, .SuperAwakening_Tutorial_QuitToMenu_end
 
     ; Do quit
-    xor  a                                        ; $432F: $AF ; $432F: $AF
-    ldh  [hActiveEntityTilesOffset], a            ; $4330: $E0 $F5 ; $4330: $E0 $F5
-    call func_001_6162                            ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
+    jp SaveAndQuit                            ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
     ret
 
 .SuperAwakening_Tutorial_QuitToMenu_end
@@ -201,7 +199,7 @@ GameOverInteractiveHandler::
 
     ld   a, [wC13F]                               ; $42E2: $FA $3F $C1 ; $42E2: $FA $3F $C1
     cp   $01                                      ; $42E5: $FE $01 ; $42E5: $FE $01
-    jr   z, jr_001_432C                           ; $42E7: $28 $43 ; $42E7: $28 $43
+    jr   z, SaveAndQuit                           ; $42E7: $28 $43 ; $42E7: $28 $43
 
     cp   $00                                      ; $42E9: $FE $00 ; $42E9: $FE $00
     jr   z, .jr_42F2                              ; $42EB: $28 $05 ; $42EB: $28 $05
@@ -241,7 +239,7 @@ jr_001_42F5::
     ld   [wInvincibilityCounter], a               ; $4328: $EA $C7 $DB ; $4328: $EA $C7 $DB
     ret                                           ; $432B: $C9 ; $432B: $C9
 
-jr_001_432C::
+SaveAndQuit::
     call SaveGameToFile                           ; $432C: $CD $E6 $5D ; $432C: $CD $E6 $5D
     xor  a                                        ; $432F: $AF ; $432F: $AF
     ldh  [hActiveEntityTilesOffset], a            ; $4330: $E0 $F5 ; $4330: $E0 $F5
