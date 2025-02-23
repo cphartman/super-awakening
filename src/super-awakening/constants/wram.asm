@@ -71,3 +71,6 @@ wSuperAwakening::
 
 .Tutotial_FileText:
   ds 11
+
+.Tutorial_ForceQuit:
+  ds 1

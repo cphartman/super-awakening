@@ -140,4 +140,20 @@
 
 .tutorial_check_disable_select_end
 
+.tutotial_check_diable_directions
+
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and TUTORIAL_DISABLE_DIRECTIONS
+    jp z, .tutorial_disable_buttons_end
+
+    ld a, [hJoypadState]
+    and (~ (J_UP | J_DOWN | J_LEFT | J_RIGHT ) )
+    ld [hJoypadState], a
+
+    ld a, [hPressedButtonsMask]
+    and (~ (J_UP | J_DOWN | J_LEFT | J_RIGHT ) )
+    ld [hPressedButtonsMask], a
+
+.tutotial_check_diable_directions_end
+
 .tutorial_disable_buttons_end

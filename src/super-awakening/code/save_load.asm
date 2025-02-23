@@ -3,12 +3,14 @@ SuperAwakening_Load::
 .initialize_tutorial_flags
     ld a, [wSaveSlot]
     cp TUTORIAL_SAVE_SLOT
+    ; Probably need to turn off flags too otherwise they could carry into a subsequent load?
     jp nz, .initialize_tutorial_flags_end
 
     ld a, TUTORIAL_STARTING_FLAGS
     ld [wSuperAwakening.Tutorial_Status], a
 
-; Probably need to turn off flags too otherwise they could carry into a subsequent load?
+    ld a, 0
+    ld [wSuperAwakening.Tutorial_ForceQuit], a
 
     ld hl, wSuperAwakening.Items_Hidden
     ; Show first 4 items

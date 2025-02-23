@@ -24,8 +24,11 @@ TUTORIAL_DISABLE_QUICK_DASH     = $04
 TUTORIAL_DISABLE_START          = $08
 TUTORIAL_DISABLE_SELECT         = $10
 TUTORIAL_HAS_OWL_OVERRIDE_TILES = $20
+TUTORIAL_DISABLE_DIRECTIONS     = $40
 
-TUTORIAL_STARTING_FLAGS = ( TUTORIAL_DISABLE_RL | TUTORIAL_DISABLE_QUICK_LIFT | TUTORIAL_DISABLE_QUICK_DASH | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_SELECT | TUTORIAL_HAS_OWL_OVERRIDE_TILES)
+TUTORIAL_STARTING_FLAGS = ( TUTORIAL_DISABLE_RL | TUTORIAL_DISABLE_QUICK_LIFT | TUTORIAL_DISABLE_QUICK_DASH | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_START | TUTORIAL_DISABLE_SELECT | TUTORIAL_HAS_OWL_OVERRIDE_TILES | TUTORIAL_DISABLE_DIRECTIONS)
+
+ALL_DUENGON_MAP_IDS = (MAP_TAIL_CAVE | MAP_BOTTLE_GROTTO | MAP_KEY_CAVERN | MAP_ANGLERS_TUNNEL | MAP_CATFISHS_MAW | MAP_FACE_SHRINE | MAP_EAGLES_TOWER | MAP_TURTLE_ROCK | MAP_WINDFISHS_EGG )
 
 ; Sets [bc] to the room list to load
 ; Also, configres any tutorial status flags on room load
@@ -38,7 +41,9 @@ SuperAwakening_Tutorial_Room::
 
     ; Check if we need to run cleanup
     cp TUTORIAL_HAS_OWL_OVERRIDE_TILES
-    jp nz, .tutorial_room_override
+    jp z, .tutorial_reset
+
+    jp .tutorial_room_override
 
 .tutorial_reset
     ; Need to restore [bc] after this
@@ -224,6 +229,28 @@ SuperAwakening_Tutorial_Room::
 
 ; Set [bc] to the entity list to load
 SuperAwakening_Tutorial_Entities::
+
+    ; Skip if we've not in the tutorial save
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .return
+
+.quit_if_entering_dungeon
+    ld a, [wIsIndoor]
+    cp 1
+    jp nz, .quit_if_entering_dungeon_end
+
+    ld a, [hMapId]
+    and ALL_DUENGON_MAP_IDS
+    jp nz, .quit_if_entering_dungeon_end
+
+.do_exit
+    ld a, 0
+    ld [wHealth], a
+    ld a, 1
+    ld [wSuperAwakening.Tutorial_ForceQuit], a
+.quit_if_entering_dungeon_end
+
     ; Skip if we've completed the tutorial
     ld a, wSuperAwakening.Tutorial_Status
     cp 0
@@ -320,6 +347,12 @@ SuperAwakening_Tutorial_Dialog::
     ; Make link look up
     ld a, $04
     ld [hLinkAnimationState], a
+
+    ; Enable movement
+    ld a, [wSuperAwakening.Tutorial_Status]
+    and (~TUTORIAL_DISABLE_DIRECTIONS)
+    ld [wSuperAwakening.Tutorial_Status], a
+
     ;; End Cutscene code
     
     ld a, TUTORIAL_DIALOG_INDEX_1

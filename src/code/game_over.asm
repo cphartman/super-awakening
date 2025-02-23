@@ -23,6 +23,24 @@ Data_001_41E7::
     db   $10, $10, $10, $10                       ; $41FF ; $41FF
 
 LinkPassOutHandler::
+
+.SuperAwakening_Tutorial_QuitToMenu
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_Tutorial_QuitToMenu_end
+    
+    ld a, [wSuperAwakening.Tutorial_ForceQuit]
+    cp 1
+    jp nz, .SuperAwakening_Tutorial_QuitToMenu_end
+
+    ; Do quit
+    xor  a                                        ; $432F: $AF ; $432F: $AF
+    ldh  [hActiveEntityTilesOffset], a            ; $4330: $E0 $F5 ; $4330: $E0 $F5
+    call func_001_6162                            ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
+    ret
+
+.SuperAwakening_Tutorial_QuitToMenu_end
+
     xor  a                                        ; $4203: $AF ; $4203: $AF
     ld   [wScreenShakeHorizontal], a              ; $4204: $EA $55 $C1 ; $4204: $EA $55 $C1
     ld   [wScreenShakeVertical], a                ; $4207: $EA $56 $C1 ; $4207: $EA $56 $C1
@@ -111,6 +129,23 @@ LinkPassOutHandler::
     ret                                           ; $4290: $C9 ; $4290: $C9
 
 LoadGameOverStage1Handler::
+    
+    .SuperAwakening_Tutorial_QuitToMenu
+    ld a, [wSaveSlot]
+    cp TUTORIAL_SAVE_SLOT
+    jp nz, .SuperAwakening_Tutorial_QuitToMenu_end
+
+    ld a, 0
+    ld [wSuperAwakening.Tutorial_Status], a
+    ld [wSuperAwakening.Tutorial_ForceQuit], a
+
+    ; Do quit
+    xor  a                                        ; $432F: $AF ; $432F: $AF
+    ldh  [hActiveEntityTilesOffset], a            ; $4330: $E0 $F5 ; $4330: $E0 $F5
+    call func_001_6162                            ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
+    ret
+
+.SuperAwakening_Tutorial_QuitToMenu_end
     ld   a, TILESET_SAVE_MENU                     ; $4291: $3E $0D ; $4291: $3E $0D
     ld   [wTilesetToLoad], a                      ; $4293: $EA $FE $D6 ; $4293: $EA $FE $D6
     ld   hl, hGameOverStage                       ; $4296: $21 $9C $FF ; $4296: $21 $9C $FF
@@ -157,8 +192,10 @@ LoadGameOverStage3Handler::
     ret                                           ; $42D8: $C9 ; $42D8: $C9
 
 GameOverInteractiveHandler::
+
     call func_001_4339                            ; $42D9: $CD $39 $43 ; $42D9: $CD $39 $43
     ldh  a, [hJoypadState]                        ; $42DC: $F0 $CC ; $42DC: $F0 $CC
+    
     and  J_A | J_B | J_START                      ; $42DE: $E6 $B0 ; $42DE: $E6 $B0
     jr   z, ret_001_4335                          ; $42E0: $28 $53 ; $42E0: $28 $53
 
