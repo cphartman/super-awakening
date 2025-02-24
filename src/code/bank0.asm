@@ -1316,7 +1316,11 @@ presentSaveScreenIfNeeded::
 
     ; If not all A + B + Start + Select buttons are pressed
     ldh  a, [hPressedButtonsMask]                 ; $0E61: $F0 $CB
-    cp   J_A | J_B | J_START | J_SELECT           ; $0E63: $FE $F0
+    ; cp   J_A | J_B | J_START | J_SELECT           ; $0E63: $FE $F0
+.SuperAwakening_PauseKey
+    and (J_START | J_SELECT)
+    cp (J_START | J_SELECT)
+.SuperAwakening_PauseKey_end
     jr   nz, jumpToGameplayHandler                ; $0E65: $20 $1E
 
     ; If wD474 != 0
