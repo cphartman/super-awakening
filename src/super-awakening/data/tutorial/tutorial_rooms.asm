@@ -178,26 +178,26 @@ Tutorial_Override_4::
   db   $89, $31, $2F           ; object
   db   $89, $41, $3A           ; object
   db   $37, $48                ; object
-  db   $C2, $37, $E0           ; object
+  db   $C2, $36, $E0           ; object
   db   $39, $49                ; object
   ;db   $34, $48                ; object
   ;db   $35, $43                ; object
   ;db   $36, $49                ; object
   
   ; Pathway
-  ;db   $12, $0B
-  ;db   $86, $22, $0B
-  ;db   $C2, $57, $0B
+  db   $12, $0B
+  db   $85, $22, $0B
+  db   $C2, $56, $0B
   ;db   $66, $0B
 
-  db   $16, $44                ; Flower
-  db   $24, $44                ; Flower
+  db   $28, $44                ; Flower
+  db   $15, $44                ; Flower
 
   db   $63, $36                ; object
   db   $64, $3C                ; object
   db   $74, $2E                ; object
   db   $75, $48                ; object
-  db   $76, $4A                ; object
+  db   $76, $43                ; object
   db   $77, $49                ; object
   db   $82, $78, $2F           ; object
 
@@ -205,9 +205,10 @@ Tutorial_Override_4::
    ;db   $54, $4E
 
    ; Open chest       
+  db   $53, $A1
   db   $54, $A1
-  db   $55, $A1
-  db   $56, $A1
+  ;db   $55, $A1
+  ;db   $56, $A1
 
   ; Bottom tree
   db   $58, $F5
@@ -270,6 +271,11 @@ Tutorial_Override_5::
   ;db   $C2, $16, $0B           ; object
   ;db   $56, $0B                ; object
   ;db   $83, $64, $0B           ; object
+
+    ; Pathway
+  db   $C3, $42, $0B           ; object
+  db   $C3, $05, $0B           ; object
+  
   
   db   $27, $44                ; Flower
   db   $55, $44                ; object
