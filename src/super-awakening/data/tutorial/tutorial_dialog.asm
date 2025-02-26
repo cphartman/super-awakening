@@ -27,7 +27,7 @@ Tutorial_Dialog_2::
 Tutorial_Dialog_3::
     
     db "To quickly lift "
-    db "a rock, push it "
+    db "a stone, push it"
 
     db "and hold the    "
     db "X or Y Button.  "

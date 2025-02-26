@@ -177,9 +177,9 @@ Tutorial_Override_4::
   db   $40, $3E                ; object
   db   $89, $31, $2F           ; object
   db   $89, $41, $3A           ; object
-  db   $37, $48                ; object
+  db   $35, $48                ; object
   db   $C2, $36, $E0           ; object
-  db   $39, $49                ; object
+  db   $37, $49                ; object
   ;db   $34, $48                ; object
   ;db   $35, $43                ; object
   ;db   $36, $49                ; object
