@@ -43,3 +43,8 @@
 
 **Actual Results:**
 * Owl sprite not shown **OR** Owl sprite not corrupted
+
+---
+
+South beach upgrade bat has enemies?
+Woods upgrade bay has enemies?

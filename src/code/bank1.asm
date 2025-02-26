@@ -1454,38 +1454,68 @@ BuildSaveSlotHeartsDrawCommand::
 .return::
     ret                                           ; $5DBF: $C9
 
-; Setup save file menu?
-func_5DC0::
+; Update bit 1,2,3 of wSaveFileCount if there is a save file for save slots 1,2,3
+;
+; Logically equivalent to:
+;   b = 1;
+;   for( c = 0; c < 16; c++ ) {
+;       if( wSaveSlotNames[c] != 0 ) {
+;           wSaveFilesCount |= b;
+;       }
+;       if( c == 5 ) b = 2;
+;       if( c == 10 ) b = 4;
+;     }
+;   }
+Update_wSaveFileCount::
+    ; wSaveFilesCount = 0 
     xor  a                                        ; $5DC0: $AF
     ld   de, wSaveFilesCount                      ; $5DC1: $11 $A7 $DB
     ld   [de], a                                  ; $5DC4: $12
-    ld   b, $01                                   ; $5DC5: $06 $01
+
+    ld   b, $01
     ld   c, $00                                   ; $5DC7: $0E $00
     ld   hl, wSaveSlotNames                       ; $5DC9: $21 $80 $DB
 
+; Loop characters in wSaveSlotNames 
 jr_001_5DCC::
+    ; If character != 0
     ld   a, [hli]                                 ; $5DCC: $2A
     and  a                                        ; $5DCD: $A7
     jr   z, .jr_5DD3                              ; $5DCE: $28 $03
+
+    ; [wSaveFilesCount] = [wSaveFilesCount] | b
     ld   a, [de]                                  ; $5DD0: $1A
     or   b                                        ; $5DD1: $B0
     ld   [de], a                                  ; $5DD2: $12
 
 .jr_5DD3::
+    ; if c != 5
+    ; 5th character is the start of the 2nd save slot name
     inc  c                                        ; $5DD3: $0C
     ld   a, c                                     ; $5DD4: $79
     cp   $05                                      ; $5DD5: $FE $05
     jr   nz, .jr_5DDB                             ; $5DD7: $20 $02
+
+    ; b = 2
     ld   b, $02                                   ; $5DD9: $06 $02
 
 .jr_5DDB::
+    ; if c != 10
+    ; 10th character is the start of the 3rd save slot name
     cp   $0A                                      ; $5DDB: $FE $0A
     jr   nz, .jr_5DE1                             ; $5DDD: $20 $02
+    
+    ; b = 4
     ld   b, $04                                   ; $5DDF: $06 $04
 
 .jr_5DE1::
-    cp   $0F                                      ; $5DE1: $FE $0F
+    ; if c != 16, then loop
+    ;cp   $0F                                      ; $5DE1: $FE $0F
+    ;jr   nz, jr_001_5DCC                          ; $5DE3: $20 $E7
+.SuperAwakening_DoNotCountSaveSlot3
+    cp   $0A                                      ; $5DE1: $FE $0F
     jr   nz, jr_001_5DCC                          ; $5DE3: $20 $E7
+.SuperAwakening_DoNotCountSaveSlot3_end
     ret                                           ; $5DE5: $C9
 
 SaveGameToFile::

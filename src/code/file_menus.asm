@@ -15,7 +15,7 @@
 NameEntryCharacterTableSize equs "(NameEntryCharacterTable.end - NameEntryCharacterTable)"
 
 FileSelectionEntryPoint::
-    call func_5DC0                                ; $47CE: $CD $C0 $5D
+    call Update_wSaveFileCount                                ; $47CE: $CD $C0 $5D
     ld   a, [wGameplaySubtype]                    ; $47D1: $FA $96 $DB
     JP_TABLE                                      ; $47D4: $C7
 ._00 dw FileSelectionPrepare0                     ; $47D5
@@ -96,7 +96,13 @@ CopyDeathCountsToBG::
     ret                                           ; $484E: $C9
 
 FileSelectionPrepare5::
-    jp   FileDeletionState4Handler                ; $484F: $C3 $6D $4D
+    ; This was common to save and copy, but we don't want to show the 3rd slot for copy
+    ;jp   FileDeletionState4Handler                ; $484F: $C3 $6D $4D
+
+    call DrawSaveSlot1Name                        ; $4D6D: $CD $8B $4D ; $4D6D: $CD $8B $4D
+    call DrawSaveSlot2Name                        ; $4D70: $CD $94 $4D ; $4D70: $CD $94 $4D
+    call DrawSaveSlot3Name                        ; $4D73: $CD $9D $4D ; $4D73: $CD $9D $4D
+    jp   IncrementGameplaySubtypeAndReturn        ; $4D76: $C3 $D6 $44 ; $4D76: $C3 $D6 $44
 
 ; [bc] = Destination
 ; [de] = String
@@ -252,12 +258,14 @@ ENDC
     call LoadFileMenuBG_trampoline                ; $48DE: $CD $05 $09
     jp   IncrementGameplaySubtypeAndReturn        ; $48E1: $C3 $D6 $44
 
-Data_001_48E4::
+MenuRowPositionY::
+    db $3B, $53, $6B, $83
+/*
     dec  sp                                       ; $48E4: $3B
     ld   d, e                                     ; $48E5: $53
     ld   l, e                                     ; $48E6: $6B
     add  a, e                                     ; $48E7: $83
-
+*/
 IF LANG_DE
 Data_001_48EB:
     ; bg copy requests
@@ -268,7 +276,8 @@ Data_001_48EB:
 ENDC
 
 
-
+; wSaveSlot - Which row to show the cursor
+; wIsFileSelectionArrowShifted - Which column to show the cursor for the ERASE/COPY row
 FileSelectionInteractiveHandler::
 IF LANG_DE
     ldh a, [hLinkInteractiveMotionBlocked]
@@ -291,65 +300,94 @@ ENDC
 
 .start
     call MoveSelect                               ; $48E8: $CD $A8 $6B
+    
+    ; If not A or START pressed
     ldh  a, [hJoypadState]                        ; $48EB: $F0 $CC
     and  J_A | J_START                            ; $48ED: $E6 $90
     jr   z, .jr_48F4                              ; $48EF: $28 $03
     jp   IncrementGameplaySubtypeAndReturn        ; $48F1: $C3 $D6 $44
 
 .jr_48F4::
+    ; If not UP or DOWN pressed
     ldh  a, [hJoypadState]                        ; $48F4: $F0 $CC
     and  J_UP | J_DOWN                            ; $48F6: $E6 $0C
-    jr   z, jr_001_4920                           ; $48F8: $28 $26
+    jr   z, .CheckForCursorChangeOnEraseCopyRow
+    ; else 
+
+    ; c is the number of menu rows
     ld   c, $02                                   ; $48FA: $0E $02
+    
+    ; If no save files
     ld   a, [wSaveFilesCount]                     ; $48FC: $FA $A7 $DB
     and  a                                        ; $48FF: $A7
-    jr   z, .jr_4903                              ; $4900: $28 $01
-    inc  c                                        ; $4902: $0C
+    jr   z, .CheckForCursorWrapBottom
+    
+    ; If there is an existing save slot, 
+    ; there will be an additional menu row
+    ; for ERASE/COPY
+    inc  c
 
-.jr_4903::
+.CheckForCursorWrapBottom
+    ; If not UP pressed
     ldh  a, [hJoypadState]                        ; $4903: $F0 $CC
     bit  J_BIT_UP, a                              ; $4905: $CB $57
-    jr   nz, .jr_4915                             ; $4907: $20 $0C
+    jr   nz, .CheckForCursorWrapTop                             ; $4907: $20 $0C
+    
+    ; if cursor row > total menu rows
     ld   a, [wSaveSlot]                           ; $4909: $FA $A6 $DB
     add  a, $01                                   ; $490C: $C6 $01
     inc  c                                        ; $490E: $0C
     cp   c                                        ; $490F: $B9
-    jr   c, jr_001_491D                           ; $4910: $38 $0B
+    jr   c, .UpdateSaveSlotValueFromCursor
+    
+    ; reset cursor to row 0
     xor  a                                        ; $4912: $AF
-    jr   jr_001_491D                              ; $4913: $18 $08
+    jr   .UpdateSaveSlotValueFromCursor
 
-.jr_4915::
+.CheckForCursorWrapTop
+    ; If cursor is not the first row
     ld   a, [wSaveSlot]                           ; $4915: $FA $A6 $DB
     sub  a, $01                                   ; $4918: $D6 $01
-    jr   nc, jr_001_491D                          ; $491A: $30 $01
+    jr   nc, .UpdateSaveSlotValueFromCursor
+
+    ; Set cursor to last row
     ld   a, c                                     ; $491C: $79
 
-jr_001_491D::
+.UpdateSaveSlotValueFromCursor
     ld   [wSaveSlot], a                           ; $491D: $EA $A6 $DB
 
-jr_001_4920::
+.CheckForCursorChangeOnEraseCopyRow::
+    ; If the cursor is not on ERASE/COPY row
     ld   a, [wSaveSlot]                           ; $4920: $FA $A6 $DB
     cp   $03                                      ; $4923: $FE $03
     jr   nz, func_001_4954                        ; $4925: $20 $2D
+    
+    ; If not RIGHT or LEFT pressed
     ldh  a, [hJoypadState]                        ; $4927: $F0 $CC
     and  J_RIGHT | J_LEFT                         ; $4929: $E6 $03
-    jr   z, .jr_4938                              ; $492B: $28 $0B
+    jr   z, .MaybeShowArrowCursor                              ; $492B: $28 $0B
+
+    ; Switch cursor to other column
     call MoveSelect.playMoveSelectionJingle       ; $492D: $CD $AE $6B
     ld   a, [wIsFileSelectionArrowShifted]        ; $4930: $FA $00 $D0
     xor  $01                                      ; $4933: $EE $01
     ld   [wIsFileSelectionArrowShifted], a        ; $4935: $EA $00 $D0
 
-.jr_4938::
+.MaybeShowArrowCursor::
+    ; If frame counter is multiple of 16 (ie: every ~1/4 second)
+    ; This is causes the arrow to blink
     ldh  a, [hFrameCounter]                       ; $4938: $F0 $E7
     and  $10                                      ; $493A: $E6 $10
     jr   nz, func_001_4954                        ; $493C: $20 $16
+
+    ; load cursor position to [a]
     ld   a, [wIsFileSelectionArrowShifted]        ; $493E: $FA $00 $D0
     and  a                                        ; $4941: $A7
     ld   a, FILE_2C                               ; $4942: $3E $2C
-    jr   z, .jr_4948                              ; $4944: $28 $02
+    jr   z, .ShowArrowCursor                              ; $4944: $28 $02
     ld   a, FILE_64                               ; $4946: $3E $64
 
-.jr_4948::
+.ShowArrowCursor::
     ld   hl, wOAMBuffer + $8 ; Arrow sprite              ; $4948: $21 $08 $C0
     ld   [hl], $88 ; y                            ; $494B: $36 $88
     inc  hl                                       ; $494D: $23
@@ -359,12 +397,17 @@ jr_001_4920::
     xor  a                                        ; $4952: $AF
     ld   [hl], a                                  ; $4953: $77
 
+; Probably draw link sprite on the menu
 func_001_4954::
+    ; Get the current row Y position
     ld   a, [wSaveSlot]                           ; $4954: $FA $A6 $DB
     ld   e, a                                     ; $4957: $5F
     ld   d, $00                                   ; $4958: $16 $00
-    ld   hl, Data_001_48E4                        ; $495A: $21 $E4 $48
+    ld   hl, MenuRowPositionY                        ; $495A: $21 $E4 $48
     add  hl, de                                   ; $495D: $19
+
+    ; If frame counter is multiple of 8 (ie: every ~1/8 second)
+    ; Probably updates link's sprite
     ldh  a, [hFrameCounter]                       ; $495E: $F0 $E7
     and  $08                                      ; $4960: $E6 $08
     jr   z, .jr_497B                              ; $4962: $28 $17
@@ -387,6 +430,7 @@ func_001_4954::
     ld   [hl], a                                  ; $4979: $77
     ret                                           ; $497A: $C9
 
+; Probably update links sprite (alternate frame)
 .jr_497B::
     ld   a, [hl]                                  ; $497B: $7E
     ld   hl, wOAMBuffer                           ; $497C: $21 $00 $C0
@@ -945,7 +989,7 @@ func_001_4CDA::
 
 
 FileDeletionEntryPoint::
-    call func_5DC0                                ; $4CFB: $CD $C0 $5D
+    call Update_wSaveFileCount                                ; $4CFB: $CD $C0 $5D
     ld   a, [wGameplaySubtype]                    ; $4CFE: $FA $96 $DB
     JP_TABLE                                      ; $4D01: $C7
 ._00 dw FileDeletionState0Handler                 ; $4D02
@@ -961,10 +1005,11 @@ FileDeletionEntryPoint::
 ._0A dw FileDeletionState10Handler                ; $4D16
 ._0B dw FileDeletionState11Handler                ; $4D18
 
+; GBC only
 FileDeletionState0Handler::
     ldh  a, [hIsGBC]                              ; $4D1A: $F0 $FE ; $4D1A: $F0 $FE
     and  a                                        ; $4D1C: $A7 ; $4D1C: $A7
-    jr   z, jr_001_4D53                           ; $4D1D: $28 $34 ; $4D1D: $28 $34
+    jr   z, DoIncrementGameplaySubtypeAndReturn                           ; $4D1D: $28 $34 ; $4D1D: $28 $34
 
     ld   a, $01                                   ; $4D1F: $3E $01 ; $4D1F: $3E $01
     call ClearFileMenuBG_trampoline               ; $4D21: $CD $FA $08 ; $4D21: $CD $FA $08
@@ -972,34 +1017,37 @@ FileDeletionState0Handler::
     ld   [wPaletteDataFlags], a                   ; $4D26: $EA $D1 $DD ; $4D26: $EA $D1 $DD
     jp   IncrementGameplaySubtypeAndReturn        ; $4D29: $C3 $D6 $44 ; $4D29: $C3 $D6 $44
 
+; GBC only
 FileDeletionState1Handler::
     ldh  a, [hIsGBC]                              ; $4D2C: $F0 $FE ; $4D2C: $F0 $FE
     and  a                                        ; $4D2E: $A7 ; $4D2E: $A7
-    jr   z, jr_001_4D53                           ; $4D2F: $28 $22 ; $4D2F: $28 $22
+    jr   z, DoIncrementGameplaySubtypeAndReturn                           ; $4D2F: $28 $22 ; $4D2F: $28 $22
 
     ld   a, $02                                   ; $4D31: $3E $02 ; $4D31: $3E $02
     ld   [wPaletteDataFlags], a                   ; $4D33: $EA $D1 $DD ; $4D33: $EA $D1 $DD
     jp   IncrementGameplaySubtypeAndReturn        ; $4D36: $C3 $D6 $44 ; $4D36: $C3 $D6 $44
 
+; GBC only
 FileDeletionState8Handler::
     ldh  a, [hIsGBC]                              ; $4D39: $F0 $FE ; $4D39: $F0 $FE
     and  a                                        ; $4D3B: $A7 ; $4D3B: $A7
-    jr   z, jr_001_4D53                           ; $4D3C: $28 $15 ; $4D3C: $28 $15
+    jr   z, DoIncrementGameplaySubtypeAndReturn                           ; $4D3C: $28 $15 ; $4D3C: $28 $15
 
     call LoadFileMenuBG_trampoline                ; $4D3E: $CD $05 $09 ; $4D3E: $CD $05 $09
     ld   a, $01                                   ; $4D41: $3E $01 ; $4D41: $3E $01
     ld   [wPaletteDataFlags], a                   ; $4D43: $EA $D1 $DD ; $4D43: $EA $D1 $DD
     jp   IncrementGameplaySubtypeAndReturn        ; $4D46: $C3 $D6 $44 ; $4D46: $C3 $D6 $44
 
+; GBC only
 FileDeletionState9Handler::
     ldh  a, [hIsGBC]                              ; $4D49: $F0 $FE ; $4D49: $F0 $FE
     and  a                                        ; $4D4B: $A7 ; $4D4B: $A7
-    jr   z, jr_001_4D53                           ; $4D4C: $28 $05 ; $4D4C: $28 $05
+    jr   z, DoIncrementGameplaySubtypeAndReturn                           ; $4D4C: $28 $05 ; $4D4C: $28 $05
 
     ld   a, $02                                   ; $4D4E: $3E $02 ; $4D4E: $3E $02
     ld   [wPaletteDataFlags], a                   ; $4D50: $EA $D1 $DD ; $4D50: $EA $D1 $DD
 
-jr_001_4D53::
+DoIncrementGameplaySubtypeAndReturn::
     jp   IncrementGameplaySubtypeAndReturn        ; $4D53: $C3 $D6 $44 ; $4D53: $C3 $D6 $44
 
 FileDeletionState2Handler::
@@ -1018,7 +1066,7 @@ FileDeletionState3Handler::
 FileDeletionState4Handler::
     call DrawSaveSlot1Name                        ; $4D6D: $CD $8B $4D ; $4D6D: $CD $8B $4D
     call DrawSaveSlot2Name                        ; $4D70: $CD $94 $4D ; $4D70: $CD $94 $4D
-    call DrawSaveSlot3Name                        ; $4D73: $CD $9D $4D ; $4D73: $CD $9D $4D
+    ;call DrawSaveSlot3Name                        ; $4D73: $CD $9D $4D ; $4D73: $CD $9D $4D
     jp   IncrementGameplaySubtypeAndReturn        ; $4D76: $C3 $D6 $44 ; $4D76: $C3 $D6 $44
 
 FileDeletionState5Handler::
@@ -1027,7 +1075,7 @@ FileDeletionState5Handler::
     jp   IncrementGameplaySubtypeAndReturn        ; $4D7F: $C3 $D6 $44 ; $4D7F: $C3 $D6 $44
 
 FileDeletionState6Handler::
-    call DrawSaveSlot3MaxHearts                   ; $4D82: $CD $D6 $4D ; $4D82: $CD $D6 $4D
+    ;call DrawSaveSlot3MaxHearts                   ; $4D82: $CD $D6 $4D ; $4D82: $CD $D6 $4D
     jp   IncrementGameplaySubtypeAndReturn        ; $4D85: $C3 $D6 $44 ; $4D85: $C3 $D6 $44
 
 FileDeletionState7Handler::
@@ -1047,25 +1095,25 @@ DrawSaveSlot3Name::
     ld hl, wSuperAwakening.Tutotial_FileText
     ld a, "H"+1
     ld [hli], a
-    ld a, "o"+1
+    ld a, "O"+1
     ld [hli], a
-    ld a, "w"+1
-    ld [hli], a
-    ld a, " "+1
-    ld [hli], a
-    ld a, "t"+1
-    ld [hli], a
-    ld a, "o"+1
+    ld a, "W"+1
     ld [hli], a
     ld a, " "+1
     ld [hli], a
-    ld a, "p"+1
+    ld a, "T"+1
     ld [hli], a
-    ld a, "l"+1
+    ld a, "O"+1
     ld [hli], a
-    ld a, "a"+1
+    ld a, " "+1
     ld [hli], a
-    ld a, "y"+1
+    ld a, "P"+1
+    ld [hli], a
+    ld a, "L"+1
+    ld [hli], a
+    ld a, "A"+1
+    ld [hli], a
+    ld a, "Y"+1
     ld [hli], a
 
 
@@ -1189,14 +1237,25 @@ Data_001_4DEE::
     db   $99, $05, $44, $7E, $99, $25, $44, $7E   ; $4DF6 ; $4DF6
     db   $99, $65, $44, $7E, $99, $85, $44, $7E   ; $4DFE ; $4DFE
 
+; Interactive handler
 FileDeletionState10Handler::
     call MoveSelect                               ; $4E06: $CD $A8 $6B
+    
+    ; If not down
     ldh  a, [hJoypadState]                        ; $4E09: $F0 $CC ; $4E09: $F0 $CC
     and  J_DOWN                                   ; $4E0B: $E6 $08 ; $4E0B: $E6 $08
     jr   z, .jr_4E18                              ; $4E0D: $28 $09 ; $4E0D: $28 $09
 
+    ; Increment save slot
     ld   a, [wSaveSlot]                           ; $4E0F: $FA $A6 $DB ; $4E0F: $FA $A6 $DB
     inc  a                                        ; $4E12: $3C ; $4E12: $3C
+; Skip over slot 2
+.SuperAwakening_DeleteMenu_SkipRowOnDown
+    cp $02
+    jp nz, .SuperAwakening_DeleteMenu_SkipRowOnDown_end
+    inc a
+.SuperAwakening_DeleteMenu_SkipRowOnDown_end
+    ; Set wSaveSlot = 0 if wSaveSlot == 4
     and  $03                                      ; $4E13: $E6 $03 ; $4E13: $E6 $03
     ld   [wSaveSlot], a                           ; $4E15: $EA $A6 $DB ; $4E15: $EA $A6 $DB
 
@@ -1207,6 +1266,11 @@ FileDeletionState10Handler::
 
     ld   a, [wSaveSlot]                           ; $4E1E: $FA $A6 $DB ; $4E1E: $FA $A6 $DB
     dec  a                                        ; $4E21: $3D ; $4E21: $3D
+.SuperAwakening_DeleteMenu_SkipRowOnUp
+    cp $02
+    jp nz, .SuperAwakening_DeleteMenu_SkipRowOnUp_end
+    dec a
+.SuperAwakening_DeleteMenu_SkipRowOnUp_end
     cp   $FF                                      ; $4E22: $FE $FF ; $4E22: $FE $FF
     jr   nz, .jr_4E28                             ; $4E24: $20 $02 ; $4E24: $20 $02
 
@@ -1589,9 +1653,9 @@ FileCopyState4Handler::
     ld   bc, $9924                                ; $4FCC: $01 $24 $99 ; $4FCC: $01 $24 $99
     ld   de, wSaveSlot2Name                       ; $4FCF: $11 $85 $DB ; $4FCF: $11 $85 $DB
     call DrawSaveSlotName                         ; $4FD2: $CD $52 $48 ; $4FD2: $CD $52 $48
-    ld   bc, $9984                                ; $4FD5: $01 $84 $99 ; $4FD5: $01 $84 $99
-    ld   de, wSaveSlot3Name                       ; $4FD8: $11 $8A $DB ; $4FD8: $11 $8A $DB
-    call DrawSaveSlotName                         ; $4FDB: $CD $52 $48 ; $4FDB: $CD $52 $48
+    ;ld   bc, $9984                                ; $4FD5: $01 $84 $99 ; $4FD5: $01 $84 $99
+    ;ld   de, wSaveSlot3Name                       ; $4FD8: $11 $8A $DB ; $4FD8: $11 $8A $DB
+    ;call DrawSaveSlotName                         ; $4FDB: $CD $52 $48 ; $4FDB: $CD $52 $48
     jp   IncrementGameplaySubtypeAndReturn        ; $4FDE: $C3 $D6 $44 ; $4FDE: $C3 $D6 $44
 
 FileCopyState5Handler::
@@ -1601,9 +1665,9 @@ FileCopyState5Handler::
     ld   bc, $992D                                ; $4FEA: $01 $2D $99 ; $4FEA: $01 $2D $99
     ld   de, wSaveSlot2Name                       ; $4FED: $11 $85 $DB ; $4FED: $11 $85 $DB
     call DrawSaveSlotName                         ; $4FF0: $CD $52 $48 ; $4FF0: $CD $52 $48
-    ld   bc, $998D                                ; $4FF3: $01 $8D $99 ; $4FF3: $01 $8D $99
-    ld   de, wSaveSlot3Name                       ; $4FF6: $11 $8A $DB ; $4FF6: $11 $8A $DB
-    call DrawSaveSlotName                         ; $4FF9: $CD $52 $48 ; $4FF9: $CD $52 $48
+    ;ld   bc, $998D                                ; $4FF3: $01 $8D $99 ; $4FF3: $01 $8D $99
+    ;ld   de, wSaveSlot3Name                       ; $4FF6: $11 $8A $DB ; $4FF6: $11 $8A $DB
+    ;call DrawSaveSlotName                         ; $4FF9: $CD $52 $48 ; $4FF9: $CD $52 $48
     jp   IncrementGameplaySubtypeAndReturn        ; $4FFC: $C3 $D6 $44 ; $4FFC: $C3 $D6 $44
 
 FileCopyState8Handler::
@@ -1614,6 +1678,11 @@ FileCopyState8Handler::
 
     ld   a, [wIntroTimer]                         ; $5008: $FA $01 $D0 ; $5008: $FA $01 $D0
     inc  a                                        ; $500B: $3C ; $500B: $3C
+.SuperAwakening_DeleteMenu_SkipRowOnDown
+    cp $02
+    jp nz, .SuperAwakening_DeleteMenu_SkipRowOnDown_end
+    inc a
+.SuperAwakening_DeleteMenu_SkipRowOnDown_end
     jr   jr_001_5018                              ; $500C: $18 $0A ; $500C: $18 $0A
 
 .jr_500E::
@@ -1623,6 +1692,12 @@ FileCopyState8Handler::
 
     ld   a, [wIntroTimer]                         ; $5014: $FA $01 $D0 ; $5014: $FA $01 $D0
     dec  a                                        ; $5017: $3D ; $5017: $3D
+; Skip over slot 2
+.SuperAwakening_DeleteMenu_SkipRowOnUp
+    cp $02
+    jp nz, .SuperAwakening_DeleteMenu_SkipRowOnUp_end
+    dec a
+.SuperAwakening_DeleteMenu_SkipRowOnUp_end
 
 jr_001_5018::
     and  $03                                      ; $5018: $E6 $03 ; $5018: $E6 $03
@@ -1689,7 +1764,7 @@ jr_001_5055::
     ld   a, [wIntroTimer]                         ; $5055: $FA $01 $D0 ; $5055: $FA $01 $D0
     ld   e, a                                     ; $5058: $5F ; $5058: $5F
     ld   d, $00                                   ; $5059: $16 $00 ; $5059: $16 $00
-    ld   hl, Data_001_48E4                        ; $505B: $21 $E4 $48 ; $505B: $21 $E4 $48
+    ld   hl, MenuRowPositionY                        ; $505B: $21 $E4 $48 ; $505B: $21 $E4 $48
     add  hl, de                                   ; $505E: $19 ; $505E: $19
     ldh  a, [hFrameCounter]                       ; $505F: $F0 $E7 ; $505F: $F0 $E7
     and  $08                                      ; $5061: $E6 $08 ; $5061: $E6 $08
@@ -1739,7 +1814,7 @@ func_001_5094::
     ld   a, [wIntroTimer]                         ; $5094: $FA $01 $D0 ; $5094: $FA $01 $D0
     ld   e, a                                     ; $5097: $5F ; $5097: $5F
     ld   d, $00                                   ; $5098: $16 $00 ; $5098: $16 $00
-    ld   hl, Data_001_48E4                        ; $509A: $21 $E4 $48 ; $509A: $21 $E4 $48
+    ld   hl, MenuRowPositionY                        ; $509A: $21 $E4 $48 ; $509A: $21 $E4 $48
     add  hl, de                                   ; $509D: $19 ; $509D: $19
     ld   a, [hl]                                  ; $509E: $7E ; $509E: $7E
     ld   hl, wOAMBuffer                           ; $509F: $21 $00 $C0 ; $509F: $21 $00 $C0
@@ -1763,6 +1838,7 @@ Data_001_50C7::
     db   $99, $0D, $44, $7E, $99, $2D, $44, $7E   ; $50CF ; $50CF
     db   $99, $6D, $44, $7E, $99, $8D, $44, $7E   ; $50D7 ; $50D7
 
+; Interactive Handler
 FileCopyState9Handler::
     call MoveSelect                               ; $50DF: $CD $A8 $6B
     ldh  a, [hJoypadState]                        ; $50E2: $F0 $CC ; $50E2: $F0 $CC
@@ -1771,9 +1847,16 @@ FileCopyState9Handler::
 
     ld   a, [wIntroSubTimer]                      ; $50E8: $FA $02 $D0 ; $50E8: $FA $02 $D0
     inc  a                                        ; $50EB: $3C ; $50EB: $3C
+    
+; Skip over slot 2
+.SuperAwakening_DeleteMenu_ChangeRows
+    cp $02
+    jp nz, .SuperAwakening_DeleteMenu_ChangeRows_end
+    inc a
+.SuperAwakening_DeleteMenu_ChangeRows_end
+    ; Set wIntroSubTimer = 0 if wIntroSubTimer == 4
     and  $03                                      ; $50EC: $E6 $03 ; $50EC: $E6 $03
     ld   [wIntroSubTimer], a                      ; $50EE: $EA $02 $D0 ; $50EE: $EA $02 $D0
-
 .jr_50F1::
     ldh  a, [hJoypadState]                        ; $50F1: $F0 $CC ; $50F1: $F0 $CC
     and  $04                                      ; $50F3: $E6 $04 ; $50F3: $E6 $04
@@ -1868,7 +1951,7 @@ func_001_5175::
     ld   a, [wIntroSubTimer]                      ; $5175: $FA $02 $D0 ; $5175: $FA $02 $D0
     ld   e, a                                     ; $5178: $5F ; $5178: $5F
     ld   d, $00                                   ; $5179: $16 $00 ; $5179: $16 $00
-    ld   hl, Data_001_48E4                        ; $517B: $21 $E4 $48 ; $517B: $21 $E4 $48
+    ld   hl, MenuRowPositionY                        ; $517B: $21 $E4 $48 ; $517B: $21 $E4 $48
     add  hl, de                                   ; $517E: $19 ; $517E: $19
     ld   a, [wIntroSubTimer]                      ; $517F: $FA $02 $D0 ; $517F: $FA $02 $D0
     cp   $03                                      ; $5182: $FE $03 ; $5182: $FE $03
@@ -1930,7 +2013,7 @@ func_001_51CE::
     ld   a, [wIntroSubTimer]                      ; $51CE: $FA $02 $D0 ; $51CE: $FA $02 $D0
     ld   e, a                                     ; $51D1: $5F ; $51D1: $5F
     ld   d, $00                                   ; $51D2: $16 $00 ; $51D2: $16 $00
-    ld   hl, Data_001_48E4                        ; $51D4: $21 $E4 $48 ; $51D4: $21 $E4 $48
+    ld   hl, MenuRowPositionY                        ; $51D4: $21 $E4 $48 ; $51D4: $21 $E4 $48
     add  hl, de                                   ; $51D7: $19 ; $51D7: $19
     ld   a, [hl]                                  ; $51D8: $7E ; $51D8: $7E
     ld   hl, wOAMBuffer+8                         ; $51D9: $21 $08 $C0 ; $51D9: $21 $08 $C0
