@@ -66,3 +66,21 @@ Owl tiles:
     RoomSpritesheetGroupsTable determines which tileset gets loaded into a room
     Tile rows 0D00-0Df0 and 0E00-0EF0 are used for instruments and dialog text
         Maybe we can hijack this for the owl on map B0
+
+Loading SGB BG:
+
+./superfamiconv -i src/super-awakening/snes/gfx/azle_000.png -t src/super-awakening/snes/gfx/azle_000.4bpp -m src/super-awakening/snes/gfx/azle_000.map -p src/super-awakening/snes/gfx/azle_000.pal --bpp 4 -W 8 -H 8 -v -P 4 -R
+
+Set the tiles to use palette 4: -P 4 
+Don't mess with palette order: -R
+
+# Expected map size is 2048
+truncate -s 2048 src/super-awakening/snes/gfx/azle_000.map
+
+# Copy bin to text files
+ython3 convertBinToText.py
+
+
+I think the -R with the palette generation is conflicting with the tile generation, need to split that into 2 commands?
+
+./superfamiconv palette -i src/super-awakening/snes/gfx/azle_000.png -d src/super-awakening/snes/gfx/azle_000.pal -W 8 -H 8 -v -P 4
