@@ -196,7 +196,7 @@ snes_source =  $(shell find src/super-awakening/snes/code     -type f -name '*.a
 #		snes_injection_data.vice => azle.mlb
 super-awakening/data/sgb_payload.smc: $(snes_source)
 	cl65 -C src/super-awakening/snes/code/smc.cfg -o src/super-awakening/data/sgb_payload.smc src/super-awakening/snes/code/update_loop.asm -g -Ln sgb_payload.vice
-#	cat snes_injection_data.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" > azle.mlb
+	cat sgb_payload.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" > azle.mlb
 
 src/super-awakening/bank3F.asm: super-awakening/data/sgb_payload.smc
 
