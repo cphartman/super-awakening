@@ -9,10 +9,20 @@
 INJECTION_START:
 
    .include "map-snes1-to-gb2.asm" 
-   ;.include "border-service.asm" 
+   .include "border-service.asm" 
 
 INJECTION_END:
    JML $00080C
+
+.include "wram.asm"
+.include "util.asm"
+
+tiles:
+.incbin "src/super-awakening/snes/gfx/azle_000.4bpp"
+tilemap_data:
+.incbin "src/super-awakening/snes/gfx/azle_000.map"
+palette:
+.incbin "src/super-awakening/snes/gfx/azle_000.pal"
 
 ; EOF marker for convert_sfc_to_packets.py
 .byte 0,0,0
