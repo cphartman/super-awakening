@@ -183,6 +183,7 @@ azle-r2_FXFLAGS = --rom-version 2 --non-japanese --title "ZELDA" --game-id "AZLE
 # SGB Injection
 #
 snes_source =  $(shell find src/super-awakening/snes/code     -type f -name '*.asm' -o -name '*.inc')
+snes_border_gfx =  $(shell find src/super-awakening/snes/code/gfx     -type f -name '*.png')
 #snes_assets =  $(shell find src/data/super_gameboy/injection_data     -type f -name '*.asm' -o -name '*.inc')
 
 # 1) Compile assets to SNES native formats

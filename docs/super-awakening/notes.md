@@ -69,7 +69,7 @@ Owl tiles:
 
 Loading SGB BG:
 
-./superfamiconv -i src/super-awakening/snes/gfx/azle_000.png -t src/super-awakening/snes/gfx/azle_000.4bpp -m src/super-awakening/snes/gfx/azle_000.map -p src/super-awakening/snes/gfx/azle_000.pal --bpp 4 -W 8 -H 8 -v -P 4 -R
+./superfamiconv -i src/super-awakening/snes/gfx/border_file_menu.png -t src/super-awakening/snes/gfx/border_file_menu.4bpp -m src/super-awakening/snes/gfx/border_file_menu.map -p src/super-awakening/snes/gfx/border_file_menu.pal --bpp 4 -W 8 -H 8 -v -P 4 -R
 
 Set the tiles to use palette 4: -P 4 
 Don't mess with palette order: -R
