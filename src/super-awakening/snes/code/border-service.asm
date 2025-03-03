@@ -1,5 +1,8 @@
 seta8
 
+; Border Service will load the tiles, palette, and tilemap into a BG over several frames 
+; Set [StartBorderLoad] = 1 to start the process
+; TODO: Allow reading from different borders and writing to different BGs
 
 Init:
     ; Backup flags and bank
@@ -17,16 +20,29 @@ Init:
     PLB         ; Pull into DBR (set data bank)
 
 BorderLoad_Check:
+    ; Are we trying to load a border?
+    lda StartBorderLoad
+    cmp #0
+    beq BorderLoad_StateCheck
+    
+BorderLoad_Init:
+    ; We are loading a new border
+    lda #0
+    sta StartBorderLoad
+    sta BorderLoadState
+    jmp BorderLoad_StateJump
 
+BorderLoad_StateCheck:
+    ; Are we currently loading a border?
     lda BorderLoadState
     cmp #0
-    bne BorderLoad_StateCheck
+    bne BorderLoad_StateJump
     
     ; No state
     jmp RETURN
 
-BorderLoad_StateCheck:
-
+BorderLoad_StateJump:
+    ; Jump to the curernt state
     LDX BorderLoadState
     LDA JumpTable_Low,X
     STA $00  ; Store low byte
@@ -36,34 +52,27 @@ BorderLoad_StateCheck:
     STA $02  ; Store bank byte
 
     JML [$00]
-    ;JMP [state_variable_2&$FFFF]
 
-
+; Jump table for the states
  JumpTable_Low:
-    .byte $00
-    .byte <BorderLoad_Stage1
-    .byte <BorderLoad_Stage2
-    .byte <BorderLoad_Stage3
-    .byte <BorderLoad_StagePalette
-    .byte <BorderLoad_Stage4
+    .byte <BorderLoad_InitStageTileLoad
+    .byte <BorderLoad_StageLoadTiles
+    .byte <BorderLoad_StageLoadPalette
+    .byte <BorderLoad_LoadTilemap
  JumpTable_High:
-    .byte $00
-    .byte >BorderLoad_Stage1
-    .byte >BorderLoad_Stage2
-    .byte >BorderLoad_Stage3
-    .byte >BorderLoad_StagePalette
-    .byte >BorderLoad_Stage4
+    .byte >BorderLoad_InitStageTileLoad
+    .byte >BorderLoad_StageLoadTiles
+    .byte >BorderLoad_StageLoadPalette
+    .byte >BorderLoad_LoadTilemap
  JumpTable_Bank:
-    .byte $00
-    .byte ^BorderLoad_Stage1
-    .byte ^BorderLoad_Stage2
-    .byte ^BorderLoad_Stage3
-    .byte ^BorderLoad_StagePalette
-    .byte ^BorderLoad_Stage4
+    .byte ^BorderLoad_InitStageTileLoad
+    .byte ^BorderLoad_StageLoadTiles
+    .byte ^BorderLoad_StageLoadPalette
+    .byte ^BorderLoad_LoadTilemap
 
-BorderLoad_Stage1:
+; Handle any setup that should happen once
+BorderLoad_InitStageTileLoad:
 
-ConfigureWindow:
     LDA #0
     PHA
     PLB
@@ -80,104 +89,28 @@ ConfigureWindow:
     PHA         ; Push it onto the stack
     PLB         ; Pull into DBR (set data bank)
 
+    CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
+    
+    ; Increment the state so we don't init again
+    lda #1
+    sta BorderLoadState
+    ; Fall through to the first state
+    
+BorderLoad_StageLoadTiles:
+    
+    CHUNK_LOAD_EXECUTE RETURN, NEXT_STATE_AND_RETURN
 
-    WAIT_FOR_VBLANK
-    DMA_COPY (border_file_menu_tiles), (BG_1_TILES), $C0
-    jmp NEXT_STATE_AND_RETURN
-
-BorderLoad_Stage2:
-    WAIT_FOR_VBLANK
-    DMA_COPY (border_file_menu_tiles+$C0), (BG_1_TILES+$60), $C0
-    jmp NEXT_STATE_AND_RETURN
-
-BorderLoad_Stage3:
-    WAIT_FOR_VBLANK
-    DMA_COPY (border_file_menu_tiles+($C0*2)), (BG_1_TILES+($60*2)), $C0
-
-BorderLoad_StagePalette:
+BorderLoad_StageLoadPalette:
     WAIT_FOR_VBLANK
     DMA_PALETTE border_file_menu_palette, $40, $20
 
-InitChunkLoader:
-    LDA #$7F
-    PHA
-    PLB
-
-    ; Init chunked loader
-    seta16
-    .a16
-    lda #(border_file_menu_tilemap&$FFFF)
-    sta ChunkLoader_Src
-    lda #BG_1_TILEMAP
-    sta ChunkLoader_Dest
-    seta8
-    .a8
-    
-    lda #CHUNK_SIZE
-    sta ChunkLoader_CurrentChunkSize
-    lda #0
-    sta ChunkLoader_ChunkIndex
-    lda #BORDER_FILE_MENU_MAP_CHUNK_COUNT
-    sta ChunkLoader_ChunkCount
-    lda #BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
-    sta ChunkLoader_LastChunkSize
+    CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
 
     jmp NEXT_STATE_AND_RETURN
 
-BorderLoad_Stage4:
+BorderLoad_LoadTilemap:
 
-    ; Do chunk load
-    WAIT_FOR_VBLANK
-    CHUNK_LOAD_DMA
-    
-ChunkComplete:
-    LDA #$7F
-    PHA
-    PLB
-
-    ; Load complete, increment the chunk index
-IncrementChunkIndex:
-    seta8
-    .a8
-    lda ChunkLoader_ChunkIndex
-    inc a
-    sta ChunkLoader_ChunkIndex
-    
-CheckAllChunks:
-    ; Did we load all the chunks?
-    cmp ChunkLoader_ChunkCount
-    beq END_STATE_AND_RETURN
-
-IncrementSrc:
-    ; Incremement the SRC
-    seta16
-    .a16
-    lda ChunkLoader_Src
-    adc ChunkLoader_CurrentChunkSize
-    sta ChunkLoader_Src
-
-IncrementDest:
-    ; Incremement the DEST
-    lda ChunkLoader_Dest
-    adc #(CHUNK_SIZE/2)
-    sta ChunkLoader_Dest
-
-ChecklLastChunk:
-    ; Are we on the last chunk?
-    seta8
-    .a8
-    lda ChunkLoader_ChunkIndex
-    inc a
-    cmp #BORDER_FILE_MENU_MAP_CHUNK_COUNT
-    beq ChunkLoad_SetupLastChunk
-
-    jmp RETURN
-
-ChunkLoad_SetupLastChunk:
-
-    lda ChunkLoader_LastChunkSize
-    sta ChunkLoader_CurrentChunkSize
-    jmp RETURN
+    CHUNK_LOAD_EXECUTE RETURN, END_STATE_AND_RETURN
 
 END_STATE_AND_RETURN:
     seta8
@@ -196,15 +129,15 @@ RETURN:
     PLP
 
 BG_1_TILES = $0000
-;BG_1_TILES = $0000
-;BG_1_TILEMAP = $3C00
 BG_1_TILEMAP = $3800
-CLOUD_TILE_SIZE = 144
-;TILE_BATCH_SIZE = 144
-;TILE_BATCH_COUNT = CLOUD_TILE_SIZE/TILE_BATCH_SIZE
 
 
 CHUNK_SIZE = $B0
+
 BORDER_FILE_MENU_MAP_SIZE = 1792
 BORDER_FILE_MENU_MAP_CHUNK_COUNT = (BORDER_FILE_MENU_MAP_SIZE/CHUNK_SIZE)+1
 BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE = BORDER_FILE_MENU_MAP_SIZE - (BORDER_FILE_MENU_MAP_SIZE/CHUNK_SIZE)*CHUNK_SIZE
+
+BORDER_FILE_MENU_TILE_SIZE = 416
+BORDER_FILE_MENU_TILE_CHUNK_COUNT = (BORDER_FILE_MENU_TILE_SIZE/CHUNK_SIZE)+1
+BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE = BORDER_FILE_MENU_TILE_SIZE - (BORDER_FILE_MENU_TILE_SIZE/CHUNK_SIZE)*CHUNK_SIZE

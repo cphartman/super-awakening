@@ -1,33 +1,3 @@
-.macro  DMA_COPY SRC, DEST, SIZE, 
-    LDA #0
-    PHA
-    PLB
-
-    lda #$80
-    sta $2115       ; Set VRAM transfer mode to word-access, increment by 1
-
-    lda #$01
-    sta $4300   ; Set DMA mode (word, normal increment)
-
-    lda #$18    ; Set the destination register (VRAM write register)
-    sta $4301
-    
-    ldx #DEST      ; DEST
-    stx $2116       ; $2116: Word address for accessing VRAM.
-
-    ldx #SRC&$FFFF  ; SRCOFFSET
-    stx $4302        ; Store Data offset into DMA source offset
-
-    lda #$7f        ; SRCBANK
-    sta $4304       ; Store data Bank into DMA source bank
-
-    ldy #SIZE
-    sty $4305   ; Store size of data block
-
-    lda #$01    ; Initiate DMA transfer (channel 1)
-    sta $420B
-.endmacro
-
 .macro  DMA_PALETTE SRC, DEST, SIZE, 
     LDA #0
     PHA
@@ -111,4 +81,98 @@ SetChunkSize:
 
     lda #$01    ; Initiate DMA transfer (channel 1)
     sta $420B
+.endmacro
+
+; Setup all the chunk load variables
+.macro CHUNK_LOAD_INIT SRC, DEST, COUNT, LAST_CHUNK_SIZE
+    LDA #$7F
+    PHA
+    PLB
+
+    seta16
+    .a16
+    lda #(SRC&$FFFF)
+    sta ChunkLoader_Src
+    lda #DEST
+    sta ChunkLoader_Dest
+    seta8
+    .a8
+    
+    lda #CHUNK_SIZE
+    sta ChunkLoader_CurrentChunkSize
+    lda #0
+    sta ChunkLoader_ChunkIndex
+    lda #COUNT
+    sta ChunkLoader_ChunkCount
+    lda #LAST_CHUNK_SIZE
+    sta ChunkLoader_LastChunkSize
+.endmacro
+
+; Method to load the current chunk and incrementing chunk counters
+DO_CHUNK_LOAD:
+    ; Do chunk load
+    WAIT_FOR_VBLANK
+    CHUNK_LOAD_DMA
+    
+ChunkComplete:
+    LDA #$7F
+    PHA
+    PLB
+
+    ; Load complete, increment the chunk index
+IncrementChunkIndex:
+    seta8
+    .a8
+    lda ChunkLoader_ChunkIndex
+    inc a
+    sta ChunkLoader_ChunkIndex
+    
+CheckAllChunks:
+    ; Did we load all the chunks?
+    cmp ChunkLoader_ChunkCount
+    bne IncrementSrc
+    rtl
+
+IncrementSrc:
+    ; Incremement the SRC
+    seta16
+    .a16
+    lda ChunkLoader_Src
+    adc ChunkLoader_CurrentChunkSize
+    sta ChunkLoader_Src
+
+IncrementDest:
+    ; Incremement the DEST
+    lda ChunkLoader_Dest
+    adc #(CHUNK_SIZE/2)
+    sta ChunkLoader_Dest
+
+ChecklLastChunk:
+    ; Are we on the last chunk?
+    seta8
+    .a8
+    lda ChunkLoader_ChunkIndex
+    inc a
+    cmp #BORDER_FILE_MENU_MAP_CHUNK_COUNT
+    beq ChunkLoad_SetupLastChunk
+    RTL
+
+ChunkLoad_SetupLastChunk:
+
+    lda ChunkLoader_LastChunkSize
+    sta ChunkLoader_CurrentChunkSize
+    RTL
+
+;  Call the chunk loader and branch
+.macro CHUNK_LOAD_EXECUTE COMPLETE_FALSE, COMPLETE_TRUE
+.local JUMP_TO_FALSE
+    JSL DO_CHUNK_LOAD
+
+    ; Check if all chunks are loaded
+    lda ChunkLoader_ChunkIndex
+    cmp ChunkLoader_ChunkCount
+    bne JUMP_TO_FALSE
+    jmp COMPLETE_TRUE
+JUMP_TO_FALSE:
+    jmp COMPLETE_FALSE
 .endmacro
