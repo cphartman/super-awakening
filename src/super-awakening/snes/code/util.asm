@@ -103,7 +103,7 @@ SetChunkSrcBank:
 SetChunkSize: 
     .a8
     seta8
-    lda f:ChunkLoader_ChunkSize
+    lda f:ChunkLoader_CurrentChunkSize
     sta $4305   ; Store size of data block
 
     lda #00
