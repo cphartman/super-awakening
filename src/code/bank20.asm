@@ -3394,14 +3394,16 @@ ret_020_5EEE:
     ret                                           ; $5EEE: $C9
 
 InventoryFadeInHandler::
+    ; Handles something else?
     call func_020_635C                            ; $5EEF: $CD $5C $63
+    ; Handles Fading
     call func_1A39                                ; $5EF2: $CD $39 $1A
 
     ld   a, [wTransitionSequenceCounter]          ; $5EF5: $FA $6B $C1
     cp   $04                                      ; $5EF8: $FE $04
-    jr   nz, .jr_020_5EFF                         ; $5EFA: $20 $03
+    jr   nz, .return                         ; $5EFA: $20 $03
     call IncrementGameplaySubtype_20              ; $5EFC: $CD $83 $66
-.jr_020_5EFF
+.return
 
     ret                                           ; $5EFF: $C9
 
@@ -4083,42 +4085,57 @@ jr_020_6369:
     ld   d, $02                                   ; $6358: $16 $02
     jr   jr_020_635E                              ; $635A: $18 $02
 
+; Something with fading or transitioning betwen pause?
 func_020_635C::
-    ld   d, $0C                                   ; $635C: $16 $0C
+    ld   d, INVENTORY_SLOT_COUNT
 
+; Setup item loop
 jr_020_635E:
     ld   hl, wInventoryItems.BButtonSlot          ; $635E: $21 $00 $DB
+    ; Counter from 0->$0C [d]
     ld   e, $00                                   ; $6361: $1E $00
 
-.loop_6363
+; Loop over all item slots
+.loop_item_slots
     ld   a, [hl+]                                 ; $6363: $2A
+    ; If current item slot is sword
     cp   INVENTORY_SWORD                          ; $6364: $FE $01
     jr   z, .jr_636E                              ; $6366: $28 $06
 
+    ; if we've checked all the item slot
     inc  e                                        ; $6368: $1C
     ld   a, e                                     ; $6369: $7B
     cp   d                                        ; $636A: $BA
-    jr   nz, .loop_6363                           ; $636B: $20 $F6
+    jr   nz, .loop_item_slots                           ; $636B: $20 $F6
 
+    ; All items checked, no sword
     ret                                           ; $636D: $C9
 
+; There is a sword in item slot [e]
 .jr_636E
+    ; hMultiPurpose0 = Data_020_633A[e]
     ld   d, $00                                   ; $636E: $16 $00
     ld   hl, Data_020_633A                        ; $6370: $21 $3A $63
     add  hl, de                                   ; $6373: $19
     ld   a, [hl]                                  ; $6374: $7E
     ldh  [hMultiPurpose0], a                      ; $6375: $E0 $D7
+
+    ; hMultiPurpose1 = Data_020_6346[e]
     ld   hl, Data_020_6346                        ; $6377: $21 $46 $63
     add  hl, de                                   ; $637A: $19
     ld   a, [hl]                                  ; $637B: $7E
     ldh  [hMultiPurpose1], a                      ; $637C: $E0 $D8
+
+    ; If we have a piece of power or acond
     ld   a, [wActivePowerUp]                      ; $637E: $FA $7C $D4
     dec  a                                        ; $6381: $3D
     jr   nz, jr_020_63BE                          ; $6382: $20 $3A
 
+    ; Every &8 frames?
     ldh  a, [hFrameCounter]                       ; $6384: $F0 $E7
     and  $08                                      ; $6386: $E6 $08
     jr   nz, jr_020_63BE                          ; $6388: $20 $34
+
 
     ld   a, [wOAMNextAvailableSlot]               ; $638A: $FA $C0 $C3
     ld   e, a                                     ; $638D: $5F
@@ -4472,8 +4489,9 @@ InventoryStatusOutHandler::
     ret                                           ; $65D1: $C9
 
 InventoryFadeOutHandler::
-    call func_020_635C                            ; $65D2: $CD $5C $63
-    call func_1A22                                ; $65D5: $CD $22 $1A
+    
+    call func_020_635C  ; Something about backing up oam slots?
+    call func_1A22      ; Do the fade out
     ld   a, [wTransitionSequenceCounter]          ; $65D8: $FA $6B $C1
     cp   $04                                      ; $65DB: $FE $04
     jp   nz, ret_020_6682                         ; $65DD: $C2 $82 $66
@@ -5194,6 +5212,7 @@ CopyLinkTunicPalette::
 .return
     ret                                           ; $6C4E: $C9
 
+; Do Fade out
 func_020_6C4F::
     ldh  a, [hIsGBC]                              ; $6C4F: $F0 $FE
     and  a                                        ; $6C51: $A7

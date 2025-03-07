@@ -20,6 +20,7 @@ INJECTION_START:
 
    .include "map-snes1-to-gb2.asm" 
    .include "border-service.asm" 
+   .include "palette-service.asm" 
 
 INJECTION_END:
    JML $00080C
@@ -30,6 +31,13 @@ border_file_menu_tilemap:
 .incbin "src/super-awakening/snes/gfx/border_file_menu.map"
 border_file_menu_palette:
 .incbin "src/super-awakening/snes/gfx/border_file_menu.pal"
+
+clouds_tiles:
+.incbin "src/super-awakening/snes/gfx/clouds.4bpp"
+clouds_tilemap:
+.incbin "src/super-awakening/snes/gfx/clouds.map"
+clouds_palette:
+.incbin "src/super-awakening/snes/gfx/clouds.pal"
 
 ; EOF marker for convert_sfc_to_packets.py
 .byte 0,0,0
