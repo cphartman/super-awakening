@@ -125,18 +125,58 @@ SuperAwakening_copy_SendVRAMCommand::
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9
 
-; Todo: allocate enough space for this command in wram
-;       Populate this when sending a command
-SuperAwakening_copy_SGB_Command::
-    sgb_data_send_cmd $0000, $7F, 11
-    db  $01
-    db  $02
-    db  $03
-    db  $04
-    db  $05
-    db  $06
-    db  $07
-    db  $08
-    db  $09
-    db  $0A
-    db  $0B
+SuperAwakening_SendPacket:
+    ld a, $79
+    ld [wSuperAwakening.SGB_PacketCommand], a
+    ld a, $03
+    ld [wSuperAwakening.SGB_PacketDest_Low], a
+    ld a, $00
+    ld [wSuperAwakening.SGB_PacketDest_High], a
+    ld a, $7F
+    ld [wSuperAwakening.SGB_PacketDest_Bank], a
+    ld a, 11
+    ld [wSuperAwakening.SGB_PacketLength], a
+    
+    ld a, $F
+    ld [wSuperAwakening.SGB_PacketData], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+1], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+2], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+3], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+4], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+5], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+6], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+7], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+8], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+9], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+10], a
+    inc a
+    ld [wSuperAwakening.SGB_PacketData+11], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+    ret
+
+SuperAwakening_SGB_FileMenuStart:
+    call SuperAwakening_SendPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $01
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank

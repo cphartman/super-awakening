@@ -30,6 +30,10 @@ FileSelectionEntryPoint::
 ._09 dw FileSelectionLoadSavedFile                ; $47E7
 
 FileSelectionPrepare0::
+
+    ld hl, SuperAwakening_SGB_FileMenuStart
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ld   a, TILESET_MENU                          ; $47E9: $3E $04
     ld   [wTilesetToLoad], a                      ; $47EB: $EA $FE $D6
 

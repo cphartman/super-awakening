@@ -41,8 +41,7 @@ SuperAwakening_Load::
 
 .initialize_tutorial_flags_end
 
-    ld hl, SuperAwakening_copy_SGB_Command
-    call SuperAwakening_SendUploadCommand
+    call SuperAwakening_SendPacket
 
     ; Loop inventory to check for progression flags
 .initialize_progression_flags

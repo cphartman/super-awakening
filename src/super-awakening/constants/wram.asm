@@ -74,3 +74,18 @@ wSuperAwakening::
 
 .Tutorial_ForceQuit:
   ds 1
+
+.SGB_Packet:
+.SGB_PacketCommand:
+  ds 1
+.SGB_PacketDest:
+.SGB_PacketDest_Low:
+  ds 1
+.SGB_PacketDest_High:
+  ds 1
+.SGB_PacketDest_Bank:
+  ds 1
+.SGB_PacketLength:
+  ds 1
+.SGB_PacketData:
+  ds 11
