@@ -1,26 +1,9 @@
 ; SGB injection payload
 
-SuperAwakening_SendSgbPayload::
-
-    ; Upload payload
-    ld   hl, SuperAwakening_SgbPayload
-    ld   de, SuperAwakening_SendPayloadCmd
-    call SuperAwakening_SendVRAMCommand
-
-    ; Upload gameloop hook
-    ld   hl, SuperAwakening_SendHookCmd                
-    call SuperAwakening_SendUploadCommand                        
-    ld   bc, $06                                  
-    call SuperAwakening_WaitForBCFrames    
-
-.return
-    ld a, $3C
-    jp SuperAwakening_Trampoline.returnToBank
-
 ; ----------------------------------
 ; Copied from code/super_gameboy.asm
 ; ----------------------------------
-SuperAwakening_SendUploadCommand::
+SuperAwakening_copy_SendUploadCommand::
     ld   a, [hl]                                  ; $6B51: $7E
     and  %00000111                                ; $6B52: $E6 $07
     ret  z                                        ; $6B54: $C8
@@ -58,10 +41,10 @@ SuperAwakening_SendUploadCommand::
     pop  bc                                       ; $6B7E: $C1
     dec  b                                        ; $6B7F: $05
     ret  z                                        ; $6B80: $C8
-    call SuperAwakening_WaitFor3Frames                           ; $6B81: $CD $86 $6B
+    call SuperAwakening_copy_WaitFor3Frames                           ; $6B81: $CD $86 $6B
     jr   .func_03C_6B58                           ; $6B84: $18 $D2
 
-SuperAwakening_WaitFor3Frames::
+SuperAwakening_copy_WaitFor3Frames::
     ld   de, $1B58                                ; $6B86: $11 $58 $1B
 .loop_6B89_3C
     nop                                           ; $6B89: $00
@@ -78,7 +61,7 @@ SuperAwakening_WaitFor3Frames::
 ;
 ; Inputs:
 ;  - bc:   the number of frames to wait for
-SuperAwakening_WaitForBCFrames::
+SuperAwakening_copy_WaitForBCFrames::
     ; Inner loop: wait for one frame.
     ;
     ; As the LCD screen is off, we can't use VBlank for timing.
@@ -101,7 +84,7 @@ SuperAwakening_WaitForBCFrames::
     dec  bc                                       ; $6B9D: $0B
     ld   a, b                                     ; $6B9E: $78
     or   c                                        ; $6B9F: $B1
-    jr   nz, SuperAwakening_WaitForBCFrames                      ; $6BA0: $20 $F0
+    jr   nz, SuperAwakening_copy_WaitForBCFrames                      ; $6BA0: $20 $F0
     ret                                           ; $6BA2: $C9
 
 ; Copy some data to VRAM, then send an SGB command to transfer
@@ -109,7 +92,7 @@ SuperAwakening_WaitForBCFrames::
 ; Inputs:
 ;   hl   data origin address
 ;   de   addess of the SGB command to send
-SuperAwakening_SendVRAMCommand::
+SuperAwakening_copy_SendVRAMCommand::
     push de                                       ; $6BA3: $D5
     ld   a, $E4                                   ; $6BA4: $3E $E4
     ld   [rBGP], a                                ; $6BA6: $E0 $47
@@ -133,18 +116,18 @@ SuperAwakening_SendVRAMCommand::
     ld   a, LCDCF_ON | LCDCF_BGON                 ; $6BC6: $3E $81
     ld   [rLCDC], a                               ; $6BC8: $E0 $40
     ld   bc, $05                                  ; $6BCA: $01 $05 $00
-    call SuperAwakening_WaitForBCFrames                          ; $6BCD: $CD $92 $6B
+    call SuperAwakening_copy_WaitForBCFrames                          ; $6BCD: $CD $92 $6B
     pop  hl                                       ; $6BD0: $E1
-    call SuperAwakening_SendUploadCommand                        ; $6BD1: $CD $51 $6B
+    call SuperAwakening_copy_SendUploadCommand                        ; $6BD1: $CD $51 $6B
     ld   bc, $06                                  ; $6BD4: $01 $06 $00
-    call SuperAwakening_WaitForBCFrames                          ; $6BD7: $CD $92 $6B
+    call SuperAwakening_copy_WaitForBCFrames                          ; $6BD7: $CD $92 $6B
     xor  a                                        ; $6BDA: $AF
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9
 
 ; Todo: allocate enough space for this command in wram
 ;       Populate this when sending a command
-SuperAwakening_SGB_Command::
+SuperAwakening_copy_SGB_Command::
     sgb_data_send_cmd $0000, $7F, 11
     db  $01
     db  $02

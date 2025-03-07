@@ -19,6 +19,7 @@ SuperAwakeining_Snes_Utils:
 INJECTION_START:
 
    .include "map-snes1-to-gb2.asm" 
+   .include "command-service.asm"
    .include "border-service.asm" 
    .include "palette-service.asm" 
 
