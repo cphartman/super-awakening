@@ -194,10 +194,13 @@ snes_border_gfx =  $(shell find src/super-awakening/snes/code/gfx     -type f -n
 # 2) Compile the SNES ASM
 #   src/data/super_gameboy/injection_data/*.asm => snes_injection_data.smc
 #		Convert symbols into a format for Mesen
-#		snes_injection_data.vice => azle.mlb
+#		azle.sym > azle.mlb
+#		snes_injection_data.vice >> azle.mlb
 super-awakening/data/sgb_payload.smc: $(snes_source)
 	cl65 -C src/super-awakening/snes/code/smc.cfg -o src/super-awakening/data/sgb_payload.smc src/super-awakening/snes/code/update_loop.asm -g -Ln sgb_payload.vice
-	cat sgb_payload.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" > azle.mlb
+	python3 tools/super-awakening/convert_sym_to_mlb.py azle.sym azle.mlb
+	cat sgb_payload.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" >> azle.mlb
+  
 
 src/super-awakening/bank3F.asm: super-awakening/data/sgb_payload.smc
 
