@@ -81,27 +81,11 @@ BorderLoad_InitStageTileLoad:
     lda #0
     sta $210B
 
-    ; Only shown BG1 and BG3 on the main screen
-    ;lda #5
-    ;sta $212C
-
-        ; Enable b1 on sub screen
-    lda #%00000001
-    sta $212D
-
-    ; Enable color math
-    lda #$02
-    sta $2130
-
-    ; Enable additive color math layers
-    lda #%10100101
-    sta $2131
-
     LDA #^SuperAwakeining_Snes_Wram   ; Load bank byte of foo
     PHA         ; Push it onto the stack
     PLB         ; Pull into DBR (set data bank)
 
-    CHUNK_LOAD_INIT clouds_tiles, BG_1_TILES, CLOUDS_TILE_CHUNK_COUNT, CLOUDS_TILE_LAST_CHUNK_SIZE
+    CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
     ;CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
     
     ; Increment the state so we don't init again
@@ -114,10 +98,9 @@ BorderLoad_StageLoadTiles:
     CHUNK_LOAD_EXECUTE RETURN, NEXT_STATE_AND_RETURN
 
 BorderLoad_StageLoadPalette:
-    WAIT_FOR_VBLANK
-    DMA_PALETTE clouds_palette, $40, $20
+    ;DMA_PALETTE border_file_menu_palette, $40, $40
 
-    CHUNK_LOAD_INIT clouds_tilemap, BG_1_TILEMAP, CLOUDS_MAP_CHUNK_COUNT, CLOUDS_MAP_LAST_CHUNK_SIZE
+    CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
     ;CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
 
     jmp NEXT_STATE_AND_RETURN

@@ -41,8 +41,6 @@ SuperAwakening_Load::
 
 .initialize_tutorial_flags_end
 
-    call SuperAwakening_SendPacket
-
     ; Loop inventory to check for progression flags
 .initialize_progression_flags
     ld c, 0

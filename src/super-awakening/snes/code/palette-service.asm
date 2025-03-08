@@ -4,7 +4,8 @@
 State = PaletteService_State
 
 STATE_NONE      = 0
-STATE_FADE_OUT   = 1
+STATE_FADE_OUT_1   = 1
+STATE_HIDE_BORDER = 4
 
 .a8
 seta8
@@ -66,27 +67,39 @@ StateJump:
     .byte ^FadeOut3
 
 FadeOut0:
+    DMA_PALETTE border_file_menu_palette, $40, $40
 
-    WAIT_FOR_VBLANK
-    DMA_PALETTE Border_Original_Palette_Fade_0, $40, $40
+        ; Only show BG 3
+    lda #$05
+    sta $212C
+
+    lda #STATE_NONE
+    sta f:PaletteService_State
+
     jmp End
 
 FadeOut1:
-
-    WAIT_FOR_VBLANK
     DMA_PALETTE Border_Original_Palette_Fade_1, $40, $40
     jmp End
 
 FadeOut2:
-
-    WAIT_FOR_VBLANK
     DMA_PALETTE Border_Original_Palette_Fade_2, $40, $40
     jmp End
 
 FadeOut3:
-
-    WAIT_FOR_VBLANK
     DMA_PALETTE Border_Original_Palette_Fade_3, $40, $40
+    
+    ; Only show BG 3
+    lda #$04
+    sta $212C
+
+    lda #STATE_NONE
+    sta f:PaletteService_State
+
+    ; Start border load
+    lda #1
+    sta f:StartBorderLoad
+    
     jmp End
 
 End:

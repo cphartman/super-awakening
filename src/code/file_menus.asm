@@ -31,7 +31,7 @@ FileSelectionEntryPoint::
 
 FileSelectionPrepare0::
 
-    ld hl, SuperAwakening_SGB_FileMenuStart
+    ld hl, SuperAwakening_SGB_FileMenuLoad
     call SuperAwakening_Trampoline.jumpTo3E
 
     ld   a, TILESET_MENU                          ; $47E9: $3E $04
@@ -100,6 +100,10 @@ CopyDeathCountsToBG::
     ret                                           ; $484E: $C9
 
 FileSelectionPrepare5::
+
+    ld a, $10
+    ld [wSuperAwakening.SGB_Delay], a
+
     ; This was common to save and copy, but we don't want to show the 3rd slot for copy
     ;jp   FileDeletionState4Handler                ; $484F: $C3 $6D $4D
 
@@ -226,6 +230,19 @@ ENDC
     ret                                           ; $48B2: $C9
 
 FileSelectionPrepare6::
+
+    ld a, [wSuperAwakening.SGB_Delay]
+    dec a
+    ld [wSuperAwakening.SGB_Delay], a
+    cp 0
+    jr z, .delay_end
+    ret
+
+.delay_end
+
+    ld hl, SuperAwakening_SGB_FileMenuShow
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ; If the music track should set overriden…
     ld   a, [wForceFileSelectionScreenMusic]      ; $48B3: $FA $7B $D4
     and  a                                        ; $48B6: $A7

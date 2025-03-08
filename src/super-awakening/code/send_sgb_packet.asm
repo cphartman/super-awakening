@@ -166,13 +166,28 @@ SuperAwakening_SendPacket:
     call SuperAwakening_copy_SendUploadCommand
     ret
 
-SuperAwakening_SGB_FileMenuStart:
+SuperAwakening_SGB_FileMenuLoad:
     call SuperAwakening_SendPacket
     
     ld a, 1
     ld [wSuperAwakening.SGB_PacketLength], a
 
     ld a, $01
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_FileMenuShow:
+    call SuperAwakening_SendPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $02
     ld [wSuperAwakening.SGB_PacketData], a
 
     ld hl, wSuperAwakening.SGB_Packet

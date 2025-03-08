@@ -1,7 +1,12 @@
 .macro  DMA_PALETTE SRC, DEST, SIZE, 
+    WAIT_FOR_VBLANK
+
     LDA #0
     PHA
     PLB
+    
+    seta8
+    .a8
 
     lda #$02
     sta $4300   ; Set DMA mode (word, normal increment)
@@ -19,6 +24,7 @@
     STA $4302      ; Low Byte of Source Address
     LDA #>SRC
     STA $4303      ; High Byte of Source Address
+    
     LDA #^SRC
     STA $4304      ; Bank Byte of Source Address
 
@@ -38,6 +44,7 @@ WAIT_FOR_VBLANK_LOOP:
 .endmacro
 
 .macro  CHUNK_LOAD_DMA
+
     LDA #0
     PHA
     PLB

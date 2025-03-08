@@ -14,10 +14,9 @@ SuperAwakeining_Snes_Wram:
    .include "wram.asm"
 
 SuperAwakeining_Snes_Utils:
-   .include "util.asm"
+   .include "util.asm" 
 
 INJECTION_START:
-
    .include "map-snes1-to-gb2.asm" 
    .include "command-service.asm"
    .include "border-service.asm" 

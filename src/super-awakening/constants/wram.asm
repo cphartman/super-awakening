@@ -89,3 +89,6 @@ wSuperAwakening::
   ds 1
 .SGB_PacketData:
   ds 11
+
+.SGB_Delay:
+  ds 1

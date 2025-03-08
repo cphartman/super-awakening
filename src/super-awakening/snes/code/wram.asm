@@ -1,6 +1,10 @@
 command:
    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
+delayed_command_timer:
+   .byte $00
+delayed_command:
+   .byte $00
+   
 counter1:
    .byte $00
 
