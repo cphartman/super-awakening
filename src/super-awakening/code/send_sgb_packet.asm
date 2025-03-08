@@ -125,7 +125,7 @@ SuperAwakening_copy_SendVRAMCommand::
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9
 
-SuperAwakening_SendPacket:
+SuperAwakening_InitPacket:
     ld a, $79
     ld [wSuperAwakening.SGB_PacketCommand], a
     ld a, $03
@@ -162,12 +162,10 @@ SuperAwakening_SendPacket:
     inc a
     ld [wSuperAwakening.SGB_PacketData+11], a
 
-    ld hl, wSuperAwakening.SGB_Packet
-    call SuperAwakening_copy_SendUploadCommand
     ret
 
 SuperAwakening_SGB_FileMenuLoad:
-    call SuperAwakening_SendPacket
+    call SuperAwakening_InitPacket
     
     ld a, 1
     ld [wSuperAwakening.SGB_PacketLength], a
@@ -182,12 +180,56 @@ SuperAwakening_SGB_FileMenuLoad:
     jp SuperAwakening_Trampoline.returnToBank
 
 SuperAwakening_SGB_FileMenuShow:
-    call SuperAwakening_SendPacket
+    call SuperAwakening_InitPacket
     
     ld a, 1
     ld [wSuperAwakening.SGB_PacketLength], a
 
     ld a, $02
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_GameplayBoder_Show:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $03
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ret
+
+SuperAwakening_SGB_TitleScreen_Load:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $04
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_TitleScreen_Show:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $05
     ld [wSuperAwakening.SGB_PacketData], a
 
     ld hl, wSuperAwakening.SGB_Packet

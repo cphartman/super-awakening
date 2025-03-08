@@ -21,21 +21,14 @@ INJECTION_START:
    PHB
    .include "map-snes1-to-gb2.asm" 
    .include "command-service.asm"
-   .include "border-service.asm" 
-   .include "palette-service.asm"
    .include "commands/FileMenu.asm"
+   .include "commands/GameplayBorder.asm"
+   .include "commands/TitleScreen.asm"
    PLB
    PLP
 
 INJECTION_END:
    JML $00080C
-
-clouds_tiles:
-.incbin "src/super-awakening/snes/gfx/clouds.4bpp"
-clouds_tilemap:
-.incbin "src/super-awakening/snes/gfx/clouds.map"
-clouds_palette:
-.incbin "src/super-awakening/snes/gfx/clouds.pal"
 
 ; EOF marker for convert_sfc_to_packets.py
 .byte 0,0,0

@@ -7,6 +7,11 @@ SuperAwakening_SendSgbPayload::
     ld   de, SuperAwakening_SendPayloadCmd
     call SuperAwakening_SendVRAMCommand
 
+    ; We can only upload a single page at a time?
+    ld   hl, SuperAwakening_SgbPayload+$1000
+    ld   de, SuperAwakening_SendPayloadCmd_2
+    call SuperAwakening_SendVRAMCommand
+
     ; Upload gameloop hook
     ld   hl, SuperAwakening_SendHookCmd                
     call SuperAwakening_SendUploadCommand                        

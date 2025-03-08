@@ -1,5 +1,7 @@
 SuperAwakening_Load::
     
+    call SuperAwakening_SGB_GameplayBoder_Show
+
 .initialize_tutorial_flags
     ld a, [wSaveSlot]
     cp TUTORIAL_SAVE_SLOT

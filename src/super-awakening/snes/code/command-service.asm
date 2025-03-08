@@ -1,11 +1,6 @@
 .scope
 ; Command Service recieved data from the GB to set up appropriate services
 
-COMMAND_FILE_MENU_START = 1
-
-PALETTE_STATE_HIDE_BORDER = 4
-PALETTE_STATE_SHOW_GB_BORDER = 1
-
 Init:
     ; Backup flags and bank
    PHP
@@ -43,14 +38,23 @@ CommandJump:
     .byte <Return
     .byte <FileMenuLoad
     .byte <FileMenuShow
+    .byte <GameplayBorderShow
+    .byte <TitleScreenLoad
+    .byte <TitleScreenShow
  JumpTable_High:
     .byte >Return
     .byte >FileMenuLoad
     .byte >FileMenuShow
+    .byte >GameplayBorderShow
+    .byte >TitleScreenLoad
+    .byte >TitleScreenShow
  JumpTable_Bank:
     .byte ^Return
     .byte ^FileMenuLoad
     .byte ^FileMenuShow
+    .byte ^GameplayBorderShow
+    .byte ^TitleScreenLoad
+    .byte ^TitleScreenShow
 
 FileMenuLoad:
     lda #FILEMENU_LOAD
@@ -65,10 +69,42 @@ FileMenuShow:
     lda #FILEMENU_SHOW
     sta a:FileMenu_State
 
+    ; Setup the counter to skip the first frame of Show_Palette
+    lda #FILEMENU_SHOW_PALETTE_FRAME_DELAY
+    sta f:FileMenu_Counter
+
     lda #0
     sta a:command
 
     jmp Return
+
+GameplayBorderShow:
+    lda #GAMEPLAYBORDER_LOAD
+    sta a:GameplayBorder_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+TitleScreenLoad:
+    lda #TITLESCREEN_LOAD
+    sta a:TitleScreen_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+TitleScreenShow:
+    lda #TITLESCREEN_SHOW
+    sta a:TitleScreen_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
 
 Return:
     PLB

@@ -6,6 +6,7 @@ IntroSeaPaletteTable::
     db   $C6, $C2, $C0, $C2                       ; $6E19
 
 IntroHandlerEntryPoint::
+
     ldh  a, [hButtonsInactiveDelay]               ; $6E1D: $F0 $B5
     and  a  ; if ButtonsInactiveDelay == 0        ; $6E1F: $A7
     jr   z, .checkJoypad                          ; $6E20: $28 $06
@@ -81,6 +82,10 @@ IntroHandlerEntryPoint::
     ld   [wMusicTrackToPlay], a                   ; $6E89: $EA $68 $D3
     ld   [wD00F], a                               ; $6E8C: $EA $0F $D0
     call func_001_7D4E                            ; $6E8F: $CD $4E $7D
+
+    ld hl, SuperAwakening_SGB_TitleScreen_Show
+    call SuperAwakening_Trampoline.jumpTo3E
+
     jr   .enableVBlankInterruptAndReturn          ; $6E92: $18 $14
 
 .transitionToFileMenu

@@ -44,6 +44,15 @@ FileMenu_State:
 FileMenu_Counter:
    .byte $00
 
+GameplayBorder_State:
+   .byte $00
+
+TitleScreen_State:
+   .byte $00
+
+TitleScreen_Counter:
+   .byte $00
+
 Border_Original_Palette_Fade_0: 
    .byte $00, $7C, $2A, $1D, $8D, $29, $87, $1D, $09, $26, $8F, $3A, $AB, $45, $F0, $35, $0C, $4E, $4D, $52, $50, $56, $B3, $62, $52, $46, $94, $4E, $56, $45, $F7, $5E
    .byte $00, $7C, $2A, $1D, $8D, $29, $87, $1D, $09, $26, $8F, $3A, $4D, $52, $CB, $4D, $0C, $4E, $AB, $45, $F7, $5E, $B3, $62, $52, $42, $52, $52, $94, $56, $50, $56
