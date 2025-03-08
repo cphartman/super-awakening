@@ -53,8 +53,8 @@ CommandJump:
     .byte ^FileMenuShow
 
 FileMenuLoad:
-    lda #PALETTE_STATE_HIDE_BORDER
-    sta a:PaletteService_State
+    lda #FILEMENU_LOAD
+    sta a:FileMenu_State
 
     lda #0
     sta a:command
@@ -62,8 +62,8 @@ FileMenuLoad:
     jmp Return
 
 FileMenuShow:
-    lda #PALETTE_STATE_SHOW_GB_BORDER
-    sta a:PaletteService_State
+    lda #FILEMENU_SHOW
+    sta a:FileMenu_State
 
     lda #0
     sta a:command

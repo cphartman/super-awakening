@@ -67,7 +67,7 @@ StateJump:
     .byte ^FadeOut3
 
 FadeOut0:
-    DMA_PALETTE border_file_menu_palette, $40, $40
+    ; DMA_PALETTE border_file_menu_palette, $40, $40
 
         ; Only show BG 3
     lda #$05

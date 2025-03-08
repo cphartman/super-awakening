@@ -17,20 +17,18 @@ SuperAwakeining_Snes_Utils:
    .include "util.asm" 
 
 INJECTION_START:
+   PHP
+   PHB
    .include "map-snes1-to-gb2.asm" 
    .include "command-service.asm"
    .include "border-service.asm" 
-   .include "palette-service.asm" 
+   .include "palette-service.asm"
+   .include "commands/FileMenu.asm"
+   PLB
+   PLP
 
 INJECTION_END:
    JML $00080C
-
-border_file_menu_tiles:
-.incbin "src/super-awakening/snes/gfx/border_file_menu.4bpp"
-border_file_menu_tilemap:
-.incbin "src/super-awakening/snes/gfx/border_file_menu.map"
-border_file_menu_palette:
-.incbin "src/super-awakening/snes/gfx/border_file_menu.pal"
 
 clouds_tiles:
 .incbin "src/super-awakening/snes/gfx/clouds.4bpp"

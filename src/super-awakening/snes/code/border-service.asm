@@ -85,7 +85,7 @@ BorderLoad_InitStageTileLoad:
     PHA         ; Push it onto the stack
     PLB         ; Pull into DBR (set data bank)
 
-    CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
+    ; CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
     ;CHUNK_LOAD_INIT border_file_menu_tiles, BG_1_TILES, BORDER_FILE_MENU_TILE_CHUNK_COUNT, BORDER_FILE_MENU_TILE_LAST_CHUNK_SIZE
     
     ; Increment the state so we don't init again
@@ -100,7 +100,7 @@ BorderLoad_StageLoadTiles:
 BorderLoad_StageLoadPalette:
     ;DMA_PALETTE border_file_menu_palette, $40, $40
 
-    CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
+    ; CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
     ;CHUNK_LOAD_INIT border_file_menu_tilemap, BG_1_TILEMAP, BORDER_FILE_MENU_MAP_CHUNK_COUNT, BORDER_FILE_MENU_MAP_LAST_CHUNK_SIZE
 
     jmp NEXT_STATE_AND_RETURN
@@ -129,7 +129,7 @@ BG_1_TILES = $0000
 BG_1_TILEMAP = $3800
 
 
-CHUNK_SIZE = $B0
+CHUNK_SIZE = $A0
 
 ; Are there issues when the SIZE is evenly divisible by CHUNK_SIZE? 
 
