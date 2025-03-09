@@ -41,6 +41,8 @@ CommandJump:
     .byte <GameplayBorderShow
     .byte <TitleScreenLoad
     .byte <TitleScreenShow
+    .byte <SendScreenScroll
+    .byte <DisableScreenScroll
  JumpTable_High:
     .byte >Return
     .byte >FileMenuLoad
@@ -48,6 +50,8 @@ CommandJump:
     .byte >GameplayBorderShow
     .byte >TitleScreenLoad
     .byte >TitleScreenShow
+    .byte >SendScreenScroll
+    .byte >DisableScreenScroll
  JumpTable_Bank:
     .byte ^Return
     .byte ^FileMenuLoad
@@ -55,6 +59,8 @@ CommandJump:
     .byte ^GameplayBorderShow
     .byte ^TitleScreenLoad
     .byte ^TitleScreenShow
+    .byte ^SendScreenScroll
+    .byte ^DisableScreenScroll
 
 FileMenuLoad:
     lda #FILEMENU_LOAD
@@ -105,6 +111,25 @@ TitleScreenShow:
 
     jmp Return
 
+SendScreenScroll:
+
+    lda #SCREENSCROLL_FOLLOW_LINK
+    sta a:ScreenScroll_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+DisableScreenScroll:
+
+    lda #SCREENSCROLL_DISABLE
+    sta a:ScreenScroll_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
 
 Return:
     PLB

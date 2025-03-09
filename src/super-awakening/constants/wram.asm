@@ -92,3 +92,15 @@ wSuperAwakening::
 
 .SGB_Delay:
   ds 1
+
+.SGB_SendPosition:
+  ds 1
+
+; We need a delay because room change is picked up before the room transition starts
+; So when the room loads, a transition occurs and Link is in a new Y position
+; This hack delays sending commands
+.SGB_SendPosition_Delay:
+  ds 1
+
+.PreviousRoom:
+  ds 1

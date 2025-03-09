@@ -1,4 +1,5 @@
 import sys
+import re
 
 def convert_sym_to_mlb(input_file, output_file):
     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
@@ -19,15 +20,18 @@ def convert_sym_to_mlb(input_file, output_file):
 
             bank = int(bank_hex, 16)
             addr = int(addr_hex, 16)
+            label = re.sub("[.]", "_", label)
+            if bank > 1:
+                # Label addresses in the sym file are offset by 0x4000 to match the memory mapped layout
+                addr = addr - 0x4000
 
-            # Label addresses in the sym file are offset by 0x4000 to match the memory mapped layout
-            # Decrementing the bank number will offset this in the mlb file
-            if bank != 0:
-                bank = bank-1
+                absolute_addr = (bank * 0x4000)+ addr
 
-            absolute_addr = (bank * 0x4000)+ addr
+                outfile.write(f"GbPrgRom:{absolute_addr:05X}:{label}\n")
 
-            outfile.write(f"GbPrgRom:{absolute_addr:05X}:{label}\n")
+            if bank == 1 or bank == 0:
+                outfile.write(f"GameboyMemory:{addr:05X}:{label}\n")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

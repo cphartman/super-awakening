@@ -237,3 +237,37 @@ SuperAwakening_SGB_TitleScreen_Show:
 
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_SendScreenScroll:
+    call SuperAwakening_InitPacket
+    
+    ld a, 3
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $06
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld a, [hLinkPositionY]
+    ld [wSuperAwakening.SGB_PacketData+1], a
+
+    ld a, [hLinkPositionX]
+    ld [wSuperAwakening.SGB_PacketData+2], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ret
+
+SuperAwakening_SGB_DisableScreenScroll:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $07
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ret

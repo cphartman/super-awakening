@@ -50,13 +50,13 @@ GameplayBorder_StateJump:
 ; Jump table for the states
 GameplayBorder_JumpTable:
 GameplayBorder_JumpTable_Low:
-.byte <FileMenu_End
+.byte <GameplayBorder_End
 .byte <GameplayBorder_Load
 GameplayBorder_JumpTable_High:
-.byte >FileMenu_End
+.byte >GameplayBorder_End
 .byte >GameplayBorder_Load
 GameplayBorder_JumpTable_Bank:
-.byte ^FileMenu_End
+.byte ^GameplayBorder_End
 .byte ^GameplayBorder_Load
 
 GameplayBorder_Load:

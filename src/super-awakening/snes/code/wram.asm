@@ -1,9 +1,5 @@
 command:
    .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-delayed_command_timer:
-   .byte $00
-delayed_command:
-   .byte $00
    
 counter1:
    .byte $00
@@ -51,6 +47,22 @@ TitleScreen_State:
    .byte $00
 
 TitleScreen_Counter:
+   .byte $00
+
+ScreenScroll_State:
+   .byte $00
+
+ScreenScroll_WindowTargetX:
+   .byte $00, $00
+ScreenScroll_WindowTargetY:
+   .byte $00, $00
+ScreenScroll_WindowPositionX:
+   .byte $00, $00
+ScreenScroll_WindowPositionY:
+   .byte $00, $00
+ScreenScroll_LinkPositionX:
+   .byte $00
+ScreenScroll_LinkPositionY:
    .byte $00
 
 Border_Original_Palette_Fade_0: 

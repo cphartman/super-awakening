@@ -24,6 +24,7 @@ INJECTION_START:
    .include "commands/FileMenu.asm"
    .include "commands/GameplayBorder.asm"
    .include "commands/TitleScreen.asm"
+   .include "commands/ScreenScroll.asm"
    PLB
    PLP
 
