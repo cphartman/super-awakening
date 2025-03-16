@@ -206,7 +206,8 @@ SuperAwakening_SGB_GameplayBoder_Show:
     ld hl, wSuperAwakening.SGB_Packet
     call SuperAwakening_copy_SendUploadCommand
 
-    ret
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
 
 SuperAwakening_SGB_TitleScreen_Load:
     call SuperAwakening_InitPacket

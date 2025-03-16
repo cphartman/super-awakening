@@ -358,8 +358,6 @@ border_title_tilemap:
     .incbin "src/super-awakening/snes/gfx/border_title.map"
 border_title_palette:
     .incbin "src/super-awakening/snes/gfx/border_title.pal"
-black_palette:
-    .incbin "src/super-awakening/snes/gfx/black.pal"
 white_palette:
     .incbin "src/super-awakening/snes/gfx/white.pal"
 gb_palette:

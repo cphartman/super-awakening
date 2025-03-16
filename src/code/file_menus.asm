@@ -28,6 +28,7 @@ FileSelectionEntryPoint::
 ._07 dw FileSelectionInteractiveHandler           ; $47E3
 ._08 dw FileSelectionExecuteChoice                ; $47E5
 ._09 dw FileSelectionLoadSavedFile                ; $47E7
+._0A dw SuperAwakening_FileSelectionLoadDelay
 
 FileSelectionPrepare0::
 
@@ -522,7 +523,21 @@ LoadSelectedFile::
 
     ld   a, TILESET_BASE_OVERWORLD                ; $49D6: $3E $05
     ld   [wTilesetToLoad], a                      ; $49D8: $EA $FE $D6
-    jp   IncrementGameplaySubtypeAndReturn        ; $49DB: $C3 $D6 $44
+    
+    ;jp   IncrementGameplaySubtypeAndReturn        ; $49DB: $C3 $D6 $44
+SuperAwakeing_LoadGame_SGB_Delay:
+    ; Go to our delay function
+    ld a, $0A
+    ld [wGameplaySubtype], a
+    
+    ; Set delay
+    ld a, $65
+    ld [wSuperAwakening.SGB_LoadGameplayBorder_Delay], a
+
+    ld hl, SuperAwakening_SGB_GameplayBoder_Show
+    call SuperAwakening_Trampoline.jumpTo3E
+SuperAwakeing_LoadGame_SGB_Delay_end:
+    ret
 
 HandleFileSelectionCommand::
     ; Clear Gameplay Subtype
@@ -2159,3 +2174,16 @@ jr_001_528C::
     ld   bc, $998D                                ; $528C: $01 $8D $99 ; $528C: $01 $8D $99
     ld   de, wSaveSlot3Name                       ; $528F: $11 $8A $DB ; $528F: $11 $8A $DB
     jp   DrawSaveSlotName                         ; $5292: $C3 $52 $48 ; $5292: $C3 $52 $48
+
+SuperAwakening_FileSelectionLoadDelay:
+    ld a, [wSuperAwakening.SGB_LoadGameplayBorder_Delay]
+    dec a
+    ld [wSuperAwakening.SGB_LoadGameplayBorder_Delay], a
+    cp 0
+    jp z, SuperAwakening_FileSelectionLoadDelay_Complete
+    ret
+SuperAwakening_FileSelectionLoadDelay_Complete:
+    ; Go to exit method
+    ld a, $09
+    ld [wGameplaySubtype], a
+    ret

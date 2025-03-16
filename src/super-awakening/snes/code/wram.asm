@@ -45,6 +45,9 @@ FileMenu_Counter:
 GameplayBorder_State:
    .byte $00
 
+GameplayBorder_Counter:
+   .byte $00
+
 TitleScreen_State:
    .byte $00
 
@@ -81,7 +84,9 @@ ScreenScroll_LinkPositionY:
 
 LostWoods_State:
    .byte $00
-   
+LostWoods_Counter:
+   .byte $00
+
 LostWoods_WindowX:
    .byte $00, $00
 

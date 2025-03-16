@@ -10,7 +10,12 @@ LOSTWOODS_LOAD_TILEMAP_TOP = 3
 LOSTWOODS_LOAD_TILEMAP_BOTTOM = 4
 LOSTWOODS_SHOW_UPDATE = 5
 LOSTWOODS_SHOW_HIDE = 6
+LOSTWOODS_FADE_IN_1 = 7
+LOSTWOODS_FADE_IN_2 = 8
+LOSTWOODS_FADE_IN_3 = 9
  
+LOSTWOODS_FADE_IN_DELAY = 5
+
 LOSTWOODS_SHOW_PALETTE_FRAME_DELAY = 4
 LOSTWOODS_SCROLL_DELAY_X = 5
 LOSTWOODS_SCROLL_DELAY_Y = 20
@@ -61,6 +66,9 @@ LostWoods_JumpTable_Low:
 .byte <LostWoods_Load_TileMap_Bottom
 .byte <LostWoods_Update
 .byte <LostWoods_Hide
+.byte <LostWoods_Fade_In_1
+.byte <LostWoods_Fade_In_2
+.byte <LostWoods_Fade_In_3
 LostWoods_JumpTable_High:
 .byte >LostWoods_End
 .byte >LostWoods_Load_Init
@@ -69,6 +77,9 @@ LostWoods_JumpTable_High:
 .byte >LostWoods_Load_TileMap_Bottom
 .byte >LostWoods_Update
 .byte >LostWoods_Hide
+.byte >LostWoods_Fade_In_1
+.byte >LostWoods_Fade_In_2
+.byte >LostWoods_Fade_In_3
 LostWoods_JumpTable_Bank:
 .byte ^LostWoods_End
 .byte ^LostWoods_Load_Init
@@ -77,6 +88,9 @@ LostWoods_JumpTable_Bank:
 .byte ^LostWoods_Load_TileMap_Bottom
 .byte ^LostWoods_Update
 .byte ^LostWoods_Hide
+.byte ^LostWoods_Fade_In_1
+.byte ^LostWoods_Fade_In_2
+.byte ^LostWoods_Fade_In_3
 
 LostWoods_Load:
 
@@ -117,10 +131,8 @@ LostWoods_Load_TileMap_Bottom:
     CHUNK_LOAD_EXECUTE LostWoods_End, LostWoods_Load_TileMap_Bottom_End
 
 LostWoods_Load_TileMap_Bottom_End:
-    lda #LOSTWOODS_SHOW_UPDATE
+    lda #LOSTWOODS_FADE_IN_1
     sta f:LostWoods_State
-
-    DMA_PALETTE fog_palette, $60, $20
 
     ; Configure BG1+2 to use the correct tile location offset
     lda #%00100001
@@ -131,6 +143,10 @@ LostWoods_Load_TileMap_Bottom_End:
     sta f:LostWoods_ScrollDelay_X
     lda #LOSTWOODS_SCROLL_DELAY_Y
     sta f:LostWoods_ScrollDelay_Y
+
+    ; Initialize fade counter
+    lda #0
+    sta f:LostWoods_Counter
 
     jml LostWoods_End
 
@@ -196,19 +212,6 @@ LostWoods_Update_Scroll_Y_Delay_End:
 
 LostWoods_Update_Scroll_Y_End:
 
-LostWoods_Enable_Fog:
-    ; Enable b1 on sub screen
-    lda #%00000001
-    sta f:$212D
-
-    ; Enable color math
-    lda #$02
-    sta f:$2130
-
-    ; Enable additive color math layers
-    lda #%10100101
-    sta f:$2131
-
     jml LostWoods_End
 
 LostWoods_Hide:
@@ -234,12 +237,83 @@ LostWoods_Hide:
 
     jml LostWoods_End
 
+LostWoods_Fade_In_1:
+    lda f:LostWoods_Counter
+    inc a
+    sta f:LostWoods_Counter
+
+    DMA_PALETTE clouds_palette_fade_in_1, $60, $20
+
+LostWoods_Enable_Fog:
+    ; Enable b1 on sub screen
+    lda #%00000001
+    sta f:$212D
+
+    ; Enable color math
+    lda #$02
+    sta f:$2130
+
+    ; Enable additive color math layers
+    lda #%10100101
+    sta f:$2131
+    
+    ; Configure BG1+BG2 to use the correct tile location offset
+    lda #%00100001
+    sta $210B
+    
+    lda #LOSTWOODS_FADE_IN_2
+    sta f:LostWoods_State
+    
+    jml LostWoods_Update_WindowScroll
+
+LostWoods_Fade_In_2:
+LostWoods_Fade_In_2_delay:
+    lda f:LostWoods_Counter
+    inc a
+    sta f:LostWoods_Counter
+
+    cmp #LOSTWOODS_FADE_IN_DELAY
+    beq LostWoods_Fade_In_2_update
+    jml LostWoods_Update_WindowScroll
+
+LostWoods_Fade_In_2_update:
+    DMA_PALETTE clouds_palette_fade_in_2, $60, $20
+    
+    lda #LOSTWOODS_FADE_IN_3
+    sta f:LostWoods_State
+    
+    jml LostWoods_Update_WindowScroll
+
+LostWoods_Fade_In_3:
+LostWoods_Fade_In_3_delay:
+    lda f:LostWoods_Counter
+    inc a
+    sta f:LostWoods_Counter
+
+    cmp #(LOSTWOODS_FADE_IN_DELAY*2)
+    beq LostWoods_Fade_In_3_update
+    jml LostWoods_Update_WindowScroll
+LostWoods_Fade_In_3_update:
+    DMA_PALETTE fog_palette, $60, $20
+    
+    lda #LOSTWOODS_SHOW_UPDATE
+    sta f:LostWoods_State
+    
+    jml LostWoods_Update_WindowScroll
+
+clouds_palette_fade_in_1:
+    .incbin "src/super-awakening/snes/gfx/clouds_fade_in_1.pal"
+clouds_palette_fade_in_2:
+    .incbin "src/super-awakening/snes/gfx/clouds_fade_in_2.pal"
+black_palette:
+    .incbin "src/super-awakening/snes/gfx/black.pal"
+
 fog_tiles:
     .incbin "src/super-awakening/snes/gfx/clouds.4bpp"
 fog_tilemap:
     .incbin "src/super-awakening/snes/gfx/clouds.map"
 fog_palette:
-    .byte $94, $52, $31, $46, $6B, $2D, $08, $21, $84, $10, $00, $00
+    .incbin "src/super-awakening/snes/gfx/clouds.pal"
 
 FOG_MAP_SIZE = 1024
 FOG_MAP_CHUNK_COUNT = (FOG_MAP_SIZE/CHUNK_SIZE)+1

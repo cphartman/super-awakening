@@ -200,6 +200,13 @@ super-awakening/data/sgb_payload.smc: $(snes_source)
 	cl65 -C src/super-awakening/snes/code/smc.cfg -o src/super-awakening/data/sgb_payload.smc src/super-awakening/snes/code/update_loop.asm -g -Ln sgb_payload.vice
 	python3 tools/super-awakening/convert_sym_to_mlb.py azle.sym azle.mlb
 	cat sgb_payload.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" >> azle.mlb
+#	cl65 -C src/super-awakening/snes/code/smc.cfg -o border_gameplay.pal src/super-awakening/snes/gfx/border_gameplay.pal.asm
+#	cl65 -C src/super-awakening/snes/code/smc.cfg -o border_gameplay.4bpp src/super-awakening/snes/gfx/border_gameplay.4bpp.asm
+#	cl65 -C src/super-awakening/snes/code/smc.cfg -o border_gameplay.map src/super-awakening/snes/gfx/border_gameplay.map.asm
+#
+#
+#	python3 tools/super-awakening/convert_sym_to_mlb.py azle.sym azle.mlb
+#	cat sgb_payload.vice | sed "s/al 7F/SnesWorkRam:1/" | sed "s/ ./:/" >> azle.mlb
   
 
 src/super-awakening/bank3F.asm: super-awakening/data/sgb_payload.smc

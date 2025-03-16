@@ -105,6 +105,9 @@ wSuperAwakening::
 .SGB_LoadSystemBorder_Delay:
   ds 1
 
+.SGB_LoadGameplayBorder_Delay:
+  ds 1
+
 .PreviousRoom:
   ds 1
 

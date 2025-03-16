@@ -1,5 +1,6 @@
 GAMEPLAYBORDER_LOAD = GAMEPLAYBORDER_LOAD_PALETTE
 SYSTEMBORDER_LOAD = SYSTEMBORDER_LOAD_PALETTE
+GAMEPLAYBORDER_FADE_IN = GAMEPLAYBORDER_FADE_IN_1
 
 ; States
 GAMEPLAYBORDER_STATE_NONE = 0
@@ -9,7 +10,12 @@ GAMEPLAYBORDER_LOAD_TILEMAP = 3
 SYSTEMBORDER_LOAD_PALETTE = 4
 SYSTEMBORDER_LOAD_TILES = 5
 SYSTEMBORDER_LOAD_TILEMAP = 6
+GAMEPLAYBORDER_FADE_IN_1 = 7
+GAMEPLAYBORDER_FADE_IN_2 = 8
+GAMEPLAYBORDER_FADE_IN_3 = 9
 seta8
+
+GAMEPLAYBORDER_FADE_IN_DELAY = 4
 
 GameplayBorder:
 GameplayBorder_Init:
@@ -55,6 +61,9 @@ GameplayBorder_JumpTable_Low:
 .byte <SystemBorder_Load_Palette
 .byte <SystemBorder_Load_Tiles
 .byte <SystemBorder_Load_TileMap
+.byte <GameplayBorder_Fade_In_1
+.byte <GameplayBorder_Fade_In_2
+.byte <GameplayBorder_Fade_In_3
 GameplayBorder_JumpTable_High:
 .byte >GameplayBorder_End
 .byte >GameplayBorder_Load_Palette
@@ -63,6 +72,9 @@ GameplayBorder_JumpTable_High:
 .byte >SystemBorder_Load_Palette
 .byte >SystemBorder_Load_Tiles
 .byte >SystemBorder_Load_TileMap
+.byte >GameplayBorder_Fade_In_1
+.byte >GameplayBorder_Fade_In_2
+.byte >GameplayBorder_Fade_In_3
 GameplayBorder_JumpTable_Bank:
 .byte ^GameplayBorder_End
 .byte ^GameplayBorder_Load_Palette
@@ -71,16 +83,21 @@ GameplayBorder_JumpTable_Bank:
 .byte ^SystemBorder_Load_Palette
 .byte ^SystemBorder_Load_Tiles
 .byte ^SystemBorder_Load_TileMap
-
+.byte ^GameplayBorder_Fade_In_1
+.byte ^GameplayBorder_Fade_In_2
+.byte ^GameplayBorder_Fade_In_3
 GameplayBorder_Load_Palette:
 
-    DMA_PALETTE border_gameplay_palette, $40, $40
+    DMA_PALETTE gb_white_palette, $40, $80
+    DMA_PALETTE gb_white_palette, $60, $80
+
+    ; DMA_PALETTE border_gameplay_palette, $40, $40
 
     ; Only show BG 2+3
     lda #$06
     sta f:$212C
 
-    ; Configure BG1 to use the correct tile location offset
+    ; Configure BG2 to use the correct tile location offset
     lda #%00100000
     sta $210B
 
@@ -106,8 +123,11 @@ GameplayBorder_Load_TileMap:
     CHUNK_LOAD_EXECUTE GameplayBorder_End, GameplayBorder_Load_TileMap_End
 
 GameplayBorder_Load_TileMap_End:
-    lda #GAMEPLAYBORDER_STATE_NONE
+    lda #GAMEPLAYBORDER_FADE_IN
     sta f:GameplayBorder_State
+
+    lda #0
+    sta f:GameplayBorder_Counter
 
     jml GameplayBorder_End
 
@@ -146,12 +166,65 @@ SystemBorder_Load_TileMap_End:
 
     jml GameplayBorder_End
 
+GameplayBorder_Fade_In_1:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    DMA_PALETTE border_gameplay_palette_fade_in_1, $40, $80
+    
+    lda #GAMEPLAYBORDER_FADE_IN_2
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+GameplayBorder_Fade_In_2:
+GameplayBorder_Fade_In_2_delay:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    cmp #GAMEPLAYBORDER_FADE_IN_DELAY
+    beq GameplayBorder_Fade_In_2_update
+    jml GameplayBorder_End
+GameplayBorder_Fade_In_2_update:
+    DMA_PALETTE border_gameplay_palette_fade_in_2, $40, $80
+    
+    lda #GAMEPLAYBORDER_FADE_IN_3
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+GameplayBorder_Fade_In_3:
+GameplayBorder_Fade_In_3_delay:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    cmp #(GAMEPLAYBORDER_FADE_IN_DELAY*2)
+    beq GameplayBorder_Fade_In_3_update
+    jml GameplayBorder_End
+GameplayBorder_Fade_In_3_update:
+    DMA_PALETTE border_gameplay_palette, $40, $80
+    
+    lda #GAMEPLAYBORDER_STATE_NONE
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+gb_white_palette:
+    .incbin "../../gfx/gb_white.pal"
+border_gameplay_palette_fade_in_1:
+    .incbin "../../gfx/border_gameplay_fade_in_2.pal"
+border_gameplay_palette_fade_in_2:
+    .incbin "../../gfx/border_gameplay_fade_in_2.pal"
+
 border_gameplay_palette:
-    .include "../..//gfx/border_gameplay.pal.asm"
+    .incbin "../..//gfx/border_gameplay.pal"
 border_gameplay_tiles:
-    .include "../..//gfx/border_gameplay.4bpp.asm"
+    .incbin "../..//gfx/border_gameplay.4bpp"
 border_gameplay_tilemap:
-    .include "../..//gfx/border_gameplay.map.asm"
+    .incbin "../..//gfx/border_gameplay.map"
 
 border_system_palette:
     .incbin "../../gfx/border_system.pal"

@@ -119,7 +119,7 @@ FileMenu_Show_Palette_CheckFrameSkip:
     jml FileMenu_End
 FileMenu_Show_Palette_CheckFrameSkip_end:
 
-    DMA_PALETTE border_file_menu_palette, $40, $40
+    DMA_PALETTE border_file_menu_palette, $60, $40
 
     ; Show BG 1 and 3
     lda #$05
