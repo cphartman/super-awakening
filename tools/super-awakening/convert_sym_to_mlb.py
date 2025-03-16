@@ -30,7 +30,9 @@ def convert_sym_to_mlb(input_file, output_file):
                 outfile.write(f"GbPrgRom:{absolute_addr:05X}:{label}\n")
 
             if bank == 1 or bank == 0:
-                outfile.write(f"GameboyMemory:{addr:05X}:{label}\n")
+                absolute_addr = (bank * 0x4000) + addr
+                outfile.write(f"GbPrgRom:{absolute_addr:05X}:{label}_rom\n")
+                outfile.write(f"GameboyMemory:{absolute_addr:05X}:{label}_wram\n")
 
 
 if __name__ == "__main__":

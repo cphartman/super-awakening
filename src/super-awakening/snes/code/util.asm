@@ -74,7 +74,7 @@ SetChunkSrcBank:
     seta8
     .a8
 
-    lda #$7f        ; SRCBANK
+    lda f:ChunkLoader_Src_Bank
     sta $4304       ; Store data Bank into DMA source bank
 
 SetChunkSize: 
@@ -160,7 +160,7 @@ ChecklLastChunk:
     .a8
     lda ChunkLoader_ChunkIndex
     inc a
-    cmp #BORDER_FILE_MENU_MAP_CHUNK_COUNT
+    cmp ChunkLoader_ChunkCount
     beq ChunkLoad_SetupLastChunk
     RTL
 

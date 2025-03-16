@@ -10,6 +10,7 @@ LinkPassOut::
 ._02 dw LoadGameOverStage2Handler                 ; $41C9
 ._03 dw LoadGameOverStage3Handler                 ; $41CB
 ._04 dw GameOverInteractiveHandler                ; $41CD
+._05 dw SuperAwakening_Delay
 
 Data_001_41CF::
     db   $6A, $6A, $6A, $6A, $6A, $6A, $6A, $6A   ; $41CF ; $41CF
@@ -240,10 +241,26 @@ jr_001_42F5::
     ret                                           ; $432B: $C9 ; $432B: $C9
 
 SaveAndQuit::
+
+    ld hl, SuperAwakening_SGB_SystemBorderLoad
+    call SuperAwakening_Trampoline.jumpTo3E
+
     call SaveGameToFile                           ; $432C: $CD $E6 $5D ; $432C: $CD $E6 $5D
     xor  a                                        ; $432F: $AF ; $432F: $AF
     ldh  [hActiveEntityTilesOffset], a            ; $4330: $E0 $F5 ; $4330: $E0 $F5
-    call func_001_6162                            ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
+    
+    ;  This triggers reset to title
+    ; call func_001_6162
+
+.SuperAwakening_GameoverDelay
+    ld a, 60
+    ld [wSuperAwakening.SGB_LoadSystemBorder_Delay], a
+
+    ; Go to super awakening delay
+    ld   hl, hGameOverStage                       
+    inc  [hl]
+.SuperAwakening_GameoverDelay_end
+                         ; $4332: $CD $62 $61 ; $4332: $CD $62 $61
 
 ret_001_4335::
     ret                                           ; $4335: $C9 ; $4335: $C9
@@ -299,3 +316,15 @@ jr_001_435C::
     ld   [hl+], a                                 ; $436D: $22 ; $436D: $22
     ld   [hl], $00                                ; $436E: $36 $00 ; $436E: $36 $00
     ret                                           ; $4370: $C9 ; $4370: $C9
+
+SuperAwakening_Delay:
+    ld a, [wSuperAwakening.SGB_LoadSystemBorder_Delay]
+    dec a
+    ld [wSuperAwakening.SGB_LoadSystemBorder_Delay], a
+    cp 0
+    jp nz, .skip
+    call func_001_6162
+.skip
+    ret
+
+    

@@ -40,27 +40,39 @@ CommandJump:
     .byte <FileMenuShow
     .byte <GameplayBorderShow
     .byte <TitleScreenLoad
-    .byte <TitleScreenShow
+    .byte <TitleScreenAnimate
     .byte <SendScreenScroll
     .byte <DisableScreenScroll
+    .byte <LostWoodsStart
+    .byte <LostWoodsStop
+    .byte <TitleScreenShow
+    .byte <SystemBorderShow
  JumpTable_High:
     .byte >Return
     .byte >FileMenuLoad
     .byte >FileMenuShow
     .byte >GameplayBorderShow
     .byte >TitleScreenLoad
-    .byte >TitleScreenShow
+    .byte >TitleScreenAnimate
     .byte >SendScreenScroll
     .byte >DisableScreenScroll
+    .byte >LostWoodsStart
+    .byte >LostWoodsStop
+    .byte >TitleScreenShow
+    .byte >SystemBorderShow
  JumpTable_Bank:
     .byte ^Return
     .byte ^FileMenuLoad
     .byte ^FileMenuShow
     .byte ^GameplayBorderShow
     .byte ^TitleScreenLoad
-    .byte ^TitleScreenShow
+    .byte ^TitleScreenAnimate
     .byte ^SendScreenScroll
     .byte ^DisableScreenScroll
+    .byte ^LostWoodsStart
+    .byte ^LostWoodsStop
+    .byte ^TitleScreenShow
+    .byte ^SystemBorderShow
 
 FileMenuLoad:
     lda #FILEMENU_LOAD
@@ -102,6 +114,15 @@ TitleScreenLoad:
 
     jmp Return
 
+TitleScreenAnimate:
+    lda #TITLESCREEN_ANIMATE
+    sta a:TitleScreen_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
 TitleScreenShow:
     lda #TITLESCREEN_SHOW
     sta a:TitleScreen_State
@@ -125,6 +146,35 @@ DisableScreenScroll:
 
     lda #SCREENSCROLL_DISABLE
     sta a:ScreenScroll_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+LostWoodsStart:
+
+    lda #LOSTWOODS_START
+    sta a:LostWoods_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+LostWoodsStop:
+
+    lda #LOSTWOODS_STOP
+    sta a:LostWoods_State
+
+    lda #0
+    sta a:command
+
+    jmp Return
+
+SystemBorderShow:
+    lda #SYSTEMBORDER_LOAD
+    sta a:GameplayBorder_State
 
     lda #0
     sta a:command

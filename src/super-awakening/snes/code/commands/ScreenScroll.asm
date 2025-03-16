@@ -29,7 +29,7 @@ ScreenScroll_StateCheck:
     bne ScreenScroll_StateJump
     
     ; No state
-    jmp ScreenScroll_End
+    jml ScreenScroll_End
 
 ScreenScroll_StateJump:
     ; Jump to the curernt state
@@ -330,7 +330,6 @@ ScreenScroll_FollowLink_UpdatePPU:
     sec
     sbc #SCREENSCROLL_WINDOW_OFFSET
 
-    ; I cant figure out how to write 16 bits here properly?
     .a8
     seta8
     sta f:BG3VOFS

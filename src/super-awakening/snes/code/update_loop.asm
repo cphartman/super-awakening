@@ -9,6 +9,7 @@
 
 ; To make debugging easier, put our heap at the top of the injection
 ; so the addresses doesn't shift around with code changes
+INJECTION_HEAD:
    JMP INJECTION_START
 SuperAwakeining_Snes_Wram:   
    .include "wram.asm"
@@ -25,6 +26,7 @@ INJECTION_START:
    .include "commands/GameplayBorder.asm"
    .include "commands/TitleScreen.asm"
    .include "commands/ScreenScroll.asm"
+   .include "commands/LostWoods.asm"
    PLB
    PLP
 

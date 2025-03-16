@@ -771,3 +771,6 @@ include "super-awakening/bank3E.asm"
 section "bank3F",romx[$4000],bank[$3F]
 include "super-awakening/bank3F.asm"
 include "text/dialog_5.asm"
+section "bank40",romx[$4000],bank[$40]
+include "super-awakening/bank40.asm"
+

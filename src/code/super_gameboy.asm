@@ -73,9 +73,13 @@ ENDC
     ld   bc, $06                                  ; $6A85: $01 $06 $00
     call WaitForBCFrames                          ; $6A88: $CD $92 $6B
 
+SuperAwakening_SendSGBPayloads::
     ld hl, SuperAwakening_SendSgbPayload
     call SuperAwakening_Trampoline.jumpTo3F
 
+    ld hl, SuperAwakening_SendSgbPayload_40
+    call SuperAwakening_Trampoline.jumpTo40
+SuperAwakening_SendSGBPayloads_end::
     ; Give priority to the ROM-defined Color Palette
     ; (instead of the player-defined palette)
     ld   hl, SGBForceApplicationPaletteCmd        ; $6A8B: $21 $60 $69
@@ -157,7 +161,7 @@ ENDC
     ; Upload frame tilemap and palettes
     ld   hl, SGBFrameTilemap                      ; $6B21: $21 $00 $60
     ld   de, SGBTransfertBorderCmd                ; $6B24: $11 $50 $69
-    call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
+    ;call SendVRAMCommand                          ; $6B27: $CD $A3 $6B
 
     ld   hl, vTiles0                              ; $6B2A: $21 $00 $80
     ld   bc, $2000                                ; $6B2D: $01 $00 $20

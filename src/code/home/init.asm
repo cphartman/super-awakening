@@ -108,8 +108,5 @@ Init::
     ; On GBC, reset WRAM bank 5
     callsb ClearWRAMBank5                         ; $01CF: $3E $20 $EA $00 $21 $CD $54 $48
 
-    ld hl, SuperAwakening_SGB_TitleScreen_Load
-    call SuperAwakening_Trampoline.jumpTo3E
-
     ; Start the game loop
     jp   RenderLoop.waitForNextFrame              ; $01D7: $C3 $5F $03

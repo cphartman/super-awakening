@@ -16,6 +16,8 @@ state_variable_2:
 ; Load from SRC=>DEST in chunks the load is split over multiple frames
 ChunkLoader_Src:
    .byte $00, $00
+ChunkLoader_Src_Bank:
+   .byte $7F
 ChunkLoader_Dest:
    .byte $00, $00
 ChunkLoader_ChunkSize:
@@ -49,6 +51,18 @@ TitleScreen_State:
 TitleScreen_Counter:
    .byte $00
 
+TitleScreen_Wipe_Top:
+   .byte $00
+
+TitleScreen_Wipe_Left:
+   .byte $00
+
+TitleScreen_Wipe_Right:
+   .byte $00
+
+TitleScreen_Wipe_Bottom:
+   .byte $00
+
 ScreenScroll_State:
    .byte $00
 
@@ -63,6 +77,20 @@ ScreenScroll_WindowPositionY:
 ScreenScroll_LinkPositionX:
    .byte $00
 ScreenScroll_LinkPositionY:
+   .byte $00
+
+LostWoods_State:
+   .byte $00
+   
+LostWoods_WindowX:
+   .byte $00, $00
+
+LostWoods_WindowY:
+   .byte $00, $00
+
+LostWoods_ScrollDelay_X:
+   .byte $00
+LostWoods_ScrollDelay_Y:
    .byte $00
 
 Border_Original_Palette_Fade_0: 

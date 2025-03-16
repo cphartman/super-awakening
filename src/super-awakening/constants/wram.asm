@@ -102,5 +102,11 @@ wSuperAwakening::
 .SGB_SendPosition_Delay:
   ds 1
 
+.SGB_LoadSystemBorder_Delay:
+  ds 1
+
 .PreviousRoom:
+  ds 1
+
+.SGB_InLostWoods:
   ds 1

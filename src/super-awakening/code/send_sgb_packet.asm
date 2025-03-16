@@ -229,6 +229,21 @@ SuperAwakening_SGB_TitleScreen_Show:
     ld a, 1
     ld [wSuperAwakening.SGB_PacketLength], a
 
+    ld a, 10
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_TitleScreen_Animate:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
     ld a, $05
     ld [wSuperAwakening.SGB_PacketData], a
 
@@ -271,3 +286,46 @@ SuperAwakening_SGB_DisableScreenScroll:
     call SuperAwakening_copy_SendUploadCommand
 
     ret
+
+SuperAwakening_SGB_LostWoodsStart:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $08
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ret
+
+SuperAwakening_SGB_LostWoodsStop:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $09
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ret
+
+SuperAwakening_SGB_SystemBorderLoad:
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, 11
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank

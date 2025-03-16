@@ -10,9 +10,69 @@ SuperAwakening_SGB_Events::
     jp .SetEvents_end
 
 .RoomChanged:
-    ld [wSuperAwakening.PreviousRoom], a
+    
+; Lost woods = $40 -> $74
+.LostWoods:
+.LostWoods_Check:
+    ; Get Room X
+    ld a, [hMapRoom]
+    and $0F
+    ; Check right border
+    scf
+    ccf
+    sbc $04
+    jp nc, .LostWoods_Exit
+
+.LostWoods_Check_Top:
+    ; Get Room Y
+    ld a, [hMapRoom]
+    and $F0
+    rra
+    rra
+    rra
+    rra
+    ld b, a
+    ; Check top border
+    scf
+    ccf
+    sbc $04
+    jp c, .LostWoods_Exit
+.LostWoods_Check_Bottom:
+    ; Restore Room Y
+    ld a, b
+    ; Check bottom border
+    scf
+    ccf
+    sbc $08
+    jp nc, .LostWoods_Exit
+    jp .LostWoods_Enter
+.LostWoods_Check_End:
+
+.LostWoods_Enter:
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 0
+    jp z, .LostWoods_SendEnter
+    jp .LostWoods_End
+.LostWoods_SendEnter:
+    ld a, 1
+    ld [wSuperAwakening.SGB_InLostWoods], a
+    call SuperAwakening_SGB_LostWoodsStart
+    jp .LostWoods_End
+
+.LostWoods_Exit:
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp z, .LostWoods_SendExit
+    jp .LostWoods_End
+.LostWoods_SendExit:
+    ld a, 0
+    ld [wSuperAwakening.SGB_InLostWoods], a
+    call SuperAwakening_SGB_LostWoodsStop
+
+.LostWoods_End:
 
 .CheckEnableScreenScroll:
+    ld a, [hMapRoom]
     cp $CE
     jp z, .StartScreenScroll
     cp $BE
@@ -67,4 +127,6 @@ SuperAwakening_SGB_Events::
 
 .CheckEvents_end:
 
+    ld a, [hMapRoom]
+    ld [wSuperAwakening.PreviousRoom], a
 .End:

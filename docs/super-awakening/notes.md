@@ -81,6 +81,8 @@ truncate -s 2048 src/super-awakening/snes/gfx/azle_000.map
 ython3 convertBinToText.py
 
 
-I think the -R with the palette generation is conflicting with the tile generation, need to split that into 2 commands?
-
 ./superfamiconv palette -i src/super-awakening/snes/gfx/azle_000.png -d src/super-awakening/snes/gfx/azle_000.pal -W 8 -H 8 -v -P 4
+
+dd if=sgb2.sfc of=border_system.4bpp bs=1 skip=$((0x5C2C0)) count=$((0x1000)) status=none
+dd if=sgb2.sfc of=border_system.pal bs=1 skip=$((0x58080)) count=$((0x40)) status=none
+dd if=sgb2.sfc of=border_system.map bs=1 skip=$((0x51800)) count=$((0x700)) status=none

@@ -83,6 +83,7 @@ IntroHandlerEntryPoint::
     ld   [wD00F], a                               ; $6E8C: $EA $0F $D0
     call func_001_7D4E                            ; $6E8F: $CD $4E $7D
 
+.SuperAwakening_SendTitleScreenPacket
     ld hl, SuperAwakening_SGB_TitleScreen_Show
     call SuperAwakening_Trampoline.jumpTo3E
 
@@ -184,6 +185,10 @@ ENDC
     ld   [wD016], a                               ; $6F20: $EA $16 $D0
     xor  a                                        ; $6F23: $AF
     ld   [wD017], a                               ; $6F24: $EA $17 $D0
+
+    ld hl, SuperAwakening_SGB_TitleScreen_Load
+    call SuperAwakening_Trampoline.jumpTo3E
+
     jp   IncrementGameplaySubtypeAndReturn        ; $6F27: $C3 $D6 $44
 
 IntroSceneStage1Handler::
@@ -651,6 +656,13 @@ Data_001_7264::
 
 IntroStage8Handler::
     ld   a, [wIntroSubTimer]                      ; $7272: $FA $02 $D0
+.SuperAwakening_SendTitleAnimatePacket
+    cp 0
+    jp nz, .SuperAwakening_SendTitleAnimatePacket_end
+    ld hl, SuperAwakening_SGB_TitleScreen_Animate
+    call SuperAwakening_Trampoline.jumpTo3E
+    ld   a, [wIntroSubTimer]
+.SuperAwakening_SendTitleAnimatePacket_end
     sla  a                                        ; $7275: $CB $27
     ld   e, a                                     ; $7277: $5F
     ld   d, $00                                   ; $7278: $16 $00
