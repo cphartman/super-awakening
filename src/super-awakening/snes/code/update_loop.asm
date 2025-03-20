@@ -27,6 +27,7 @@ INJECTION_START:
    .include "commands/TitleScreen.asm"
    .include "commands/ScreenScroll.asm"
    .include "commands/LostWoods.asm"
+INJECTION_EXIT:
    PLB
    PLP
 

@@ -599,6 +599,13 @@ SuperAwakening_InventoryScreen_Open:
 
 SuperAwakening_InventoryScreen_Close:
 
+.SuperAwakening_InventoryScreen_Close_CheckLostWoods
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .SuperAwakening_InventoryScreen_Close_CheckLostWoods_End
+    call SuperAwakening_SGB_LostWoodsStart
+.SuperAwakening_InventoryScreen_Close_CheckLostWoods_End
+
 .refresh_weapon_3
     ld a, [wSuperAwakening.Weapon3_Inventory_Index]
     ld c, a

@@ -1,6 +1,7 @@
 SuperAwakening_Load::
 
 .initialize_tutorial_flags
+
     ld a, [wSaveSlot]
     cp TUTORIAL_SAVE_SLOT
     ; Probably need to turn off flags too otherwise they could carry into a subsequent load?

@@ -2405,6 +2405,10 @@ InventoryInitialHandler::
     ei                                            ; $593F: $FB
 
 .notGBC:
+
+    ld hl, SuperAwakening_SGB_LostWoods_InventoryStart
+    call SuperAwakening_Trampoline.jumpTo3E
+
     call IncrementGameplaySubtype_20              ; $5940: $CD $83 $66
     ; Fall through and handle next gameplay
     ; subtype directly this frame
@@ -4257,6 +4261,10 @@ CloseInventory:
     
     ld hl, SuperAwakening_InventoryScreen_Close
     call SuperAwakening_Trampoline.jumpTo3E
+
+    ld hl, SuperAwakening_SGB_LostWoods_InventoryEnd
+    call SuperAwakening_Trampoline.jumpTo3E
+    
 .return:
     ret                                           ; $6445: $C9
 

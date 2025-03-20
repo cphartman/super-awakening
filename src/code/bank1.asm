@@ -766,6 +766,10 @@ PeachPictureStateAHandler::
     call func_6A7C                                ; $5822: $CD $7C $6A
 
 FileSaveFadeOut::
+    ; Bug: This spams lost woods end for a few frames
+    ld hl, SuperAwakening_SGB_LostWoods_SaveEnd
+    call SuperAwakening_Trampoline.jumpTo3E
+
     call func_1A22                                ; $5825: $CD $22 $1A
     ld   a, [wTransitionSequenceCounter]          ; $5828: $FA $6B $C1
     cp   $04                                      ; $582B: $FE $04
@@ -2462,6 +2466,12 @@ func_001_6162::
     ldh  [hBaseScrollX], a                        ; $617D: $E0 $96
     ld   [wSwitchBlocksState], a                  ; $617F: $EA $FB $D6
     ld   [wSwitchableObjectAnimationStage], a     ; $6182: $EA $F8 $D6
+SuperAwakening_Reset_Variables:
+    ld   [wSuperAwakening.Dash_Enabled], a
+    ld   [wSuperAwakening.PreviousRoom], a
+    ld   [wSuperAwakening.SGB_InLostWoods], a
+    ld   [hMapRoom], a
+SuperAwakening_Reset_Variables_end:
     ld   a, $18                                   ; $6185: $3E $18
     ldh  [hButtonsInactiveDelay], a               ; $6187: $E0 $B5
     ret                                           ; $6189: $C9

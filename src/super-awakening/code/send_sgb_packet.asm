@@ -330,3 +330,158 @@ SuperAwakening_SGB_SystemBorderLoad:
 
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_InventoryStart:
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $09
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $20
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_InventoryEnd:
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $08
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $20
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_Death:
+    ldh  a, [hLinkCountdown]
+    cp $A0
+    jp nz, .return
+
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $09
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+
+SuperAwakening_SGB_LostWoods_SaveStart:
+
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $09
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_SaveEnd:
+    ld a, [wTransitionSequenceCounter]
+    cp 0
+    jp nz, .return
+
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $08
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_MapStart:
+
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $09
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_LostWoods_MapEnd:
+    ld a, [wTransitionSequenceCounter]
+    cp 0
+    jp nz, .return
+
+    ld a, [wSuperAwakening.SGB_InLostWoods]
+    cp 1
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $08
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $01
+    jp SuperAwakening_Trampoline.returnToBank

@@ -21,7 +21,7 @@ SuperAwakening_SGB_Events::
     scf
     ccf
     sbc $04
-    jp nc, .LostWoods_Exit
+    jp nc, .LostWoods_False
 
 .LostWoods_Check_Top:
     ; Get Room Y
@@ -36,7 +36,7 @@ SuperAwakening_SGB_Events::
     scf
     ccf
     sbc $04
-    jp c, .LostWoods_Exit
+    jp c, .LostWoods_False
 .LostWoods_Check_Bottom:
     ; Restore Room Y
     ld a, b
@@ -44,11 +44,11 @@ SuperAwakening_SGB_Events::
     scf
     ccf
     sbc $08
-    jp nc, .LostWoods_Exit
-    jp .LostWoods_Enter
+    jp nc, .LostWoods_False
 .LostWoods_Check_End:
+    jp.LostWoods_True
 
-.LostWoods_Enter:
+.LostWoods_True:
     ld a, [wSuperAwakening.SGB_InLostWoods]
     cp 0
     jp z, .LostWoods_SendEnter
@@ -59,7 +59,7 @@ SuperAwakening_SGB_Events::
     call SuperAwakening_SGB_LostWoodsStart
     jp .LostWoods_End
 
-.LostWoods_Exit:
+.LostWoods_False:
     ld a, [wSuperAwakening.SGB_InLostWoods]
     cp 1
     jp z, .LostWoods_SendExit

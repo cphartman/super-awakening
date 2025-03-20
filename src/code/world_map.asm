@@ -26,6 +26,9 @@ WorldMapEntryPoint::
 ._06 dw FileSaveFadeOut                           ; $5646
 
 WorldMapState0Handler::
+    ld hl, SuperAwakening_SGB_LostWoods_MapStart
+    call SuperAwakening_Trampoline.jumpTo3E
+
     call IncrementGameplaySubtype                 ; $5648: $CD $D6 $44
     ldh  a, [hIsGBC]                              ; $564B: $F0 $FE
     and  a                                        ; $564D: $A7

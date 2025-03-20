@@ -13,8 +13,12 @@ FileSaveEntryPoint::
 ._04 dw FileSaveVisible                           ; $400C
 ._05 dw FileSaveInteractive                       ; $400E
 ._06 dw FileSaveFadeOut                           ; $4010
+._07 dw SuperAwakening_SaveScreenQuit_Delay_State
 
 FileSaveInitial::
+    ld hl, SuperAwakening_SGB_LostWoods_SaveStart
+    call SuperAwakening_Trampoline.jumpTo3E
+
     call IncrementGameplaySubtype                 ; $4012: $CD $D6 $44
 
     ; If running on grayscale GB, jump directly to the
@@ -143,7 +147,8 @@ FileSaveInteractive::
     ldh  [hJingle], a                             ; $40B5: $E0 $F2
     ld   a, [wC13F]                               ; $40B7: $FA $3F $C1
     cp   $01                                      ; $40BA: $FE $01
-    jr   z, jr_001_40F9                           ; $40BC: $28 $3B
+    ;jr   z, jr_001_40F9                           ; $40BC: $28 $3B
+    jr   z, SuperAwakening_SaveScreenQuit_Delay_Setup
     call IncrementGameplaySubtype                 ; $40BE: $CD $D6 $44
     xor  a                                        ; $40C1: $AF
     ld   [wTransitionSequenceCounter], a          ; $40C2: $EA $6B $C1
@@ -220,6 +225,20 @@ LCDOn::
     ldh  [hVolumeLeft], a                         ; $4125: $E0 $AA
 .return
     ret                                           ; $4127: $C9
+
+SuperAwakening_SaveScreenQuit_Delay_Setup::
+    ld hl, SuperAwakening_SGB_SystemBorderLoad
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ld a, 60
+    ld [wSuperAwakening.SGB_LoadSystemBorder_Delay], a
+
+    ; Go to super awakening delay state
+    ld   a, $07           
+    ld  [wGameplaySubtype], a
+    ret
+
+
 
 ; OAM Y positions
 Data_001_4128::
@@ -351,3 +370,13 @@ func_001_412A::
     ld   [wBGPalette], a                          ; $41BC: $EA $97 $DB
     ld   [rBGP], a                                ; $41BF: $E0 $47
     ret                                           ; $41C1: $C9
+
+SuperAwakening_SaveScreenQuit_Delay_State:
+    ld a, [wSuperAwakening.SGB_LoadSystemBorder_Delay]
+    dec a
+    ld [wSuperAwakening.SGB_LoadSystemBorder_Delay], a
+    cp 0
+    jp nz, .skip
+    call func_001_6162
+.skip
+    ret

@@ -37,7 +37,7 @@ GameplayBorder_StateCheck:
     bne GameplayBorder_StateJump
     
     ; No state
-    jmp GameplayBorder_End
+    jmp GameplayBorder_Exit
 
 GameplayBorder_StateJump:
     ; Jump to the curernt state
@@ -251,4 +251,7 @@ BORDER_TILE_CHUNK_COUNT = (BORDER_TILE_SIZE/CHUNK_SIZE)+1
 BORDER_TILE_LAST_CHUNK_SIZE = BORDER_TILE_SIZE - (BORDER_TILE_SIZE/CHUNK_SIZE)*CHUNK_SIZE
 
 GameplayBorder_End:
+    jml INJECTION_EXIT
+
+GameplayBorder_Exit:
     nop

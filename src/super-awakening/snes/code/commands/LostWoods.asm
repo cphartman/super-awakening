@@ -44,8 +44,13 @@ LostWoods_StateCheck:
     ; No state
     jml LostWoods_End
 
+; When loading into lost woods, the Gameplay border and the LostWoods tiles are running the loader 
+; at the same time
+
 LostWoods_StateJump:
     ; Jump to the curernt state
+    .i8
+    setxy8
     tax
     lda LostWoods_JumpTable_Low,X
     sta $00  ; Store low byte
@@ -147,6 +152,10 @@ LostWoods_Load_TileMap_Bottom_End:
     ; Initialize fade counter
     lda #0
     sta f:LostWoods_Counter
+
+    ; Configure BG1 to use the correct tile location offset
+    lda #1
+    sta $210B
 
     jml LostWoods_End
 

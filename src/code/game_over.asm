@@ -44,6 +44,9 @@ LinkPassOutHandler::
     ld   [wScreenShakeHorizontal], a              ; $4204: $EA $55 $C1 ; $4204: $EA $55 $C1
     ld   [wScreenShakeVertical], a                ; $4207: $EA $56 $C1 ; $4207: $EA $56 $C1
 
+    ld hl, SuperAwakening_SGB_LostWoods_Death
+    call SuperAwakening_Trampoline.jumpTo3E
+
     ; If the passing out animation is running, jump to it.
     ldh  a, [hLinkCountdown]                      ; $420A: $F0 $B7 ; $420A: $F0 $B7
     and  a                                        ; $420C: $A7 ; $420C: $A7
