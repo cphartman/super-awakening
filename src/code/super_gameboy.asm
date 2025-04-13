@@ -79,6 +79,9 @@ SuperAwakening_SendSGBPayloads::
 
     ld hl, SuperAwakening_SendSgbPayload_40
     call SuperAwakening_Trampoline.jumpTo40
+
+    ld hl, SuperAwakening_SendSgbPayload_41
+    call SuperAwakening_Trampoline.jumpTo41
 SuperAwakening_SendSGBPayloads_end::
     ; Give priority to the ROM-defined Color Palette
     ; (instead of the player-defined palette)

@@ -48,6 +48,9 @@ GameplayBorder_State:
 GameplayBorder_Counter:
    .byte $00
 
+GameplayBorder_CrackedIndex:
+   .byte $00
+
 TitleScreen_State:
    .byte $00
 

@@ -7660,6 +7660,11 @@ SuperAwakening_Trampoline::
     ld   a, $40
     ld   [rSelectROMBank], a
     jp hl
+.jumpTo41
+    ; Jump to hl in $3F
+    ld   a, $41
+    ld   [rSelectROMBank], a
+    jp hl
 .returnToBank
    ; Return to bank in [a]
    ld   [rSelectROMBank], a

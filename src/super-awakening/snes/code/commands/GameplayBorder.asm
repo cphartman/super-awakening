@@ -13,6 +13,7 @@ SYSTEMBORDER_LOAD_TILEMAP = 6
 GAMEPLAYBORDER_FADE_IN_1 = 7
 GAMEPLAYBORDER_FADE_IN_2 = 8
 GAMEPLAYBORDER_FADE_IN_3 = 9
+GAMEPLAYBORDER_LOAD_CRACKED = 10
 seta8
 
 GAMEPLAYBORDER_FADE_IN_DELAY = 4
@@ -64,6 +65,7 @@ GameplayBorder_JumpTable_Low:
 .byte <GameplayBorder_Fade_In_1
 .byte <GameplayBorder_Fade_In_2
 .byte <GameplayBorder_Fade_In_3
+.byte <GameplayBorder_Load_TileMap_Cracked
 GameplayBorder_JumpTable_High:
 .byte >GameplayBorder_End
 .byte >GameplayBorder_Load_Palette
@@ -75,6 +77,7 @@ GameplayBorder_JumpTable_High:
 .byte >GameplayBorder_Fade_In_1
 .byte >GameplayBorder_Fade_In_2
 .byte >GameplayBorder_Fade_In_3
+.byte >GameplayBorder_Load_TileMap_Cracked
 GameplayBorder_JumpTable_Bank:
 .byte ^GameplayBorder_End
 .byte ^GameplayBorder_Load_Palette
@@ -86,6 +89,7 @@ GameplayBorder_JumpTable_Bank:
 .byte ^GameplayBorder_Fade_In_1
 .byte ^GameplayBorder_Fade_In_2
 .byte ^GameplayBorder_Fade_In_3
+.byte ^GameplayBorder_Load_TileMap_Cracked
 GameplayBorder_Load_Palette:
 
     DMA_PALETTE gb_white_palette, $40, $80
@@ -123,6 +127,94 @@ GameplayBorder_Load_TileMap:
     CHUNK_LOAD_EXECUTE GameplayBorder_End, GameplayBorder_Load_TileMap_End
 
 GameplayBorder_Load_TileMap_End:
+    lda #GAMEPLAYBORDER_LOAD_CRACKED
+    sta f:GameplayBorder_State
+
+    lda #0
+    sta f:GameplayBorder_Counter
+
+    jml GameplayBorder_End
+    
+GameplayBorder_Load_TileMap_Cracked:
+
+GameplayBorder_Load_TileMap_Cracked_SetupChunkLoader:
+    seta16
+    .a16
+    lda #$25A0
+    sta f:ChunkLoader_Dest
+    seta8
+    .a8
+
+    ; Address in the table is index*(3 bytes)
+    lda f:GameplayBorder_CrackedIndex
+    clc
+    adc f:GameplayBorder_CrackedIndex
+    adc f:GameplayBorder_CrackedIndex
+
+    ; Copy to index16
+    seta16
+    .a16
+    and #$00FF
+    tax
+    
+    ; Set the src image address in the chunk loader  
+    lda f:GameplayBorder_CrackedImages, x
+    sta f:ChunkLoader_Src
+    
+    ; Set src bank
+    seta8
+    .a8
+    lda f:GameplayBorder_CrackedImages+2, x
+    sta f:ChunkLoader_Src_Bank
+    
+    lda #$60
+    sta f:ChunkLoader_CurrentChunkSize
+
+GameplayBorder_Load_TileMap_Cracked_SetupChunkLoader_end:
+
+GameplayBorder_Load_TileMap_Cracked_SetChunkRow:
+
+
+    ; Get Index for the offset/address table
+    lda f:GameplayBorder_Counter
+    clc
+    adc f:GameplayBorder_Counter
+    
+    seta16
+    .a16
+    ; Drop top byte
+    and #$00FF
+    tax
+
+    ; Offset src address
+    lda f:ChunkLoader_Src
+    clc
+    adc f:GameplayBorder_CrackedImages_ChunkLoaderSrcRowOffset,X
+    sta f:ChunkLoader_Src
+
+    ; Set dest address
+    lda f:GameplayBorder_CrackedImages_ChunkLoaderDestRowAddress,X
+    sta f:ChunkLoader_Dest
+
+    seta8
+    .a8
+
+GameplayBorder_Load_TileMap_Cracked_SetChunkRow_end:
+
+GameplayBorder_Load_TileMap_Cracked_DoCopy:
+    WAIT_FOR_VBLANK
+    CHUNK_LOAD_DMA
+
+GameplayBorder_Load_TileMap_Cracked_NextState:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    cmp #03
+    beq GameplayBorder_Load_TileMap_Cracked_StartFadeIn
+    jml GameplayBorder_End
+
+GameplayBorder_Load_TileMap_Cracked_StartFadeIn:
     lda #GAMEPLAYBORDER_FADE_IN
     sta f:GameplayBorder_State
 
@@ -222,9 +314,9 @@ border_gameplay_palette_fade_in_2:
 border_gameplay_palette:
     .incbin "../..//gfx/border_gameplay.pal"
 border_gameplay_tiles:
-    .incbin "../..//gfx/border_gameplay.4bpp"
+    .incbin "../../gfx/border_gameplay.4bpp"
 border_gameplay_tilemap:
-    .incbin "../..//gfx/border_gameplay.map"
+    .incbin "../../gfx/border_gameplay.map"
 
 border_system_palette:
     .incbin "../../gfx/border_system.pal"
@@ -233,6 +325,72 @@ border_system_tiles:
 border_system_tilemap:
     .incbin "../../gfx/border_system.map"
 
+border_gameplay_cracked_tiles_0:
+    .incbin "../../gfx/border-cracked/cracked-0.4bpp"
+border_gameplay_cracked_tiles_1:
+    .incbin "../../gfx/border-cracked/cracked-1.4bpp"
+border_gameplay_cracked_tiles_2:
+    .incbin "../../gfx/border-cracked/cracked-2.4bpp"
+border_gameplay_cracked_tiles_3:
+    .incbin "../../gfx/border-cracked/cracked-3.4bpp"
+border_gameplay_cracked_tiles_4:
+    .incbin "../../gfx/border-cracked/cracked-4.4bpp"
+border_gameplay_cracked_tiles_5:
+    .incbin "../../gfx/border-cracked/cracked-5.4bpp"
+border_gameplay_cracked_tiles_6:
+    .incbin "../../gfx/border-cracked/cracked-6.4bpp"
+border_gameplay_cracked_tiles_7:
+    .incbin "../../gfx/border-cracked/cracked-7.4bpp"
+border_gameplay_cracked_tiles_8:
+    .incbin "../../gfx/border-cracked/cracked-8.4bpp"
+
+GameplayBorder_CrackedImages:
+GameplayBorder_CrackedImages_0:
+    .byte <border_gameplay_cracked_tiles_0
+    .byte >border_gameplay_cracked_tiles_0
+    .byte ^border_gameplay_cracked_tiles_0
+GameplayBorder_CrackedImages_1:
+    .byte <border_gameplay_cracked_tiles_1
+    .byte >border_gameplay_cracked_tiles_1
+    .byte ^border_gameplay_cracked_tiles_1
+GameplayBorder_CrackedImages_2:
+    .byte <border_gameplay_cracked_tiles_2
+    .byte >border_gameplay_cracked_tiles_2
+    .byte ^border_gameplay_cracked_tiles_2
+GameplayBorder_CrackedImages_3:
+    .byte <border_gameplay_cracked_tiles_3
+    .byte >border_gameplay_cracked_tiles_3
+    .byte ^border_gameplay_cracked_tiles_3
+GameplayBorder_CrackedImages_4:
+    .byte <border_gameplay_cracked_tiles_4
+    .byte >border_gameplay_cracked_tiles_4
+    .byte ^border_gameplay_cracked_tiles_4
+GameplayBorder_CrackedImages_5:
+    .byte <border_gameplay_cracked_tiles_5
+    .byte >border_gameplay_cracked_tiles_5
+    .byte ^border_gameplay_cracked_tiles_5
+GameplayBorder_CrackedImages_6:
+    .byte <border_gameplay_cracked_tiles_6
+    .byte >border_gameplay_cracked_tiles_6
+    .byte ^border_gameplay_cracked_tiles_6
+GameplayBorder_CrackedImages_7:
+    .byte <border_gameplay_cracked_tiles_7
+    .byte >border_gameplay_cracked_tiles_7
+    .byte ^border_gameplay_cracked_tiles_7
+GameplayBorder_CrackedImages_8:
+    .byte <border_gameplay_cracked_tiles_8
+    .byte >border_gameplay_cracked_tiles_8
+    .byte ^border_gameplay_cracked_tiles_8
+    
+GameplayBorder_CrackedImages_ChunkLoaderSrcRowOffset:
+    .byte $00, $00
+    .byte $60, $00
+    .byte $C0, $00
+GameplayBorder_CrackedImages_ChunkLoaderDestRowAddress:
+    .byte $A0, $25
+    .byte $30, $26
+    .byte $E0, $26
+
 SYSTEM_TILE_SIZE = 2048
 SYSTEM_TILE_CHUNK_COUNT = (SYSTEM_TILE_SIZE/CHUNK_SIZE)+1
 SYSTEM_TILE_LAST_CHUNK_SIZE = SYSTEM_TILE_SIZE - (SYSTEM_TILE_SIZE/CHUNK_SIZE)*CHUNK_SIZE
@@ -240,7 +398,6 @@ SYSTEM_TILE_LAST_CHUNK_SIZE = SYSTEM_TILE_SIZE - (SYSTEM_TILE_SIZE/CHUNK_SIZE)*C
 SYSTEM_MAP_SIZE = 1792
 SYSTEM_MAP_CHUNK_COUNT = (SYSTEM_MAP_SIZE/CHUNK_SIZE)+1
 SYSTEM_MAP_LAST_CHUNK_SIZE = SYSTEM_MAP_SIZE - (SYSTEM_MAP_SIZE/CHUNK_SIZE)*CHUNK_SIZE
-
 
 BORDER_MAP_SIZE = (8*256)
 BORDER_MAP_CHUNK_COUNT = (BORDER_MAP_SIZE/CHUNK_SIZE)+1
@@ -255,3 +412,4 @@ GameplayBorder_End:
 
 GameplayBorder_Exit:
     nop
+

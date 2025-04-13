@@ -1,21 +1,28 @@
 ; SGB injection payload
 
-SuperAwakening_SendSgbPayload_40::
+SuperAwakening_SendSgbPayload_41::
 
     ; Upload payload
-    ld   hl, SuperAwakening_SgbPayload_40
-    ld   de, SuperAwakening_SendPayloadCmd_4
-    call SuperAwakening_SendVRAMCommand_40
+    ld   hl, SuperAwakening_SgbPayload_41
+    ld   de, SuperAwakening_SendPayloadCmd_7
+    call SuperAwakening_SendVRAMCommand_41
 
+/*
         ; Upload payload
-    ld   hl, SuperAwakening_SgbPayload_40+$1000
-    ld   de, SuperAwakening_SendPayloadCmd_5
-    call SuperAwakening_SendVRAMCommand_40
+    ld   hl, SuperAwakening_SgbPayload_41+$1000
+    ld   de, SuperAwakening_SendPayloadCmd_8
+    call SuperAwakening_SendVRAMCommand_41
 
             ; Upload payload
-    ld   hl, SuperAwakening_SgbPayload_40+$2000
-    ld   de, SuperAwakening_SendPayloadCmd_6
-    call SuperAwakening_SendVRAMCommand_40
+    ld   hl, SuperAwakening_SgbPayload_41+$2000
+    ld   de, SuperAwakening_SendPayloadCmd_9
+    call SuperAwakening_SendVRAMCommand_41
+*/
+    ; Upload gameloop hook
+    ld   hl, SuperAwakening_SendHookCmd_41                
+    call SuperAwakening_SendUploadCommand_41                        
+    ld   bc, $06                                  
+    call SuperAwakening_WaitForBCFrames_41    
 
 .return
     ld a, $3C
@@ -24,7 +31,7 @@ SuperAwakening_SendSgbPayload_40::
 ; ----------------------------------
 ; Copied from code/super_gameboy.asm
 ; ----------------------------------
-SuperAwakening_SendUploadCommand_40::
+SuperAwakening_SendUploadCommand_41::
     ld   a, [hl]                                  ; $6B51: $7E
     and  %00000111                                ; $6B52: $E6 $07
     ret  z                                        ; $6B54: $C8
@@ -65,7 +72,7 @@ SuperAwakening_SendUploadCommand_40::
     call SuperAwakening_WaitFor3Frames                           ; $6B81: $CD $86 $6B
     jr   .func_03C_6B58                           ; $6B84: $18 $D2
 
-SuperAwakening_WaitFor3Frames_40::
+SuperAwakening_WaitFor3Frames_41::
     ld   de, $1B58                                ; $6B86: $11 $58 $1B
 .loop_6B89_3C
     nop                                           ; $6B89: $00
@@ -82,7 +89,7 @@ SuperAwakening_WaitFor3Frames_40::
 ;
 ; Inputs:
 ;  - bc:   the number of frames to wait for
-SuperAwakening_WaitForBCFrames_40::
+SuperAwakening_WaitForBCFrames_41::
     ; Inner loop: wait for one frame.
     ;
     ; As the LCD screen is off, we can't use VBlank for timing.
@@ -113,7 +120,7 @@ SuperAwakening_WaitForBCFrames_40::
 ; Inputs:
 ;   hl   data origin address
 ;   de   addess of the SGB command to send
-SuperAwakening_SendVRAMCommand_40::
+SuperAwakening_SendVRAMCommand_41::
     push de                                       ; $6BA3: $D5
     ld   a, $E4                                   ; $6BA4: $3E $E4
     ld   [rBGP], a                                ; $6BA6: $E0 $47
@@ -137,11 +144,11 @@ SuperAwakening_SendVRAMCommand_40::
     ld   a, LCDCF_ON | LCDCF_BGON                 ; $6BC6: $3E $81
     ld   [rLCDC], a                               ; $6BC8: $E0 $40
     ld   bc, $05                                  ; $6BCA: $01 $05 $00
-    call SuperAwakening_WaitForBCFrames_40                          ; $6BCD: $CD $92 $6B
+    call SuperAwakening_WaitForBCFrames_41                          ; $6BCD: $CD $92 $6B
     pop  hl                                       ; $6BD0: $E1
-    call SuperAwakening_SendUploadCommand_40                        ; $6BD1: $CD $51 $6B
+    call SuperAwakening_SendUploadCommand_41                        ; $6BD1: $CD $51 $6B
     ld   bc, $06                                  ; $6BD4: $01 $06 $00
-    call SuperAwakening_WaitForBCFrames_40                          ; $6BD7: $CD $92 $6B
+    call SuperAwakening_WaitForBCFrames_41                          ; $6BD7: $CD $92 $6B
     xor  a                                        ; $6BDA: $AF
     ld   [rLCDC], a                               ; $6BDB: $E0 $40
     ret                                           ; $6BDD: $C9

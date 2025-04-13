@@ -44,7 +44,7 @@ WAIT_FOR_VBLANK_LOOP:
 .endmacro
 
 .macro  CHUNK_LOAD_DMA
-
+.scope
     LDA #0
     PHA
     PLB
@@ -88,6 +88,7 @@ SetChunkSize:
 
     lda #$01    ; Initiate DMA transfer (channel 1)
     sta $420B
+.endscope
 .endmacro
 
 ; Setup all the chunk load variables
