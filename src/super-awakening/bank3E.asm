@@ -5,6 +5,7 @@ include "super-awakening/code/save_load.asm"
 include "super-awakening/code/inventory_screen.asm"
 include "super-awakening/code/tutorial.asm"
 include "super-awakening/code/send_sgb_packet.asm"
+include "super-awakening/code/sgb_events/instrument_update.asm"
 
 SuperAwakening_Gfx_ItemsOutline:
 incbin "super-awakening/gfx/items_outline.dmg.2bpp"

@@ -103,6 +103,9 @@ GameplayBorderShow:
     lda #GAMEPLAYBORDER_LOAD
     sta a:GameplayBorder_State
 
+    lda a:command+1
+    sta a:GameplayBorder_CrackedIndex
+
     lda #0
     sta a:command
 

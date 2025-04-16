@@ -197,11 +197,15 @@ SuperAwakening_SGB_FileMenuShow:
 SuperAwakening_SGB_GameplayBoder_Show:
     call SuperAwakening_InitPacket
     
-    ld a, 1
+    ld a, 2
     ld [wSuperAwakening.SGB_PacketLength], a
 
     ld a, $03
     ld [wSuperAwakening.SGB_PacketData], a
+
+    call InstrumentUpdate_GetInstrumentCount
+    ld a, b
+    ld [wSuperAwakening.SGB_PacketData+1], a
 
     ld hl, wSuperAwakening.SGB_Packet
     call SuperAwakening_copy_SendUploadCommand

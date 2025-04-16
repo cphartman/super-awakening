@@ -524,20 +524,7 @@ LoadSelectedFile::
     ld   a, TILESET_BASE_OVERWORLD                ; $49D6: $3E $05
     ld   [wTilesetToLoad], a                      ; $49D8: $EA $FE $D6
     
-    ;jp   IncrementGameplaySubtypeAndReturn        ; $49DB: $C3 $D6 $44
-SuperAwakeing_LoadGame_SGB_Delay:
-    ; Go to our delay function
-    ld a, $0A
-    ld [wGameplaySubtype], a
-    
-    ; Set delay
-    ld a, $65
-    ld [wSuperAwakening.SGB_LoadGameplayBorder_Delay], a
-
-    ld hl, SuperAwakening_SGB_GameplayBoder_Show
-    call SuperAwakening_Trampoline.jumpTo3E
-SuperAwakeing_LoadGame_SGB_Delay_end:
-    ret
+    jp   IncrementGameplaySubtypeAndReturn        ; $49DB: $C3 $D6 $44
 
 HandleFileSelectionCommand::
     ; Clear Gameplay Subtype
@@ -2184,6 +2171,8 @@ SuperAwakening_FileSelectionLoadDelay:
     ret
 SuperAwakening_FileSelectionLoadDelay_Complete:
     ; Go to exit method
-    ld a, $09
-    ld [wGameplaySubtype], a
+    ld   a, GAMEPLAY_WORLD                        ; $531D: $3E $0B
+    ld   [wGameplayType], a                       ; $531F: $EA $95 $DB
+    xor  a                                        ; $5322: $AF
+    ld   [wGameplaySubtype], a                    ; $5323: $EA $96 $DB
     ret

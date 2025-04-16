@@ -10,7 +10,7 @@ SuperAwakening_SGB_Events::
     jp .SetEvents_end
 
 .RoomChanged:
-    
+
 ; Lost woods = $40 -> $74
 .LostWoods:
 .LostWoods_Check:

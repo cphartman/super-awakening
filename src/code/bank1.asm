@@ -370,10 +370,25 @@ ENDC
     ld   [wPhotos2], a                            ; $531A: $EA $0D $DC
 
 jr_001_531D::
-    ld   a, GAMEPLAY_WORLD                        ; $531D: $3E $0B
-    ld   [wGameplayType], a                       ; $531F: $EA $95 $DB
-    xor  a                                        ; $5322: $AF
-    ld   [wGameplaySubtype], a                    ; $5323: $EA $96 $DB
+
+SuperAwakening_GoToLoadBorderState:
+    ;ld   a, GAMEPLAY_WORLD                        ; $531D: $3E $0B
+    ;ld   [wGameplayType], a                       ; $531F: $EA $95 $DB
+    ;xor  a                                        ; $5322: $AF
+    ;ld   [wGameplaySubtype], a                    ; $5323: $EA $96 $DB
+
+    ; Go to our delay function
+    ld a, $0A
+    ld [wGameplaySubtype], a
+    
+    ; Set delay
+    ld a, $65
+    ld [wSuperAwakening.SGB_LoadGameplayBorder_Delay], a
+
+    ld hl, SuperAwakening_SGB_GameplayBoder_Show
+    call SuperAwakening_Trampoline.jumpTo3E
+    
+SuperAwakening_GoToLoadBorderState_end:
     xor  a                                        ; $5326: $AF
     ld   [wLinkMotionState], a                    ; $5327: $EA $1C $C1
     ldh  [hLinkPhysicsModifier], a                ; $532A: $E0 $9C
