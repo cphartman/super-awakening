@@ -489,3 +489,56 @@ SuperAwakening_SGB_LostWoods_MapEnd:
 .return
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
+
+
+SuperAwakening_SGB_GameplayBorder_Hide:
+
+    ld a, [wSuperAwakening.SGB_GameplayBorder_FadeOutDelay]
+    dec a
+    ld [wSuperAwakening.SGB_GameplayBorder_FadeOutDelay], a
+
+    cp $00
+    jp nz, .return
+
+    ldh  a, [hFrameCounter]                       ; $5E36: $F0 $E7
+    and  $07                                      ; $5E38: $E6 $07
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 1
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, 13
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $03
+    jp SuperAwakening_Trampoline.returnToBank
+
+SuperAwakening_SGB_GameplayBoder_ShowAfterInstrument:
+    
+    ld a, [wSuperAwakening.SGB_GameplayBorder_FadeInDelay]
+    cp SGB_INSTRUMENT_GAMEPLAY_BORDER_FADE_IN_DELAY
+    jp nz, .return
+
+    call SuperAwakening_InitPacket
+    
+    ld a, 2
+    ld [wSuperAwakening.SGB_PacketLength], a
+
+    ld a, $03
+    ld [wSuperAwakening.SGB_PacketData], a
+
+    call InstrumentUpdate_GetInstrumentCount
+    ld a, b
+    ld [wSuperAwakening.SGB_PacketData+1], a
+
+    ld hl, wSuperAwakening.SGB_Packet
+    call SuperAwakening_copy_SendUploadCommand
+
+.return
+    ld a, $03
+    jp SuperAwakening_Trampoline.returnToBank

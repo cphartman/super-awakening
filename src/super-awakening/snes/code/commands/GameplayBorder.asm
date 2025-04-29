@@ -1,6 +1,7 @@
 GAMEPLAYBORDER_LOAD = GAMEPLAYBORDER_LOAD_PALETTE
 SYSTEMBORDER_LOAD = SYSTEMBORDER_LOAD_PALETTE
 GAMEPLAYBORDER_FADE_IN = GAMEPLAYBORDER_FADE_IN_1
+GAMEPLAYBORDER_FADE_OUT = GAMEPLAYBORDER_FADE_OUT_1
 
 ; States
 GAMEPLAYBORDER_STATE_NONE = 0
@@ -14,9 +15,13 @@ GAMEPLAYBORDER_FADE_IN_1 = 7
 GAMEPLAYBORDER_FADE_IN_2 = 8
 GAMEPLAYBORDER_FADE_IN_3 = 9
 GAMEPLAYBORDER_LOAD_CRACKED = 10
+GAMEPLAYBORDER_FADE_OUT_1 = 11
+GAMEPLAYBORDER_FADE_OUT_2 = 12
+GAMEPLAYBORDER_FADE_OUT_3 = 13
 seta8
 
 GAMEPLAYBORDER_FADE_IN_DELAY = 4
+GAMEPLAYBORDER_FADE_OUT_DELAY = 16
 
 GameplayBorder:
 GameplayBorder_Init:
@@ -66,6 +71,9 @@ GameplayBorder_JumpTable_Low:
 .byte <GameplayBorder_Fade_In_2
 .byte <GameplayBorder_Fade_In_3
 .byte <GameplayBorder_Load_TileMap_Cracked
+.byte <GameplayBorder_Fade_Out_1
+.byte <GameplayBorder_Fade_Out_2
+.byte <GameplayBorder_Fade_Out_3
 GameplayBorder_JumpTable_High:
 .byte >GameplayBorder_End
 .byte >GameplayBorder_Load_Palette
@@ -78,6 +86,9 @@ GameplayBorder_JumpTable_High:
 .byte >GameplayBorder_Fade_In_2
 .byte >GameplayBorder_Fade_In_3
 .byte >GameplayBorder_Load_TileMap_Cracked
+.byte >GameplayBorder_Fade_Out_1
+.byte >GameplayBorder_Fade_Out_2
+.byte >GameplayBorder_Fade_Out_3
 GameplayBorder_JumpTable_Bank:
 .byte ^GameplayBorder_End
 .byte ^GameplayBorder_Load_Palette
@@ -90,6 +101,9 @@ GameplayBorder_JumpTable_Bank:
 .byte ^GameplayBorder_Fade_In_2
 .byte ^GameplayBorder_Fade_In_3
 .byte ^GameplayBorder_Load_TileMap_Cracked
+.byte ^GameplayBorder_Fade_Out_1
+.byte ^GameplayBorder_Fade_Out_2
+.byte ^GameplayBorder_Fade_Out_3
 GameplayBorder_Load_Palette:
 
     DMA_PALETTE gb_white_palette, $40, $80
@@ -304,10 +318,59 @@ GameplayBorder_Fade_In_3_update:
     
     jml GameplayBorder_End
 
+GameplayBorder_Fade_Out_1:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    DMA_PALETTE border_gameplay_palette_fade_in_2, $40, $80
+    
+    lda #GAMEPLAYBORDER_FADE_OUT_2
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+GameplayBorder_Fade_Out_2:
+GameplayBorder_Fade_Out_2_delay:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    cmp #GAMEPLAYBORDER_FADE_OUT_DELAY
+    beq GameplayBorder_Fade_Out_2_update
+    jml GameplayBorder_End
+GameplayBorder_Fade_Out_2_update:
+    DMA_PALETTE border_gameplay_palette_fade_in_1, $40, $80
+    
+    lda #GAMEPLAYBORDER_FADE_OUT_3
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+GameplayBorder_Fade_Out_3:
+GameplayBorder_Fade_Out_3_delay:
+    lda f:GameplayBorder_Counter
+    inc a
+    sta f:GameplayBorder_Counter
+
+    cmp #(GAMEPLAYBORDER_FADE_OUT_DELAY*2)
+    beq GameplayBorder_Fade_Out_3_update
+    jml GameplayBorder_End
+GameplayBorder_Fade_Out_3_update:
+    DMA_PALETTE gb_white_palette, $40, $80
+    
+    lda #GAMEPLAYBORDER_STATE_NONE
+    sta f:GameplayBorder_State
+    
+    jml GameplayBorder_End
+
+; ------------- Data --------------
+
+
 gb_white_palette:
     .incbin "../../gfx/gb_white.pal"
 border_gameplay_palette_fade_in_1:
-    .incbin "../../gfx/border_gameplay_fade_in_2.pal"
+    .incbin "../../gfx/border_gameplay_fade_in_1.pal"
 border_gameplay_palette_fade_in_2:
     .incbin "../../gfx/border_gameplay_fade_in_2.pal"
 

@@ -108,6 +108,12 @@ wSuperAwakening::
 .SGB_LoadGameplayBorder_Delay:
   ds 1
 
+.SGB_GameplayBorder_FadeOutDelay:
+  ds 1
+
+.SGB_GameplayBorder_FadeInDelay:
+  ds 1
+
 .PreviousRoom:
   ds 1
 

@@ -162,6 +162,8 @@ IF __PATCH_0__
 ENDC
     ret                                           ; $659C: $C9
 
+; Dungeon hint Dialog Start
+dungeon_hint_start:
 jr_007_659D:
     call GetEntityTransitionCountdown             ; $659D: $CD $05 $0C
     ret  nz                                       ; $65A0: $C0
@@ -205,6 +207,7 @@ jr_007_659D:
     ld   [wPaletteDataFlags], a                   ; $65C7: $EA $D1 $DD
     ei                                            ; $65CA: $FB
 
+dungeon_hint_end:
 jr_007_65CB:
     jp   ClearEntityStatus_07                     ; $65CB: $C3 $A4 $7E
 

@@ -48,6 +48,7 @@ CommandJump:
     .byte <TitleScreenShow
     .byte <SystemBorderShow
     .byte <GameplayBorderShowCracked
+    .byte <GameplayBorderHide
  JumpTable_High:
     .byte >Return
     .byte >FileMenuLoad
@@ -62,6 +63,7 @@ CommandJump:
     .byte >TitleScreenShow
     .byte >SystemBorderShow
     .byte >GameplayBorderShowCracked
+    .byte >GameplayBorderHide
  JumpTable_Bank:
     .byte ^Return
     .byte ^FileMenuLoad
@@ -76,6 +78,7 @@ CommandJump:
     .byte ^TitleScreenShow
     .byte ^SystemBorderShow
     .byte ^GameplayBorderShowCracked
+    .byte ^GameplayBorderHide
 
 FileMenuLoad:
     lda #FILEMENU_LOAD
@@ -196,6 +199,15 @@ GameplayBorderShowCracked:
     sta a:command
 
     jmp Return
+
+GameplayBorderHide:
+
+    lda #GAMEPLAYBORDER_FADE_OUT
+    sta a:GameplayBorder_State
+
+    lda #0
+    sta a:GameplayBorder_Counter
+    sta a:command
 
 Return:
     PLB

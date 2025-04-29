@@ -772,26 +772,29 @@ GetColorDungeonRoomStatus::
     ret                                           ; $4B8E: $C9
 
 EntityInitRotoswitchRed::
+/*
     call GetColorDungeonRoomStatus                ; $4B8F: $CD $84 $4B
     and  $10                                      ; $4B92: $E6 $10
     jr   nz, jr_003_4BAD                          ; $4B94: $20 $17
 
     xor  a                                        ; $4B96: $AF
     jp   SetEntitySpriteVariant                   ; $4B97: $C3 $0C $3B
-
+*/
 EntityInitRotoswitchYellow::
+/*
     call GetColorDungeonRoomStatus                ; $4B9A: $CD $84 $4B
     and  $10                                      ; $4B9D: $E6 $10
     jr   nz, jr_003_4BAD                          ; $4B9F: $20 $0C
 
     ld   a, $04                                   ; $4BA1: $3E $04
     jp   SetEntitySpriteVariant                   ; $4BA3: $C3 $0C $3B
-
+*/
 EntityInitRotoswitchBlue::
+    /*
     call GetColorDungeonRoomStatus                ; $4BA6: $CD $84 $4B
     and  $10                                      ; $4BA9: $E6 $10
     jr   z, jr_003_4BB3                           ; $4BAB: $28 $06
-
+*/
 jr_003_4BAD:
     ld   hl, wEntitiesStateTable                  ; $4BAD: $21 $90 $C2
     add  hl, bc                                   ; $4BB0: $09
@@ -3429,6 +3432,20 @@ SirensInstrument2SpriteVariants::
     db $7C, $01
     db $7E, $01
 
+
+; ENTITY_INSTRUMENT_OF_THE_SIRENS entity manages the animation when picking 
+; up an instrument at the end of a dungeon.
+; It's used as 3 different entites for the cutscene
+; * SirensInstrumentState0Handler - Manages scene
+;   * Handles instrument sprite
+;   * Plays music jingle
+;   * Opens and text box
+;   * Spawns other entities
+; * SirensInstrumentState1Handler - Notes
+;   * Draws the notes for the song animation
+; * SirensInstrumentState2Handler - Fade effects
+;   * Draws the sparkle effects and handles fadeout
+;   * Transitions out of cutscene
 SirensInstrumentEntityHandler::
     ld   hl, wEntitiesPrivateState1Table          ; $5D93: $21 $B0 $C2
     add  hl, bc                                   ; $5D96: $09
@@ -3438,10 +3455,13 @@ SirensInstrumentEntityHandler::
 ._01 dw SirensInstrumentState1Handler             ; $5D9B
 ._02 dw SirensInstrumentState2Handler             ; $5D9D
 
+; Flashing palette for picking up instrucment
+; BG palettes
 Data_003_5D9F::
     db   $E4, $E4, $E4, $E4, $90, $90, $90, $90, $40, $40, $40, $40, $00, $00, $00, $00
     db   $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; Obj palettes
 Data_003_5DBC::
     db   $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C, $1C
     db   $08, $08, $08, $08, $04, $04, $04, $04, $00, $00, $00, $00, $00
@@ -3453,6 +3473,23 @@ SirensInstrumentState2Handler::
     call GetEntityDropTimer                       ; $5DE1: $CD $FB $0B
     jr   nz, animateSirensInstrumentPickup        ; $5DE4: $20 $43
 
+.SuperAwakening_ShowBorderAfterInstrument
+    ld hl, SuperAwakening_SGB_GameplayBoder_ShowAfterInstrument
+    call SuperAwakening_Trampoline.jumpTo3E
+
+    ; If delay complete, go to cutscene end
+    ld a, [wSuperAwakening.SGB_GameplayBorder_FadeInDelay]
+    cp $00
+    jp z, .SuperAwakening_ShowBorderAfterInstrument_end
+    
+    ; Delay not complete, wait
+    dec a
+    ld [wSuperAwakening.SGB_GameplayBorder_FadeInDelay], a
+    ret
+
+.SuperAwakening_ShowBorderAfterInstrument_end
+
+    ; Cutscene ended, go to fade in
     call UnloadEntity                             ; $5DE6: $CD $8D $3F
     xor  a                                        ; $5DE9: $AF
     ldh  [hLinkAnimationState], a                 ; $5DEA: $E0 $9D
@@ -3462,6 +3499,7 @@ SirensInstrumentState2Handler::
     ld   hl, wEntitiesStateTable                  ; $5DF1: $21 $90 $C2
     add  hl, de                                   ; $5DF4: $19
     inc  [hl]                                     ; $5DF5: $34
+
     call disableMovementInTransition              ; $5DF6: $CD $9E $0C
 
     ; Execute some code specific to each dungeon
@@ -3512,30 +3550,59 @@ AfterSirensInstrumentD7::
     ld   [wIsRoosterFollowingLink], a             ; $5E25: $EA $7B $DB
     ret                                           ; $5E28: $C9
 
+; Animation for power effect
 animateSirensInstrumentPickup:
+    
+    ; Entity Timer is above $50
+    ; Counts down
     cp   $50                                      ; $5E29: $FE $50
     jr   nc, ret_003_5E8A                         ; $5E2B: $30 $5D
 
+    ; Entity Timer is below $50
     ld   hl, wEntitiesPrivateState2Table          ; $5E2D: $21 $C0 $C2
     add  hl, bc                                   ; $5E30: $09
     ld   a, [hl]                                  ; $5E31: $7E
+    
+    ; Fade out timer above $19, animation is over, waiting for music to end
+    ; Counts up
     cp   $19                                      ; $5E32: $FE $19
     jr   nc, ret_003_5E8A                         ; $5E34: $30 $54
 
+    ; Fade out timer below $19
+    ; Every 8 frames, adjust the palette (?)
     ldh  a, [hFrameCounter]                       ; $5E36: $F0 $E7
     and  $07                                      ; $5E38: $E6 $07
     jr   nz, jr_003_5E5B                          ; $5E3A: $20 $1F
 
+    ; On not first of the animation
     ld   a, [hl]                                  ; $5E3C: $7E
     and  a                                        ; $5E3D: $A7
     jr   nz, .jr_5E45                             ; $5E3E: $20 $05
 
+    ; On first frame of the animation
     ld   a, NOISE_SFX_INSTRUMENT_WARP             ; $5E40: $3E $2C
     ldh  [hNoiseSfx], a                           ; $5E42: $E0 $F4
     xor  a                                        ; $5E44: $AF
 
+    ld a, SGB_INSTRUMENT_GAMEPLAY_BORDER_FADE_OUT_DELAY
+    ld [wSuperAwakening.SGB_GameplayBorder_FadeOutDelay], a
+    
+    ld a, SGB_INSTRUMENT_GAMEPLAY_BORDER_FADE_IN_DELAY
+    ld [wSuperAwakening.SGB_GameplayBorder_FadeInDelay], a
+
 .jr_5E45
+
+.SuperAwakening_FadeOutBorder
+    push hl
+    push af
+    ld hl, SuperAwakening_SGB_GameplayBorder_Hide
+    call SuperAwakening_Trampoline.jumpTo3E
+    pop af
+    pop hl
+.SuperAwakening_FadeOutBorder_end
+
     inc  [hl]                                     ; $5E45: $34
+    ; Animation key fram
     cp   $18                                      ; $5E46: $FE $18
     jr   nz, jr_003_5E5B                          ; $5E48: $20 $11
 
@@ -3548,7 +3615,10 @@ animateSirensInstrumentPickup:
     add  hl, de                                   ; $5E58: $19
     ld   [hl], $60                                ; $5E59: $36 $60
 
+; What is [bc]?
+; Doing the fadeout
 jr_003_5E5B:
+
     ldh  a, [hFrameCounter]                       ; $5E5B: $F0 $E7
     and  $03                                      ; $5E5D: $E6 $03
     ld   hl, wEntitiesPrivateState2Table          ; $5E5F: $21 $C0 $C2
@@ -3568,6 +3638,7 @@ jr_003_5E5B:
     pop  bc                                       ; $5E73: $C1
     jr   ret_003_5E8A                             ; $5E74: $18 $14
 
+; do fade out
 .jr_5E76
     ld   hl, Data_003_5D9F                        ; $5E76: $21 $9F $5D
     add  hl, de                                   ; $5E79: $19
@@ -3625,8 +3696,11 @@ SirensInstrumentState0Handler::
     ldh  a, [hActiveEntityState]                  ; $5EC8: $F0 $F0
     JP_TABLE                                      ; $5ECA
 ._00 dw func_003_5ED5                             ; $5ECB
+; Pickup Jingle and Instrument Dialog Box
 ._01 dw func_003_5F0C                             ; $5ECD
+; Play Instrument song
 ._02 dw func_003_5F33                             ; $5ECF
+; Hold above head?
 ._03 dw func_003_5FBC                             ; $5ED1
 ._04 dw func_003_5FBF                             ; $5ED3
 IF __PATCH_3__
@@ -3638,6 +3712,7 @@ func_003_5ED5::
     call GetEntityTransitionCountdown             ; $5ED5: $CD $05 $0C
     jp   z, label_003_60AA                        ; $5ED8: $CA $AA $60
 
+; Link touches the instrument
     cp   $10                                      ; $5EDB: $FE $10
     jr   nz, .jr_5EFE                             ; $5EDD: $20 $1F
 
@@ -3701,14 +3776,17 @@ InstrumentMusicTable::
     db   MUSIC_INSTRUMENT_THUNDER_DRUM
 
 func_003_5F0C::
+    ; Wait for music to end
     ld   a, [wActiveMusicIndex]                   ; $5F0C: $FA $69 $D3
     and  a                                        ; $5F0F: $A7
     jr   nz, .jr_5F2C                             ; $5F10: $20 $1A
 
+    ; Wait for dialog to close
     ld   a, [wDialogState]                        ; $5F12: $FA $9F $C1
     and  a                                        ; $5F15: $A7
     jr   nz, .jr_5F2C                             ; $5F16: $20 $14
-
+    
+    ; Setup instrument song
     ldh  a, [hMapId]                              ; $5F18: $F0 $F7
     ld   e, a                                     ; $5F1A: $5F
     ld   d, b                                     ; $5F1B: $50
@@ -3736,20 +3814,31 @@ func_003_5F33::
     ld   a, JINGLE_INSTRUMENT_WARP                ; $5F38: $3E $2B
     ldh  [hJingle], a                             ; $5F3A: $E0 $F2
 
+    ; Create entity for cutscene power effect
     ld   a, ENTITY_INSTRUMENT_OF_THE_SIRENS       ; $5F3C: $3E $39
     call SpawnNewEntity                           ; $5F3E: $CD $CA $64
+    
+    ; Sets x position of power effect
+    ; hMultiPurpose0 = previous entity X from SpawnNewEntity
     ldh  a, [hMultiPurpose0]                      ; $5F41: $F0 $D7
     dec  a                                        ; $5F43: $3D
     ld   hl, wEntitiesPosXTable                   ; $5F44: $21 $00 $C2
     add  hl, de                                   ; $5F47: $19
     ld   [hl], a                                  ; $5F48: $77
+    
+    ; Set y position of power effect
+    ; hMultiPurpose0 = previous entity Y from SpawnNewEntity
     ldh  a, [hMultiPurpose1]                      ; $5F49: $F0 $D8
     ld   hl, wEntitiesPosYTable                   ; $5F4B: $21 $10 $C2
     add  hl, de                                   ; $5F4E: $19
     ld   [hl], a                                  ; $5F4F: $77
+
+    ; Configure this to use SirensInstrumentState2Handler
     ld   hl, wEntitiesPrivateState1Table          ; $5F50: $21 $B0 $C2
     add  hl, de                                   ; $5F53: $19
     ld   [hl], $02                                ; $5F54: $36 $02
+
+    ; Sets countdown timer for the entity
     ld   hl, wEntitiesDropTimerTable              ; $5F56: $21 $50 $C4
     add  hl, de                                   ; $5F59: $19
     ld   [hl], $80                                ; $5F5A: $36 $80
@@ -7746,7 +7835,7 @@ entitiesLoop:
     ld   a, [hl]                                  ; $7644: $7E
     cp   ENTITY_FINAL_NIGHTMARE                   ; $7645: $FE $E6
     jr   nz, .finalNightmareEnd                   ; $7647: $20 $0D
-    ; … and this is Final Nightmare final form…
+    ; … and 3621 Final Nightmare final form…
     ld   a, [wFinalNightmareForm]                 ; $7649: $FA $19 $D2
     cp   $05                                      ; $764C: $FE $05
     jr   nz, .finalNightmareEnd                   ; $764E: $20 $06
