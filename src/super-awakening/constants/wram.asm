@@ -119,3 +119,18 @@ wSuperAwakening::
 
 .SGB_InLostWoods:
   ds 1
+
+.TimerCounter_Enabled:
+  ds 1
+  
+.TimerCounter_Frame:
+  ds 1
+
+.TimerCounter_Second:
+  ds 1
+
+.TimerCounter_Minute:
+  ds 1
+
+.TimerCounter_Hour:
+  ds 1
