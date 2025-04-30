@@ -1,5 +1,5 @@
 SuperAwakening_Timer::
- UpdateTimer:
+
     ; Increment frame count
     ld hl, wSuperAwakening.TimerCounter_Frame
     inc [hl]
@@ -37,5 +37,4 @@ SuperAwakening_Timer::
     ld hl, wSuperAwakening.TimerCounter_Hour
     inc [hl]
 
-.return:
-    ret
+.return
