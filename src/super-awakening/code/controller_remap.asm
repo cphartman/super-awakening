@@ -19,6 +19,25 @@ jp nz, .map_controller2_to_controller1_end
     jr   z, .map_controller2_to_controller1_end
 .check_for_save_button_combo_end
 
+IF SUPER_AWAKENING_SHIELD_WHILE_CHARGING
+.map_P1A_sword_out
+    ld a, [wInventoryItems.BButtonSlot]
+    cp INVENTORY_SWORD
+    jr nz, .map_P1A_sword_out_end
+    ; Sword is out: A only raises the shield (see CheckItemsToUse),
+    ; so drop it instead of turning it into a sword press
+    ld hl, hJoypadState
+    ld a, [hl]
+    and (~J_A)
+    ld [hl], a
+    ld hl, hPressedButtonsMask
+    ld a, [hl]
+    and (~J_A)
+    ld [hl], a
+    jp .map_P1A_to_P1B_mask_end
+.map_P1A_sword_out_end
+ENDC
+
 .map_P1A_to_P1B
     ld hl, hJoypadState
     ld  a, [hl]

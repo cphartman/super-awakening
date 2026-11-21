@@ -1,7 +1,8 @@
 ; Hold Select in the start menu to open the save screen.
 ; Once the time is reached, wSuperAwakening.SelectHold_Save is set. The start
 ; menu closes itself (bank 20), then ExecuteGameplayHandler (bank 0) opens the
-; save screen back in the overworld and clears the flag.
+; save screen back in the overworld. The flag is cleared below once the save
+; screen is up.
 IF SUPER_AWAKENING_SELECT_HOLD_SAVE
 
 .selectHold

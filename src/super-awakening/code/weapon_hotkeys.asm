@@ -14,6 +14,18 @@
     cp J_A
     jp nz, .use_weapon_shield_end
 
+IF SUPER_AWAKENING_SHIELD_WHILE_CHARGING
+    ; Sword button held with the sword out: keep the sword,
+    ; the shield gets raised in CheckItemsToUse instead
+    ld  a, [wSuperAwakening.PressedButtonsMask]
+    and J_B
+    jr  z, .use_weapon_shield_swap
+    ld  a, [wInventoryItems.BButtonSlot]
+    cp  INVENTORY_SWORD
+    jp  z, .use_weapon_shield_end
+.use_weapon_shield_swap
+ENDC
+
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
     ld [hl], INVENTORY_SHIELD

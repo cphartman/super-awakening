@@ -36,5 +36,12 @@ SUPER_AWAKENING_SCREEN_WARP = TRUE
 SUPER_AWAKENING_SELECT_HOLD_SAVE = TRUE
 SUPER_AWAKENING_SELECT_HOLD_SAVE_FRAMES = 180 ; About 3 seconds (60 frames per second)
 
+; Hold the shield while charging the sword, like the original game.
+; Sword and shield share the B slot here, so normally pressing one
+; swaps out the other.
+; TRUE  = shield and sword charge work at the same time
+; FALSE = pressing one replaces the other
+SUPER_AWAKENING_SHIELD_WHILE_CHARGING = TRUE
+
 DEBUG_STARTING_HEARTS = 4 ; Value * 8 = Heart Count
 DEBUG_MAX_HEARTS = 3

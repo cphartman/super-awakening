@@ -161,6 +161,11 @@ CheckItemsToUse::
     call SetShieldVals                            ; $1248: $CD $40 $13
 
 .nextItemB
+IF SUPER_AWAKENING_SHIELD_WHILE_CHARGING
+    ld   hl, SuperAwakening_ShieldWithSword
+    call SuperAwakening_Trampoline.jumpTo3E
+    call nz, SetShieldVals
+ENDC
     ldh  a, [hJoypadState]                        ; $124B: $F0 $CC
     and  J_B                                      ; $124D: $E6 $20
     jr   z, .nextItemA                            ; $124F: $28 $0D
