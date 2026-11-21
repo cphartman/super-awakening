@@ -133,8 +133,12 @@ FileSaveInteractive::
     ld   a, JINGLE_VALIDATE                       ; $40B3: $3E $13
     ldh  [hJingle], a                             ; $40B5: $E0 $F2
     ld   a, [wC13F]                               ; $40B7: $FA $3F $C1
-    cp   $01                                      ; $40BA: $FE $01
+    cp   $02                                      ; Save and quit
     jr   z, jr_001_40F9                           ; $40BC: $28 $3B
+    cp   $01                                      ; Save and continue
+    jr   nz, .returnToGame
+    call SaveGameToFile                           ; (label_27F2 would stop the music)
+.returnToGame
     call IncrementGameplaySubtype                 ; $40BE: $CD $D6 $44
     xor  a                                        ; $40C1: $AF
     ld   [wTransitionSequenceCounter], a          ; $40C2: $EA $6B $C1
@@ -214,8 +218,9 @@ LCDOn::
 
 ; OAM Y positions
 Data_001_4128::
-    db   $38 + $10                                ; $4128
-    db   $48 + $10                                ; $4129
+    db   $28 + $10                                ; Return to game (row 1)
+    db   $38 + $10                                ; Save and continue (row 3)
+    db   $48 + $10                                ; Save and quit (row 5)
 
 ; Called by FileSaveInteractive
 func_001_412A::
@@ -224,9 +229,23 @@ func_001_412A::
     ldh  a, [hJoypadState]                        ; $4130: $F0 $CC
     and  J_UP | J_DOWN                            ; $4132: $E6 $0C
     jr   z, .jr_413B                              ; $4134: $28 $05
-    ld   a, [hl]                                  ; $4136: $7E
-    inc  a                                        ; $4137: $3C
-    and  $01                                      ; $4138: $E6 $01
+    ldh  a, [hJoypadState]
+    bit  J_BIT_UP, a
+    ld   a, [hl]
+    jr   nz, .moveUp
+    inc  a                                        ; Down, wraps after the last option
+    cp   3
+    jr   c, .store
+    xor  a
+    jr   .store
+.moveUp
+    and  a                                        ; Up, wraps before the first option
+    jr   nz, .decrement
+    ld   a, 2
+    jr   .store
+.decrement
+    dec  a
+.store
     ld   [hl], a                                  ; $413A: $77
 
 .jr_413B::

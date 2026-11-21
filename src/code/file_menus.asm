@@ -1279,6 +1279,10 @@ ENDC
     or   d                                        ; $4E98: $B2 ; $4E98: $B2
     jr   nz, .loop_4E91                           ; $4E99: $20 $F6 ; $4E99: $20 $F6
 
+IF SUPER_AWAKENING_SAVE_MAPPING
+    ld   hl, SuperAwakening_SaveExt_Clear
+    call SuperAwakening_Trampoline.jumpTo3E
+ENDC
     jp   label_001_4555                           ; $4E9B: $C3 $55 $45 ; $4E9B: $C3 $55 $45
 
 jr_001_4E9E::
@@ -1944,6 +1948,10 @@ FileCopyStateAHandler::
     or   d                                        ; $522F: $B2 ; $522F: $B2
     jr   nz, .loop_5224                           ; $5230: $20 $F2 ; $5230: $20 $F2
 
+IF SUPER_AWAKENING_SAVE_MAPPING
+    ld   hl, SuperAwakening_SaveExt_Copy
+    call SuperAwakening_Trampoline.jumpTo3E
+ENDC
     jp   label_001_4555                           ; $5232: $C3 $55 $45 ; $5232: $C3 $55 $45
 
 jr_001_5235::

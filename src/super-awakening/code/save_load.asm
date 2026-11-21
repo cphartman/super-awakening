@@ -48,12 +48,23 @@ SuperAwakening_Load::
     ld a, [wInventoryItems.subscreen+1]
     ld [wSuperAwakening.Weapon3_Value], a
 
+IF SUPER_AWAKENING_SAVE_MAPPING
+    ; Use the mapping stored in the file, if it has one
+IF SUPER_AWAKENING_MENU_MAPPING
+    xor a
+    ld [wSuperAwakening.ButtonSwap], a
+ENDC
+    call SuperAwakening_SaveExt_Load
+ENDC
+
 .return
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank
 
 SuperAwakening_Save::
-    ; Doesn't do anything right now
+IF SUPER_AWAKENING_SAVE_MAPPING
+    call SuperAwakening_SaveExt_Save
+ENDC
 .save_loop_end
     ld a, $01
     jp SuperAwakening_Trampoline.returnToBank

@@ -179,16 +179,30 @@ SuperAwakening_QuickDash::
     ld hl, wSuperAwakening.QuickDash_Timer
     ld [hl], 0
 
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; The shield's button also sets J_B, so holding it while on B
+    ; shouldn't dash (or play the boots sound). Jumping still works
+    ; with the shield on B when B isn't held.
+    ldh  a, [hPressedButtonsMask]
+    and  J_B
+    jr   z, .shield_button_not_held
+    ld   a, [wInventoryItems.BButtonSlot]
+    cp   INVENTORY_SHIELD
+    jp   z, .quickdash_end
+.shield_button_not_held
+ENDC
+
     ; Check for quick jump button input
     ldh  a, [hPressedButtonsMask]                    
     and  J_B
     cp J_B
     jp nz, .quickdash_execute
 
-    ; Make sure the shield is equipped for quick jump
+    ; Not holding B: jump if the shield is on B, otherwise dash
+    ; (dash works with or without the sword button held)
     ld a, [wInventoryItems.BButtonSlot]
     cp INVENTORY_SHIELD
-    jp nz, .execute_end
+    jp nz, .quickdash_execute
 
 .quickjump_execute
     ; Are boots unlocked?

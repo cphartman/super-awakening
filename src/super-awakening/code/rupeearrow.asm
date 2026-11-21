@@ -1,6 +1,9 @@
 SuperAwakening_QuickRestock::
 
 .Powder:
+IF !SUPER_AWAKENING_QUICK_RESTOCK
+    jp .return
+ENDC
     ; Skip if we have powder
     ld   a, [wMagicPowderCount]
     cp $00
@@ -35,6 +38,9 @@ SuperAwakening_QuickRestock::
     jp .return
 
 .Arrow:
+IF !SUPER_AWAKENING_QUICK_RESTOCK
+    jp .return
+ENDC
     ; Skip if we have powder
     ld   a, [wArrowCount]
     cp $00
@@ -58,6 +64,9 @@ SuperAwakening_QuickRestock::
     jp .return
 
 .Bomb:
+IF !SUPER_AWAKENING_QUICK_RESTOCK
+    jp .return
+ENDC
     ; Skip if we have powder
     ld   a, [wBombCount]
     cp $00

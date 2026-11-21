@@ -51,3 +51,16 @@ SaveGame3:
 .dx3:
     ds SAVE_DX3_SIZE
 .end:
+
+; Super Awakening: extra data for each save file (see save_mapping.asm).
+; It sits after the three original saves so their layout does not change.
+SAVE_EXT_SIZE equ 5
+
+SuperAwakeningSaveExt:
+.slot1:
+    ds SAVE_EXT_SIZE
+.slot2:
+    ds SAVE_EXT_SIZE
+.slot3:
+    ds SAVE_EXT_SIZE
+.end:

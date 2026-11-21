@@ -1317,7 +1317,16 @@ presentSaveScreenIfNeeded::
     ; If not all A + B + Start + Select buttons are pressed
     ldh  a, [hPressedButtonsMask]                 ; $0E61: $F0 $CB
     cp   J_A | J_B | J_START | J_SELECT           ; $0E63: $FE $F0
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+    ; Also open it if Select was held long enough in the start menu
+    jr   z, .saveScreenRequested
+    ld   a, [wSuperAwakening.SelectHold_Save]
+    and  a
+    jr   z, jumpToGameplayHandler
+.saveScreenRequested
+ELSE
     jr   nz, jumpToGameplayHandler                ; $0E65: $20 $1E
+ENDC
 
     ; If wD474 != 0
     ld   a, [wD474]                               ; $0E67: $FA $74 $D4
@@ -1668,8 +1677,11 @@ InitGotItemSequence::
     ld   a, [wDialogState]                        ; $10A9: $FA $9F $C1
     ld   hl, wC167                                ; $10AC: $21 $67 $C1
     or   [hl]                                     ; $10AF: $B6
+    ; Screen warp patch. Skipped when SUPER_AWAKENING_SCREEN_WARP is TRUE.
+IF !SUPER_AWAKENING_SCREEN_WARP
     ld   hl, wRoomTransitionState                 ; $10B0: $21 $24 $C1
     or   [hl]                                     ; $10B3: $B6
+ENDC
     jr   nz, .jp_10DB                             ; $10B4: $20 $25
     ld   a, [wD464]                               ; $10B6: $FA $64 $D4
     and  a                                        ; $10B9: $A7

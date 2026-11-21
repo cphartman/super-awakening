@@ -66,3 +66,16 @@ wSuperAwakening::
 ; For temporarily storing data
 .temp1:
   ds 1
+
+; Frames Select has been held in the start menu
+.SelectHold_Timer:
+  ds 2
+
+; Set to 1 once Select has been held long enough, opens the save screen
+.SelectHold_Save:
+  ds 1
+
+; 0 - Sword on B, shield on A
+; 1 - Swapped, set from the start menu
+.ButtonSwap:
+  ds 1

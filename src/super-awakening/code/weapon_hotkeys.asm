@@ -14,6 +14,31 @@
     cp J_A
     jp nz, .use_weapon_shield_end
 
+IF SUPER_AWAKENING_SHIELD_WHILE_CHARGING
+    ; Sword button held with the sword out: keep the sword,
+    ; the shield gets raised in CheckItemsToUse instead
+    ; Sword button is B, or A when the buttons are swapped
+IF SUPER_AWAKENING_MENU_MAPPING
+    ld  a, [wSuperAwakening.ButtonSwap]
+    and a
+    ld  a, [wSuperAwakening.PressedButtonsMask]
+    jr  nz, .sword_held_swapped
+    and J_B
+    jr  .sword_held_check
+.sword_held_swapped
+    and J_A
+.sword_held_check
+ELSE
+    ld  a, [wSuperAwakening.PressedButtonsMask]
+    and J_B
+ENDC
+    jr  z, .use_weapon_shield_swap
+    ld  a, [wInventoryItems.BButtonSlot]
+    cp  INVENTORY_SWORD
+    jp  z, .use_weapon_shield_end
+.use_weapon_shield_swap
+ENDC
+
     ; Set weapon Slot B
     ld hl, wInventoryItems.BButtonSlot
     ld [hl], INVENTORY_SHIELD
