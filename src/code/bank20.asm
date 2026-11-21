@@ -3181,6 +3181,11 @@ InventoryLoad3Handler::
 
 InventoryLoad4Handler::
     call LCDOff                                   ; $5D52: $CD $CF $28
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; Draw the X/Y letters next to the mapped items
+    ld   hl, SuperAwakening_MenuDrawLettersFromLoad
+    call SuperAwakening_Trampoline.jumpTo3E
+ENDC
     call ReloadColorDungeonNpcTiles               ; $5D55: $CD $D1 $3F
     ; Turn on LCD
     ld   a, [wLCDControl]                         ; $5D58: $FA $FD $D6

@@ -43,5 +43,16 @@ SUPER_AWAKENING_SELECT_HOLD_SAVE_FRAMES = 180 ; About 3 seconds (60 frames per s
 ; FALSE = pressing one replaces the other
 SUPER_AWAKENING_SHIELD_WHILE_CHARGING = TRUE
 
+; What the top of the start menu shows. During gameplay the HUD shows the X and Y items.
+; TRUE  = sword (B) and shield (A) while the menu is open
+; FALSE = the X and Y items, same as gameplay
+SUPER_AWAKENING_MENU_SWORD_SHIELD = TRUE
+
+; Button prompts in the start menu (needs MENU_SWORD_SHIELD).
+; TRUE  = A hides/shows the selected item, B swaps the sword and shield buttons,
+;         X or Y puts the selected item on that button (its letter is shown next to it)
+; FALSE = A and B both hide/show the selected item
+SUPER_AWAKENING_MENU_MAPPING = TRUE
+
 DEBUG_STARTING_HEARTS = 4 ; Value * 8 = Heart Count
 DEBUG_MAX_HEARTS = 3

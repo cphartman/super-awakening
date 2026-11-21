@@ -9,8 +9,20 @@ SuperAwakening_ShieldWithSword::
     ld   a, [wShieldLevel]
     and  a
     jr   z, .return
+    ; Shield button is A, or B when the buttons are swapped
+IF SUPER_AWAKENING_MENU_MAPPING
+    ld   a, [wSuperAwakening.ButtonSwap]
+    and  a
+    ld   a, [wSuperAwakening.PressedButtonsMask]
+    jr   nz, .shield_swapped
+    and  J_A
+    jr   .return
+.shield_swapped
+    and  J_B
+ELSE
     ld   a, [wSuperAwakening.PressedButtonsMask]
     and  J_A
+ENDC
     jr   .return
 .no
     xor  a

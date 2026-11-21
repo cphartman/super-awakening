@@ -8,10 +8,23 @@ SuperAwakening_InventoryScreen:
     and  J_A
     cp J_A
     jp z, SuperAwakening_InventoryScreen_More.get_inventory_item_value
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; B swaps the sword and shield, X and Y map the selected item
+    ldh  a, [hJoypadState]
+    and  J_B
+    jp nz, SuperAwakening_MenuSwapSwordShield
+    ld   a, [wSuperAwakening.JoypadState2]
+    and  J_A
+    jp nz, SuperAwakening_MenuMapToX
+    ld   a, [wSuperAwakening.JoypadState2]
+    and  J_B
+    jp nz, SuperAwakening_MenuMapToY
+ELSE
     ldh  a, [hJoypadState]
     and  J_B
     cp J_B
     jp z, SuperAwakening_InventoryScreen_More.get_inventory_item_value
+ENDC
 
 .check_swap
     ld  a, [wSuperAwakening.JoypadState2]
@@ -101,6 +114,12 @@ SuperAwakening_InventoryScreen_SwapRight:
     xor  a                                        ; $0379: $AF
     ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
 .poll_for_vblank_end
+
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; X and Y stay with their items
+    call SuperAwakening_MenuFollowSwap
+    call SuperAwakening_MenuDrawLetters
+ENDC
 
     ld d, c ; Store next index
 
@@ -227,6 +246,12 @@ SuperAwakening_InventoryScreen_SwapLeft:
     xor  a                                        ; $0379: $AF
     ldh  [hNeedsRenderingFrame], a                ; $037A: $E0 $D1
 .poll_for_vblank_end
+
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; X and Y stay with their items
+    call SuperAwakening_MenuFollowSwap
+    call SuperAwakening_MenuDrawLetters
+ENDC
 
     ld d, c ; Store next index
 
@@ -433,14 +458,20 @@ SuperAwakening_InventoryScreen_More:
     add hl, bc
     ld a, [hl]
     ld [wSuperAwakening.Weapon4_Value], a
+IF !SUPER_AWAKENING_MENU_SWORD_SHIELD
     ld [wInventoryItems.BButtonSlot], a
+ENDC
     jp .refresh_weapon_4_end
 .hide_weapon_4
     ld a, 0
     ld [wSuperAwakening.Weapon4_Value], a
+IF !SUPER_AWAKENING_MENU_SWORD_SHIELD
     ld [wInventoryItems.BButtonSlot], a
+ENDC
 .refresh_weapon_4_end
 
+; The top of the menu shows sword and shield, so don't redraw it with the X/Y items
+IF !SUPER_AWAKENING_MENU_SWORD_SHIELD
 .refresh_hud
     ld a, 1
     ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
@@ -453,6 +484,7 @@ SuperAwakening_InventoryScreen_More:
 
     ld a, 0
     ld [wSuperAwakening.OverrideInventoryDisplaySlots], a
+ENDC
 
 .return
     ; Restore bank
@@ -557,11 +589,39 @@ SuperAwakening_InventoryScreen_Open:
 
     ; Since we're displaying the invetory slots from wInventoryItems
     ; we need to update A/B to X/Y
+IF SUPER_AWAKENING_MENU_SWORD_SHIELD
+; Show the sword on B and the shield on A at the top of the menu
+.initialize_sword_shield_slots
+    ld a, [wSwordLevel]
+    and a
+    ld a, INVENTORY_SWORD
+IF SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS
+    jr nz, .sword_slot_set
+    ld a, INVENTORY_EMPTY
+.sword_slot_set
+ENDC
+    ld [wInventoryItems.BButtonSlot], a
+
+    ld a, [wShieldLevel]
+    and a
+    ld a, INVENTORY_SHIELD
+IF SUPER_AWAKENING_RESTRICT_INVENTORY_ITEMS
+    jr nz, .shield_slot_set
+    ld a, INVENTORY_EMPTY
+.shield_slot_set
+ENDC
+    ld [wInventoryItems.AButtonSlot], a
+IF SUPER_AWAKENING_MENU_MAPPING
+    ; Swaps them if needed, and loads the B/A/X/Y letters
+    call SuperAwakening_MenuOpen
+ENDC
+ELSE
 .initialize_XY_slots
     ld a, [wSuperAwakening.Weapon4_Value]
     ld [wInventoryItems.BButtonSlot], a
     ld a, [wSuperAwakening.Weapon3_Value]
     ld [wInventoryItems.AButtonSlot], a
+ENDC
 
     ld hl, wSuperAwakening.Items_Hidden
     ld c, $0
@@ -639,6 +699,13 @@ SuperAwakening_InventoryScreen_Close:
     ld [wSuperAwakening.Weapon4_Value], a
 .refresh_weapon_4_end
 
+IF SUPER_AWAKENING_MENU_SWORD_SHIELD
+    ; The menu showed sword and shield on the slots, put the X/Y items back
+    ld a, [wSuperAwakening.Weapon4_Value]
+    ld [wInventoryItems.BButtonSlot], a
+    ld a, [wSuperAwakening.Weapon3_Value]
+    ld [wInventoryItems.AButtonSlot], a
+ENDC
 
 .return
     ; Restore bank
