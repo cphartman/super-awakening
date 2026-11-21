@@ -1317,7 +1317,16 @@ presentSaveScreenIfNeeded::
     ; If not all A + B + Start + Select buttons are pressed
     ldh  a, [hPressedButtonsMask]                 ; $0E61: $F0 $CB
     cp   J_A | J_B | J_START | J_SELECT           ; $0E63: $FE $F0
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+    ; Also open it if Select was held long enough in the start menu
+    jr   z, .saveScreenRequested
+    ld   a, [wSuperAwakening.SelectHold_Save]
+    and  a
+    jr   z, jumpToGameplayHandler
+.saveScreenRequested
+ELSE
     jr   nz, jumpToGameplayHandler                ; $0E65: $20 $1E
+ENDC
 
     ; If wD474 != 0
     ld   a, [wD474]                               ; $0E67: $FA $74 $D4
@@ -1335,6 +1344,11 @@ presentSaveScreenIfNeeded::
     ld   [wC16C], a                               ; $0E77: $EA $6C $C1
     ld   [wDialogState], a                        ; $0E7A: $EA $9F $C1
     ld   [wGameplaySubtype], a                    ; $0E7D: $EA $96 $DB
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+    ld   [wSuperAwakening.SelectHold_Save], a
+    ld   [wSuperAwakening.SelectHold_Timer], a
+    ld   [wSuperAwakening.SelectHold_Timer + 1], a
+ENDC
     ld   a, GAMEPLAY_FILE_SAVE ; Set GameplayType to FILE_SAVE ; $0E80: $3E $06
     ld   [wGameplayType], a                       ; $0E82: $EA $95 $DB
 

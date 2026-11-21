@@ -29,5 +29,12 @@ SUPER_AWAKENING_QUICK_RESTOCK = FALSE
 ; Can softlock or corrupt saves.
 SUPER_AWAKENING_SCREEN_WARP = TRUE
 
+; Hold Select in the start menu to open the save screen.
+; Handy since A + B + Start + Select is awkward on a SNES controller.
+; TRUE  = hold Select for the number of frames below
+; FALSE = only the A + B + Start + Select combo opens it
+SUPER_AWAKENING_SELECT_HOLD_SAVE = TRUE
+SUPER_AWAKENING_SELECT_HOLD_SAVE_FRAMES = 180 ; About 3 seconds (60 frames per second)
+
 DEBUG_STARTING_HEARTS = 4 ; Value * 8 = Heart Count
 DEBUG_MAX_HEARTS = 3

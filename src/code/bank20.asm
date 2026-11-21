@@ -4221,6 +4221,12 @@ jr_020_641E:
     or   [hl]                                     ; $6428: $B6
     jr   nz, CloseInventory.return                ; $6429: $20 $1A
 
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+    ld   a, [wSuperAwakening.SelectHold_Save]
+    and  a
+    jp   nz, SelectHoldCloseInventory
+ENDC
+
     ldh  a, [hJoypadState]                        ; $642B: $F0 $CC
     and  J_START                                  ; $642D: $E6 $80
     jr   z, CloseInventory.return                 ; $642F: $28 $14
@@ -4443,6 +4449,11 @@ InventoryStatusInHandler::
     ret                                           ; $65A7: $C9
 
 InventoryStatusHandler::
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+    ld   a, [wSuperAwakening.SelectHold_Save]
+    and  a
+    jp   nz, SelectHoldCloseInventory
+ENDC
     call func_020_5EB5                            ; $65A8: $CD $B5 $5E
     call RenderInventoryStatus                    ; $65AB: $CD $EE $64
     ldh  a, [hPressedButtonsMask]                 ; $65AE: $F0 $CB
@@ -4469,6 +4480,18 @@ InventoryStatusOutHandler::
 .jr_65CE
     ld   [wDE0A], a                               ; $65CE: $EA $0A $DE
     ret                                           ; $65D1: $C9
+
+IF SUPER_AWAKENING_SELECT_HOLD_SAVE
+; Select was held long enough: close the start menu like Start does.
+; The save screen opens once we're back in the overworld (see bank 0).
+SelectHoldCloseInventory:
+    ; Put the status panel away
+    ld   a, $90
+    ld   [wDE0A], a
+    ld   a, GAMEPLAY_INVENTORY_FADE_OUT
+    ld   [wGameplaySubtype], a
+    jp   CloseInventory
+ENDC
 
 InventoryFadeOutHandler::
     call func_020_635C                            ; $65D2: $CD $5C $63
