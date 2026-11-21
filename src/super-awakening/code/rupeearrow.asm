@@ -1,4 +1,7 @@
 SuperAwakening_QuickRestock::
+IF !SUPER_AWAKENING_QUICK_RESTOCK
+    jp .return
+ENDC
 
 .Powder:
     ; Skip if we have powder

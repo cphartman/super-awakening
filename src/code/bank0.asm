@@ -1668,8 +1668,11 @@ InitGotItemSequence::
     ld   a, [wDialogState]                        ; $10A9: $FA $9F $C1
     ld   hl, wC167                                ; $10AC: $21 $67 $C1
     or   [hl]                                     ; $10AF: $B6
+    ; Screen warp patch. Skipped when SUPER_AWAKENING_SCREEN_WARP is TRUE.
+IF !SUPER_AWAKENING_SCREEN_WARP
     ld   hl, wRoomTransitionState                 ; $10B0: $21 $24 $C1
     or   [hl]                                     ; $10B3: $B6
+ENDC
     jr   nz, .jp_10DB                             ; $10B4: $20 $25
     ld   a, [wD464]                               ; $10B6: $FA $64 $D4
     and  a                                        ; $10B9: $A7
