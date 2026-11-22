@@ -5,9 +5,9 @@
 SUPER_AWAKENING_HIDE_CODE = FALSE
 
 ; Enable for development features
-SUPER_AWAKENING_DEBUG = TRUE
+SUPER_AWAKENING_DEBUG = FALSE
 
-SUPER_AWAKENING_DEBUG_FAST_DIALOG = TRUE
+SUPER_AWAKENING_DEBUG_FAST_DIALOG = FALSE
 
 ; If the inventory system allows all items
 ; TRUE = Select any item in the inventory
@@ -53,6 +53,13 @@ SUPER_AWAKENING_MENU_SWORD_SHIELD = TRUE
 ;         X or Y puts the selected item on that button (its letter is shown next to it)
 ; FALSE = A and B both hide/show the selected item
 SUPER_AWAKENING_MENU_MAPPING = TRUE
+
+; Remember the X/Y items and the sword/shield swap in each save file.
+; The data goes in spare cartridge memory after the three original save files,
+; so old saves still load (they just get the default mapping).
+; TRUE  = saved and loaded with the file
+; FALSE = X/Y go back to the first two slots when a file is loaded
+SUPER_AWAKENING_SAVE_MAPPING = TRUE
 
 DEBUG_STARTING_HEARTS = 4 ; Value * 8 = Heart Count
 DEBUG_MAX_HEARTS = 3
